@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import HeroImage from "../../assets/banner-image.png";
 import Image from "next/image";
 import Container from "../shared/Container";
+import Link from "next/link";
 
 const textVariants = {
   hidden: { x: -50, opacity: 0 },
@@ -32,8 +33,8 @@ export default function HeroSection() {
               animate="visible"
               className="text-4xl md:text-5xl font-bold"
             >
-              Swap Skills, Grow Together{" "}
-              <span className="text-black">and Learn</span>
+              Exchnage Your Skills With{" "}
+              <span className="text-red-500">SwapSkill!</span>
             </motion.h1>
 
             {/* Sub Texts */}
@@ -61,9 +62,11 @@ export default function HeroSection() {
               animate="visible"
               className="flex gap-4 pt-4"
             >
-              <button className="px-6 py-3 rounded-2xl bg-black text-white font-semibold hover:bg-gray-800 transition">
-                Join Us
-              </button>
+              <Link href="login">
+                <button className="px-6 py-3 rounded-2xl bg-black text-white font-semibold hover:bg-gray-800 transition">
+                  Join Us
+                </button>
+              </Link>
               <button className="px-6 py-3 rounded-2xl border border-black text-black hover:bg-black hover:text-white transition">
                 See More
               </button>

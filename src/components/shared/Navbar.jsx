@@ -12,8 +12,8 @@ export default function NavbarPage() {
   // List of nav links
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
-    { name: "Skills", path: "/skills" },
+    { name: "Find Skills", path: "/find-skills" },
+    { name: "Community", path: "/community" },
     { name: "Projects", path: "/projects" },
     { name: "Contact", path: "/contact" },
   ];
@@ -81,7 +81,7 @@ export default function NavbarPage() {
                     href={link.path}
                     className={`transition ${
                       pathname === link.path
-                        ? "font-semibold text-black border-b-2 border-black"
+                        ? "font-semibold text-black underline border-black"
                         : "font-semibold text-gray-600 hover:text-black"
                     }`}
                   >
@@ -95,7 +95,7 @@ export default function NavbarPage() {
           {/* Navbar End: Profile + Buttons */}
           <div className="navbar-end flex items-center gap-2 px-0">
             {session?.user?.name && (
-              <div className="px-3 py-1 rounded-full bg-gray-200 text-black font-medium">
+              <div className="px-3 py-3 rounded-full bg-gray-200 text-black font-medium">
                 {session.user.name}
               </div>
             )}

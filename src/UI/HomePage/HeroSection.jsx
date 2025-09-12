@@ -2,8 +2,8 @@
 import { motion } from "framer-motion";
 import HeroImage from "../../assets/banner-image.png";
 import Image from "next/image";
-import Container from "../shared/Container";
 import Link from "next/link";
+import Container from "@/components/shared/Container";
 
 const textVariants = {
   hidden: { x: -50, opacity: 0 },

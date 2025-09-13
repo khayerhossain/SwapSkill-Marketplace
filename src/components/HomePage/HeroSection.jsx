@@ -20,6 +20,7 @@ const textVariants = {
 
 export default function HeroSection() {
   return (
+    <div>
     <section className="bg-white text-black min-h-screen flex items-center">
       <Container>
         <div className="flex flex-col md:flex-row items-center justify-between w-full gap-10 mt-0 lg:mt-20 px-4">
@@ -87,5 +88,7 @@ export default function HeroSection() {
         </div>
       </Container>
     </section>
+    
+    </div>
   );
 }

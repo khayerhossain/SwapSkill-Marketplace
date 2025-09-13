@@ -43,18 +43,7 @@ export default function WhyChooseUs() {
           </motion.div>
 
           {/* Card 3 */}
-          <motion.div
-            className="bg-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition duration-300"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            <h3 className="text-xl font-semibold mb-3">💡 Grow Faster</h3>
-            <p className="text-gray-600">
-              You will be able to quickly improve your skills through practical learning. 
-              You will have real life experience.
-            </p>
-          </motion.div>
+          
         </div>
       </div>
     </section>

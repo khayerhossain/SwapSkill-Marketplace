@@ -31,7 +31,8 @@ const faqs = [
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(0);
 
-  return (
+  return ( 
+    // Implement Frequently Asked Questions section
     <Container>
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">

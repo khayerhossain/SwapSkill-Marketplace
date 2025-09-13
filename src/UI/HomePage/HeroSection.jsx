@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/shared/Container";
 
+
 const textVariants = {
   hidden: { y: 30, opacity: 0 },
   visible: (i) => ({
@@ -243,7 +244,8 @@ export default function HeroSection() {
             </motion.div>
           </motion.div>
         </div>
-      </Container>
+      </Container> 
+    
     </section>
   );
 }

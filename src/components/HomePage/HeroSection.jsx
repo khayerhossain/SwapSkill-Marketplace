@@ -4,6 +4,7 @@ import HeroImage from "../../assets/banner-image.png";
 import Image from "next/image";
 import Container from "../shared/Container";
 
+
 const textVariants = {
   hidden: { x: -50, opacity: 0 },
   visible: (i) => ({

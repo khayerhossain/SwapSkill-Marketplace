@@ -52,7 +52,7 @@ export default function WhyChooseUs() {
             <h3 className="text-xl font-semibold mb-3">💡 Grow Faster</h3>
             <p className="text-gray-600">
               You will be able to quickly improve your skills through practical learning. 
-              You will have real life experience with us.
+              You will have real life experience.
             </p>
           </motion.div>
         </div>

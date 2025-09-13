@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import HeroImage from "../../assets/banner-image.png";
 import Image from "next/image";
 import Container from "../shared/Container";
-import WhyChooseUs from "./WhyChooseUs";
+
 
 const textVariants = {
   hidden: { x: -50, opacity: 0 },
@@ -88,7 +88,7 @@ export default function HeroSection() {
         </div>
       </Container>
     </section>
-    <WhyChooseUs></WhyChooseUs>
+    
     </div>
   );
 }

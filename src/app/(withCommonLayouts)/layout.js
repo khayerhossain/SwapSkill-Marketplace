@@ -1,3 +1,4 @@
+
 import FooterPage from "@/components/shared/Footer";
 import NavbarPage from "@/components/shared/Navbar";
 import { Toaster } from "react-hot-toast";
@@ -10,7 +11,8 @@ const layout = ({ children }) => {
         {children}
         <Toaster position="top-right" reverseOrder={false} />
       </div>
-      <FooterPage />
+      <FooterPage /> 
+     
     </div>
   );
 };

@@ -38,7 +38,7 @@ export default function FAQSection() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-12">
             {/* Left side */}
-            <div className="md:w-1/2 space-y-8 flex flex-col  justify-between">
+            <div className="md:w-1/2 space-y-8 flex flex-col  justify-between ">
               <div>
                 <div className="flex items-center gap-4 py-2 px-4 border border-base-300 w-fit rounded-lg">
                   <FaRegCircle className="text-xl text-purple-600" />
@@ -75,7 +75,7 @@ export default function FAQSection() {
             </div>
 
             {/* Right side: Accordion */}
-            <div className="md:w-1/2 flex flex-col justify-between">
+            <div className="md:w-1/2 flex flex-col justify-between gap-4">
               {faqs.map((faq, index) => (
                 <div
                   key={index}

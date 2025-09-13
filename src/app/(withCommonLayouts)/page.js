@@ -9,6 +9,7 @@ export default async function HomeScreen() {
       <HeroSection /> 
       <FAQSection></FAQSection>
       <WhyChooseUs></WhyChooseUs>
+      
     
     </>
   );

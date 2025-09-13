@@ -31,7 +31,7 @@ const faqs = [
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(0);
 
-  return ( 
+  return (
     // Implement Frequently Asked Questions section
     <Container>
       <section className="py-16 bg-white">
@@ -42,9 +42,11 @@ export default function FAQSection() {
               <div>
                 <div className="flex items-center gap-4 py-2 px-4 border border-base-300 w-fit rounded-lg">
                   <FaRegCircle className="text-xl text-purple-600" />
-                  <p className="text-purple-600">Got questions? We’ve got answers!</p>
+                  <p className="text-purple-600">
+                    Got questions? We’ve got answers!
+                  </p>
                 </div>
-                <h1 className="text-5xl md:text-6xl lg:text-6xl font-bold text-gray-900 mt-5 ">
+                <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold text-gray-900 mt-5 ">
                   Frequently asked questions
                 </h1>
               </div>
@@ -73,7 +75,7 @@ export default function FAQSection() {
             </div>
 
             {/* Right side: Accordion */}
-            <div className="md:w-1/2 flex flex-col gap-10">
+            <div className="md:w-1/2 flex flex-col justify-between">
               {faqs.map((faq, index) => (
                 <div
                   key={index}

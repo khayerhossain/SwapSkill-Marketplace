@@ -11,6 +11,7 @@ import SkillMarquee from "@/components/HomePage/SkillMarquee";
 
 
 import ReviewsSection from "@/components/HomePage/ReviewsSection";
+import PopularSkills from "@/components/HomePage/PopularSkills";
 
 
 
@@ -25,8 +26,8 @@ export default async function HomeScreen() {
       <WhyChooseUs></WhyChooseUs>
       <NewsletterSection/>
       <ReviewsSection></ReviewsSection>
-
-    
+      <PopularSkills></PopularSkills>
+          
     </>
   );
 }

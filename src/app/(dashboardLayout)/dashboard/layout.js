@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }) {
       <div className="min-h-screen">
         <div className="flex">
           {/* Large Screen Sidebar */}
-          <div className="hidden md:block w-[20%] bg-gray-700 text-white">
+          <div className="hidden md:block w-[20%] bg-gray-800 text-white">
             <div className="p-4 border-b border-gray-700">
               <h1 className="text-xl font-bold">Dashboard</h1>
             </div>

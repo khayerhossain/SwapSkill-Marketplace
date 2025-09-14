@@ -13,15 +13,12 @@ export default async function HomeScreen() {
     <>
       <HeroSection />
       <AboutSection />
-      <FAQSection></FAQSection>
       <WhyChooseUs></WhyChooseUs>
       <SkillMarquee></SkillMarquee>
-      <WhyChooseUs></WhyChooseUs>
-      <NewsletterSection />
-      <ReviewsSection></ReviewsSection>
-      <NewsletterSection />
-      <ReviewsSection></ReviewsSection>
       <PopularSkills></PopularSkills>
+      <ReviewsSection></ReviewsSection>
+      <FAQSection></FAQSection>
+      <NewsletterSection />
     </>
   );
 }

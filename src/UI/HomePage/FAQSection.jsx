@@ -1,8 +1,9 @@
 "use client";
 import Container from "@/components/shared/Container";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRegCircle } from "react-icons/fa";
 
+import Aos from "aos";
 import { AnimatePresence, motion } from "framer-motion"; // For smooth animations
 import { FaChevronDown } from "react-icons/fa";
 const faqs = [
@@ -30,12 +31,18 @@ const faqs = [
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(0);
+  useEffect(() => {
+    Aos.init({
+      duration: 2000,
+      once: false,
+    });
+  }, []);
 
   return (
     // Implement Frequently Asked Questions section
     <Container>
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
+      <section data-aos="fade-right" className="py-16 bg-white">
+        <div  className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-12">
             {/* Left side */}
             <div className="md:w-1/2 space-y-8 flex flex-col  justify-between ">

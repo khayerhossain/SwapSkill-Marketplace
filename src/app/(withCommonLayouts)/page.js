@@ -5,6 +5,8 @@ import React from "react";
 import WhyChooseUs from "@/components/HomePage/WhyChooseUs";
 import FAQSection from "@/UI/HomePage/FAQSection";
 import ReviewsSection from "@/components/HomePage/ReviewsSection";
+import SkillMarquee from "@/components/HomePage/SkillMarquee";
+import PopularSkills from "@/components/HomePage/PopularSkills";
 
 export default async function HomeScreen() {
   return (
@@ -13,8 +15,13 @@ export default async function HomeScreen() {
       <AboutSection />
       <FAQSection></FAQSection>
       <WhyChooseUs></WhyChooseUs>
+      <SkillMarquee></SkillMarquee>
+      <WhyChooseUs></WhyChooseUs>
       <NewsletterSection />
       <ReviewsSection></ReviewsSection>
+      <NewsletterSection />
+      <ReviewsSection></ReviewsSection>
+      <PopularSkills></PopularSkills>
     </>
   );
 }

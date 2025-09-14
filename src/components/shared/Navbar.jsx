@@ -15,7 +15,7 @@ export default function NavbarPage() {
     { name: "Find Skills", path: "/find-skills" },
     { name: "Community", path: "/community" },
     { name: "Projects", path: "/projects" },
-    { name: "Contact", path: "/contact" },
+    { name: "Dashboard", path: "/dashboard" },
   ];
 
   return (

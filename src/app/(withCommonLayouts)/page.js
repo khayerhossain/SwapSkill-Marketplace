@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> 3f40e10cc544ac038a96d5030d313ed793d912c4
 import AboutSection from "@/components/HomePage/AboutSection";
 import HeroSection from "@/components/HomePage/HeroSection";
 import NewsletterSection from "@/components/HomePage/NewsletterSection";
@@ -9,11 +6,13 @@ import React from "react";
 
 import WhyChooseUs from "@/components/HomePage/WhyChooseUs";
 import FAQSection from "@/UI/HomePage/FAQSection";
-<<<<<<< HEAD
-=======
+
+import SkillMarquee from "@/components/HomePage/SkillMarquee";
+
+
 import ReviewsSection from "@/components/HomePage/ReviewsSection";
 
->>>>>>> 3f40e10cc544ac038a96d5030d313ed793d912c4
+
 
 export default async function HomeScreen() {
   return (
@@ -21,10 +20,10 @@ export default async function HomeScreen() {
       <HeroSection />
       <AboutSection/>
       <FAQSection></FAQSection>
+      <WhyChooseUs></WhyChooseUs> 
+      <SkillMarquee></SkillMarquee>
       <WhyChooseUs></WhyChooseUs>
       <NewsletterSection/>
-
-      
       <ReviewsSection></ReviewsSection>
 
     

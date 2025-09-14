@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # sawp-skill
 this is an skill swap project where a person can swap his/her skill share with other also have others functionalities
 =======

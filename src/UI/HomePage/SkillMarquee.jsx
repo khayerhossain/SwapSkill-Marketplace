@@ -1,6 +1,6 @@
 "use client";
 import Marquee from "react-fast-marquee";
-import Container from "../shared/Container";
+import Container from "../../components/shared/Container";
 
 function SkillMarquee() {
   const marqueeLogo = [

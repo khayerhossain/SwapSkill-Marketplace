@@ -5,7 +5,7 @@ import React from "react";
 import WhyChooseUs from "@/components/HomePage/WhyChooseUs";
 import FAQSection from "@/UI/HomePage/FAQSection";
 import ReviewsSection from "@/components/HomePage/ReviewsSection";
-//import HeroSection from "@/UI/HomePage/HeroSection";
+
 
 export default async function HomeScreen() {
   return (

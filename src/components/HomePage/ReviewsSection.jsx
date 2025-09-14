@@ -57,7 +57,7 @@ export default function ReviewsSection() {
         </h2>
 
         <Swiper
-          modules={[ Pagination]}
+          modules={[Navigation, Pagination]}
           spaceBetween={30}
           slidesPerView={1}
           navigation

@@ -1,114 +1,115 @@
 "use client";
-import React, { useState } from 'react';
-import Container from '@/components/shared/Container';
+import { useState } from "react";
+import axios from "axios";
+import Container from "@/components/shared/Container";
 
 export default function NewsletterSection() {
-  const [email, setEmail] = useState('');
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    setTimeout(() => {
-      setIsSubscribed(true);
-      setIsLoading(false);
-      setEmail('');
-    }, 1500);
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const res = await axios.post("/api/newsletter", { email });
+      if (res.data?.success) {
+        setMessage(" Subscribed successfully!");
+        setEmail("");
+      } else {
+        setMessage("Subscription failed.");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage(" Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-slate-50 via-red-50/30 to-pink-50/30 min-h-screen flex items-center overflow-hidden">
-      {/* Background gradient matching the image */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-400/20 via-pink-400/10 to-red-500/20"></div>
-      
-      {/* Subtle curved background element */}
-      <div className="absolute top-0 right-0 w-1/2 h-full">
-        <div className="w-full h-full bg-gradient-to-bl from-red-500/80 to-pink-600/80 rounded-l-[200px]"></div>
-      </div>
-
+    <section className="min-h-[420px] flex items-center justify-center bg-white p-6 mt-0 lg:mt-16">
       <Container>
-        <div className="relative z-10 max-w-lg mx-auto w-full">
-          {/* Main Card - exact white card like image */}
-          <div className="bg-white rounded-3xl shadow-2xl p-12 relative">
-            
-            {/* Paper plane icon - positioned like in image */}
-            <div className="text-center mb-8">
-              <div className="inline-block relative">
-                <svg className="w-16 h-16 text-red-500 transform rotate-12" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                </svg>
-                {/* Curved line behind plane like in image */}
-                <div className="absolute -right-8 top-1/2 transform -translate-y-1/2">
-                  <svg className="w-20 h-8 text-gray-200" viewBox="0 0 80 32" fill="none">
-                    <path d="M2 16C20 8, 40 8, 78 16" stroke="currentColor" strokeWidth="2" fill="none" strokeDasharray="4,4" opacity="0.3"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
+        <div className="relative w-ful rounded-3xl shadow-2xl overflow-hidden">
+          <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-b from-red-600 to-red-500" />
 
-            {/* SUBSCRIBE heading - exact typography from image */}
-            <div className="text-center mb-8">
-              <h1 className="text-5xl font-black text-gray-900 tracking-tight">
+          <div className="relative bg-white rounded-3xl p-12 shadow-inner md:p-16">
+            <div className="absolute -bottom-6 left-10 right-10 h-6 rounded-xl bg-white/0 shadow-[0_35px_35px_rgba(0,0,0,0.12)] pointer-events-none" />
+
+            <div className="max-w-2xl mx-auto text-center">
+              {/* Curved line + rocket/paper-plane icon */}
+              <div className="flex items-center justify-center mb-6">
+                <svg
+                  width="240"
+                  height="80"
+                  viewBox="0 0 240 80"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="mx-auto"
+                >
+                  {/* Curved flight path */}
+                  <path
+                    d="M10 60 C80 10, 160 10, 230 40"
+                    stroke="#D1D5DB"
+                    strokeWidth="2.5"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+
+                  {/* Paper-plane/rocket icon */}
+                  <g transform="translate(210,22) rotate(-10)">
+                    <path
+                      d="M2 10 L28 0 L18 30 L10 22 L2 10 Z"
+                      fill="#EF4444"
+                    />
+                    <path d="M2 10 L10 22 L12 14 Z" fill="#B91C1C" />
+                    <circle cx="16" cy="12" r="2" fill="#fff" />
+                  </g>
+                </svg>
+              </div>
+
+              <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-2">
                 SUBSCRIBE<span className="text-red-500">.</span>
               </h1>
-            </div>
 
-            {/* Form - exactly like in image */}
-            {!isSubscribed ? (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Your email address"
-                    required
-                    className="w-full px-0 py-3 text-gray-600 bg-transparent border-0 border-b-2 border-gray-200 focus:outline-none focus:border-red-400 transition-colors duration-300 text-center placeholder-gray-400"
-                  />
+              <p className="text-gray-500 mb-8">
+                Get the latest updates and offers delivered straight to your
+                inbox.
+              </p>
+
+              <form
+                onSubmit={handleSubscribe}
+                className="flex flex-col sm:flex-row items-center gap-4 justify-center"
+              >
+                <div className="w-full sm:w-2/3">
+                  <label className="relative block">
+                    <input
+                      type="email"
+                      placeholder="Your email address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="w-full bg-transparent border-none px-4 py-4 text-gray-700 placeholder-gray-300 focus:outline-none text-lg"
+                    />
+                    <div className="h-[1px] bg-gray-200 w-full" />
+                  </label>
                 </div>
-                
-                <div className="text-center pt-4">
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="px-12 py-4 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed uppercase tracking-wide"
-                  >
-                    {isLoading ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Subscribing...
-                      </div>
-                    ) : (
-                      "SUBSCRIBE"
-                    )}
-                  </button>
-                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-red-500 text-white font-semibold shadow-lg hover:bg-red-600 transition disabled:opacity-60"
+                >
+                  {loading ? "Subscribing..." : "SUBSCRIBE"}
+                </button>
               </form>
-            ) : (
-              <div className="text-center">
-                <div className="bg-green-50 border border-green-200 rounded-2xl p-6">
-                  <div className="flex items-center justify-center mb-3">
-                    <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-semibold text-green-800 mb-2">Successfully Subscribed!</h3>
-                  <p className="text-green-700">Thank you for joining our community.</p>
-                </div>
-              </div>
-            )}
 
-            {/* Decorative circles like in image */}
-            <div className="absolute -top-3 -right-3 w-6 h-6 bg-red-400/30 rounded-full"></div>
-            <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-pink-400/30 rounded-full"></div>
+              {message && (
+                <p className="mt-6 text-sm text-gray-600">{message}</p>
+              )}
+            </div>
           </div>
-
-          {/* Circular background element like in image */}
-          <div className="absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2 w-96 h-96 border-4 border-white/20 rounded-full -z-10"></div>
         </div>
       </Container>
     </section>

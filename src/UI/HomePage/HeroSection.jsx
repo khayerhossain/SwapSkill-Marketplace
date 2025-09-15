@@ -93,14 +93,14 @@ export default function HeroSection() {
       <Container>
         <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between w-full gap-16 mt-0 lg:mt-20 px-4 ">
           {/* Left Side Text */}
-          <div className="space-y-8 w-full md:w-1/2">
+          <div className="space-y-7 w-full md:w-1/2">
             {/* Main Heading with Gradient Text */}
             <motion.h1
               custom={1}
               variants={textVariants}
               initial="hidden"
               animate="visible"
-              className="text-5xl md:text-6xl lg:text-6xl font-bold leading-tight"
+              className="text-5xl md:text-5xl lg:text-5xl font-bold leading-tight"
             >
               Exchange Your Skills With{" "}
               <span className="bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 bg-clip-text text-transparent animate-pulse">
@@ -211,23 +211,14 @@ export default function HeroSection() {
             className="relative flex justify-center md:justify-end w-full md:w-1/2"
           >
             {/* Decorative Elements */}
-            <motion.div
-              variants={floatingVariants}
-              animate="animate"
-              className="absolute -top-6 -left-6 w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-2xl shadow-lg"
-            />
+           
             <motion.div
               variants={floatingVariants}
               animate="animate"
               className="absolute -bottom-4 -right-4 w-8 h-8 bg-gradient-to-r from-green-400 to-blue-400 rounded-full shadow-lg"
               transition={{ delay: 0.5 }}
             />
-            <motion.div
-              variants={floatingVariants}
-              animate="animate"
-              className="absolute top-1/2 -right-8 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-lg shadow-lg"
-              transition={{ delay: 1 }}
-            />
+           
 
             {/* Main Image with Hover Effect */}
             <motion.div
@@ -239,7 +230,7 @@ export default function HeroSection() {
               <Image
                 src={HeroImage}
                 alt="SwapSkill Hero"
-                className="relative object-contain w-[280px] md:w-[350px] lg:w-[400px] drop-shadow-2xl hidden lg:block"
+                className="relative object-contain w-[280px] md:w-[350px] drop-shadow-2xl hidden lg:block"
               />
             </motion.div>
           </motion.div>

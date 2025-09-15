@@ -1,22 +1,24 @@
-import AboutSection from "@/components/HomePage/AboutSection";
-import HeroSection from "@/components/HomePage/HeroSection";
+import AboutSection from "@/UI/HomePage/AboutSection";
+import HeroSection from "@/UI/HomePage/HeroSection";
+import NewsletterSection from "@/UI/HomePage/NewsletterSection";
 import React from "react";
-
-import WhyChooseUs from "@/components/HomePage/WhyChooseUs";
+import WhyChooseUs from "@/UI/HomePage/WhyChooseUs";
 import FAQSection from "@/UI/HomePage/FAQSection";
-import ReviewsSection from "@/components/HomePage/ReviewsSection";
-//import HeroSection from "@/UI/HomePage/HeroSection";
+import ReviewsSection from "@/UI/HomePage/ReviewsSection";
+import SkillMarquee from "@/UI/HomePage/SkillMarquee";
+import PopularSkills from "@/UI/HomePage/PopularSkills";
 
 export default async function HomeScreen() {
   return (
     <>
       <HeroSection />
-      <AboutSection/>
-      <FAQSection></FAQSection>
+      <AboutSection />
       <WhyChooseUs></WhyChooseUs>
+      <SkillMarquee></SkillMarquee>
+      <PopularSkills></PopularSkills>
       <ReviewsSection></ReviewsSection>
-
-    
+      <FAQSection></FAQSection>
+      <NewsletterSection />
     </>
   );
 }

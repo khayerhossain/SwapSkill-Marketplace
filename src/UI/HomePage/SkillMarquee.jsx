@@ -1,9 +1,9 @@
 "use client";
+
+import Container from "@/components/shared/Container";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Marquee from "react-fast-marquee";
-import Container from "../shared/Container";
-import Container from "../../components/shared/Container";
 
 function SkillMarquee() {
   const marqueeLogo = [
@@ -29,8 +29,10 @@ function SkillMarquee() {
   });
 
   return (
-    <Container>
-      <div className="py-10">
+   <Container> 
+
+
+     <div className="py-10">
         <div className="max-w-6xl mx-auto text-center space-y-4">
           <h1 className="text-3xl font-bold">Our Skill Universe</h1>
           <p className="md:text-xl">
@@ -63,7 +65,7 @@ function SkillMarquee() {
           ))}
         </Marquee>
       </div>
-    </Container>
+   </Container>
   );
 }
 

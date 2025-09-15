@@ -1,7 +1,8 @@
 "use client";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import Marquee from "react-fast-marquee";
 import Container from "../shared/Container";
-
 function SkillMarquee() {
   const marqueeLogo = [
     { logo: "/assets/marquee/coding-5-64.png", skillName: "Coding" },
@@ -11,9 +12,6 @@ function SkillMarquee() {
     { logo: "/assets/marquee/Dance.png", skillName: "Dance" },
     { logo: "/assets/marquee/designer-2-69.png", skillName: "Design" },
     { logo: "/assets/marquee/driving.png", skillName: "Driving" },
-  ];
-
-  const marqueeLogo2 = [
     { logo: "/assets/marquee/fishing-40.png", skillName: "Fishing" },
     { logo: "/assets/marquee/music-27.png", skillName: "Music" },
     { logo: "/assets/marquee/running-90.png", skillName: "Running" },
@@ -22,6 +20,11 @@ function SkillMarquee() {
     { logo: "/assets/marquee/team-work-1-75.png", skillName: "Team Work" },
     { logo: "/assets/marquee/video-call-81.png", skillName: "Video Call" },
   ];
+
+  AOS.init({
+    duration: 2000,
+    once: false,
+  });
 
   return (
     <Container>
@@ -34,39 +37,26 @@ function SkillMarquee() {
           </p>
         </div>
 
-        <Marquee gradient={false} speed={75} pauseOnHover loop={0}>
+        <Marquee gradient={false} speed={100} loop={0}>
           {marqueeLogo?.map((item, index) => (
-            <div
-              key={index}
-              className="mx-12 flex flex-col items-center py-10  "
-            >
-              <img
-                src={item.logo}
-                alt={item.skillName}
-                className="  w-25 h-25"
-              />
-              <h1 className="font-bold">{item.skillName}</h1>
-            </div>
-          ))}
-        </Marquee>
-        <Marquee
-          direction="right"
-          gradient={false}
-          speed={75}
-          pauseOnHover
-          loop={0}
-        >
-          {marqueeLogo2?.map((item, index) => (
-            <div
-              key={index}
-              className="mx-12 flex flex-col items-center py-10  "
-            >
-              <img
-                src={item.logo}
-                alt={item.skillName}
-                className=" w-25 h-25"
-              />
-              <h1 className="font-bold">{item.skillName}</h1>
+            <div className="py-10">
+              <div
+                data-aos="flip-right"
+                key={index}
+                className="mx-4 sm:mx-8 md:mx-12 flex flex-col items-center py-8 px-6 
+             bg-white rounded-2xl border border-purple-400 shadow-lg shadow-purple-600
+             hover:shadow-2xl hover:scale-105 hover:border-purple-400
+             transition-all duration-300 ease-in-out mt-10"
+              >
+                <img
+                  src={item.logo}
+                  alt={item.skillName}
+                  className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
+                />
+                <h1 className="font-bold text-xs tracking-wide text-gray-800 hover:text-purple-600 transition-colors">
+                  {item.skillName}
+                </h1>
+              </div>
             </div>
           ))}
         </Marquee>

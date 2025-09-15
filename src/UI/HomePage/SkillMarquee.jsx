@@ -3,6 +3,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Marquee from "react-fast-marquee";
 import Container from "../shared/Container";
+import Container from "../../components/shared/Container";
+
 function SkillMarquee() {
   const marqueeLogo = [
     { logo: "/assets/marquee/coding-5-64.png", skillName: "Coding" },

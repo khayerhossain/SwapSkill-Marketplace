@@ -2,6 +2,7 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 
 export const collectionNamesObj = {
   usersCollection: "users",
+  skillsDirectoryCollection: 'skills-directory',
 };
 
 const uri = process.env.MONGODB_URI;

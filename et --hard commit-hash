@@ -1,0 +1,273 @@
+[33mcommit 1e71494c53f993afe6389cb28f3e981da9083aea[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mariful-dev[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/ariful-dev[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Merge: 00001cf fff2946
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Mon Sep 15 13:48:11 2025 +0600
+
+    Merge pull request #20 from khayerhossain/masud-dev
+    
+    Masud dev
+
+[33mcommit fff2946ac2cfeab1db0a033655c1bcb5969d5354[m[33m ([m[1;31morigin/masud-dev[m[33m)[m
+Author: 176409 <148116817+176409@users.noreply.github.com>
+Date:   Mon Sep 15 12:59:26 2025 +0600
+
+    update code
+
+[33mcommit 0ab5a300865b39c9bda94612429d4976da9a5a47[m
+Merge: 203676b ed33396
+Author: 176409 <148116817+176409@users.noreply.github.com>
+Date:   Mon Sep 15 12:52:34 2025 +0600
+
+    shorten texts and update marquee card layout
+
+[33mcommit 203676b8634c73af5199b37a35509f5391ff5848[m
+Author: 176409 <148116817+176409@users.noreply.github.com>
+Date:   Mon Sep 15 12:45:46 2025 +0600
+
+    fix same issue
+
+[33mcommit ed333965e77ec4b35f0907dec7a3878971315131[m
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Mon Sep 15 00:50:58 2025 +0600
+
+    lading page section re arranged
+
+[33mcommit 50289c1c9d5ad28fe31dc95da5a658bda45b0481[m
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Mon Sep 15 00:36:26 2025 +0600
+
+    dashboard created
+
+[33mcommit c1ae3fe0d255f38400e07f3a268592ee021d83f5[m
+Merge: 6b675ff 7072ebf
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Mon Sep 15 00:15:08 2025 +0600
+
+    Merge branch 'development' of https://github.com/khayerhossain/SwapSkill-Marketplace into development
+
+[33mcommit 6b675ff9b2fec182b0706dffa2eca602787bc70b[m
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Mon Sep 15 00:11:00 2025 +0600
+
+    hero section updated
+
+[33mcommit 7072ebf8962ce28cc673b62768d2ad6984199e0c[m
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sun Sep 14 22:26:21 2025 +0600
+
+    Update README.md
+
+[33mcommit c1edd4669a6a5fb40f31c527c9274776ee2df1ec[m
+Merge: 0471603 e7d0b2b
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sun Sep 14 22:22:38 2025 +0600
+
+    working on dashboard
+
+[33mcommit 00001cf51d5d28e1f0e137fe64b3581a86f906e3[m
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sun Sep 14 22:14:06 2025 +0600
+
+    Update README.md
+
+[33mcommit 047160368a7d017a8cc556f337ba0f9783e35233[m
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sun Sep 14 22:04:22 2025 +0600
+
+    local changes in page.js
+
+[33mcommit e7d0b2bcde24aab4d72e6ffcdf7e6201a50b7668[m
+Merge: 8b10645 da39d31
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sun Sep 14 22:00:28 2025 +0600
+
+    Merge pull request #17 from khayerhossain/sabit-dev
+    
+    Sabit dev
+
+[33mcommit da39d318a3dc5430b462d53a51fcf63998036de0[m
+Merge: 3fde59e 3b17fab
+Author: sabithossen4 <sabithossenkhoka420@gmail.com>
+Date:   Sun Sep 14 21:55:02 2025 +0600
+
+     popular skills add
+
+[33mcommit 8b106454789a43bfa8e15ac320dfee3a6bac0d9c[m
+Merge: 6106a94 4c635a0
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sun Sep 14 21:53:15 2025 +0600
+
+    Merge pull request #16 from khayerhossain/masud-dev
+    
+    feat: add marquee section with skill logos
+
+[33mcommit 4c635a0e09ff7cc36cee933a9b2e36457e020150[m
+Merge: a16830a 6106a94
+Author: 176409 <148116817+176409@users.noreply.github.com>
+Date:   Sun Sep 14 21:46:34 2025 +0600
+
+    fix issue
+
+[33mcommit 3fde59ea2aa16238bf8ce4340a8eb92e9d6a86f5[m
+Author: sabithossen4 <sabithossenkhoka420@gmail.com>
+Date:   Sun Sep 14 21:21:53 2025 +0600
+
+     Popular skills add
+
+[33mcommit 6106a943f42dd6b6d3046cadb1b8d3f963c34bb1[m
+Merge: 3f40e10 db57db7
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sun Sep 14 20:34:17 2025 +0600
+
+    Merge pull request #15 from khayerhossain/suborna-dev
+    
+    Add News letter Section
+
+[33mcommit db57db721b600f3c7f23ef4b6082f437dd683def[m
+Merge: a0ef104 3f40e10
+Author: suborna33 <152749142+suborna33@users.noreply.github.com>
+Date:   Sun Sep 14 20:30:51 2025 +0600
+
+    Resolved merge conflicts from development into suborna-dev
+
+[33mcommit 3f40e10cc544ac038a96d5030d313ed793d912c4[m
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sun Sep 14 17:03:11 2025 +0600
+
+    Update README.md
+
+[33mcommit 879b6ec622b39d153f39992f08ca9bc4c121886c[m
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sun Sep 14 17:01:32 2025 +0600
+
+    hero section updated
+
+[33mcommit 526e3432dcb6b5a5261f339c800fea9a4b9a9f9a[m
+Merge: fa4b5e2 d52ad65
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sun Sep 14 16:31:34 2025 +0600
+
+    Merge pull request #14 from khayerhossain/tomal-dev
+    
+    ReviewsSection
+
+[33mcommit a16830a4e067b60192cbead6aecde193f216fd95[m
+Author: 176409 <148116817+176409@users.noreply.github.com>
+Date:   Sun Sep 14 15:55:51 2025 +0600
+
+    feat: add marquee section with skill logos
+
+[33mcommit d52ad655cb55548afc58bdbdaac2d4764d6e4799[m
+Merge: 9852282 fa4b5e2
+Author: Badhon Biswas Tomal <badhonbiswast@gmail.com>
+Date:   Sun Sep 14 09:43:39 2025 +0600
+
+    Merge branch 'development' into tomal-dev
+
+[33mcommit 9852282dc0cb52b1789d73e9d06e0f554c01912f[m
+Author: tomal7010 <badhonbiswast@gmail.com>
+Date:   Sun Sep 14 09:34:17 2025 +0600
+
+    ReviewsSection
+
+[33mcommit a0ef104ab0b562acc51c1bc3c7429cde79193f48[m
+Author: suborna33 <152749142+suborna33@users.noreply.github.com>
+Date:   Sun Sep 14 09:33:29 2025 +0600
+
+    Add News letter Section
+
+[33mcommit fa4b5e2d65e41107027ae3ab9ae908566b08eb6f[m
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sun Sep 14 00:58:08 2025 +0600
+
+    navbar and project updated
+
+[33mcommit e11798ba3bac0407e587278c49263ef3ce09d61a[m
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sat Sep 13 23:56:09 2025 +0600
+
+    Update page.js
+    
+    root page.js updated
+
+[33mcommit 1c592ee91b74ef0f840f611c9353a5e991cae22e[m
+Merge: c1c5b3c 32baf58
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sat Sep 13 22:23:32 2025 +0600
+
+    Merge pull request #8 from khayerhossain/suborna-dev
+    
+    Added AboutSection
+
+[33mcommit 32baf582df01ec1627c832b9ca3352f33a0ccc37[m
+Merge: f664ef4 c1c5b3c
+Author: suborna33 <152749142+suborna33@users.noreply.github.com>
+Date:   Sat Sep 13 22:21:44 2025 +0600
+
+    Problem Solve
+
+[33mcommit c1c5b3c4c574e6fa0dfed1047e612b391b28b686[m
+Merge: 05da81a 4b0a8e8
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sat Sep 13 22:12:04 2025 +0600
+
+    Merge pull request #13 from khayerhossain/tomal-dev
+    
+    Tomal dev
+
+[33mcommit 4b0a8e8f56dfc42e007318c1b9aa47c88e4e5e26[m
+Author: tomal7010 <badhonbiswast@gmail.com>
+Date:   Sat Sep 13 22:09:22 2025 +0600
+
+    issue 1
+
+[33mcommit f8ff8eb376df021cf1d69be99d61be2f3fa3df7c[m
+Author: tomal7010 <badhonbiswast@gmail.com>
+Date:   Sat Sep 13 22:06:35 2025 +0600
+
+    issue fixed1
+
+[33mcommit 3b17fab8680c5e0c87269ccd0e08b4d77f5a84aa[m
+Merge: 681a509 3ebd06d
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sat Sep 13 21:58:05 2025 +0600
+
+    Merge pull request #12 from khayerhossain/tomal-dev
+    
+    why choose us section
+
+[33mcommit 3ebd06d5711326ec686d333c8aba6e193db06001[m
+Author: tomal7010 <badhonbiswast@gmail.com>
+Date:   Sat Sep 13 21:55:10 2025 +0600
+
+    issue fixed
+
+[33mcommit 05da81a02757b0920a2dd4904fd922c00cefeeef[m
+Merge: bea2bf3 456b6bc
+Author: Khayer Hossain <khayerhossain62@gmail.com>
+Date:   Sat Sep 13 21:41:14 2025 +0600
+
+    Merge pull request #11 from khayerhossain/masud-dev
+    
+    FAQ section updated
+
+[33mcommit 456b6bcd2fda75b8ee4456b7f07c7d50d13c2ba0[m
+Author: 176409 <148116817+176409@users.noreply.github.com>
+Date:   Sat Sep 13 21:17:16 2025 +0600
+
+    more  customize
+
+[33mcommit 1d2998df15f6e10baa4019c398712d358739f817[m
+Author: 176409 <148116817+176409@users.noreply.github.com>
+Date:   Sat Sep 13 21:12:05 2025 +0600
+
+     customize same issu
+
+[33mcommit bea2bf3a284344e5bd48c0690f04821423445a1b[m
+Merge: f1849b7 0f2c7c1
+Author: Badhon Biswas Tomal <badhonbiswast@gmail.com>
+Date:   Sat Sep 13 20:23:48 2025 +0600
+
+    Merge pull request #10 from khayerhossain/tomal-dev
+    
+    

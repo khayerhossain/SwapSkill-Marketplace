@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation"; 
 import React from "react";
 import Container from "./Container";
+import logo from "../../assets/logo.png"
+import Image from "next/image";
 
 export default function NavbarPage() {
   const { data: session } = useSession();
@@ -68,7 +70,7 @@ export default function NavbarPage() {
             </div>
             {/* Project Name */}
             <Link href="/" className="text-xl font-bold">
-              Swap Skill
+              <Image src={logo} alt="logo" className="w-28 h-12"/>
             </Link>
           </div>
 

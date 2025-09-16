@@ -21,9 +21,14 @@ const Sidebar = ({ onClick }) => {
       path: "/dashboard/admin/applied-riders",
     },
     {
+      name: "Admin",
+      icon: <FaUserFriends />,
+      path: "/dashboard/admin/approved-riders",
+    },
+    {
       name: "Subscribers",
       icon: <FaUserCheck />,
-      path: "/dashboard/admin/approved-riders",
+      path: "/dashboard/admin/subscribe",
     },
     {
       name: "Activity",

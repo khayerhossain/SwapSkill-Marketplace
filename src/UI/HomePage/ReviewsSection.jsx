@@ -4,6 +4,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
+import Container from "@/components/shared/Container";
 
 export default function ReviewsSection() {
   const reviews = [
@@ -47,74 +48,72 @@ export default function ReviewsSection() {
 
   return (
     <section className="bg-white py-16 px-6">
-      <div className="max-w-6xl mx-auto text-center">
-        <h4 className="font-bold text-orange-500 text-sm mb-2">
-          What our customers say about us
-        </h4>
+      <Container>
+        <div className=" mx-auto text-center">
+          <h4 className="font-bold text-blue-500 text-sm mb-2">
+            What our customers say about us
+          </h4>
 
-        <h2 className="text-3xl font-bold mb-10">
-          Testimonials
-        </h2>
+          <h2 className="text-3xl font-bold mb-10">Testimonials</h2>
 
-        <Swiper
-          modules={[Navigation, Pagination]}
-          spaceBetween={30}
-          slidesPerView={1}
-          navigation
-          pagination={{ clickable: true }}
-          breakpoints={{
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-          }}
-          className="pb-12"
-        >
-          {reviews.map((item) => (
-            <SwiperSlide key={item.id}>
-              <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 ">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="flex items-center justify-center mb-4">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-16 h-16 rounded-full border-2 border-orange-400"
-                    />
+          <Swiper
+            modules={[Navigation, Pagination]}
+            spaceBetween={30}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            breakpoints={{
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+            }}
+            className="pb-12"
+          >
+            {reviews.map((item) => (
+              <SwiperSlide key={item.id}>
+                <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 ">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex items-center justify-center mb-4">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-16 h-16 rounded-full border-2 border-black"
+                      />
+                    </div>
+
+                    <div className="px-3 text-left">
+                      <h4 className="text-lg font-semibold">{item.name}</h4>
+                      <p className="text-sm text-white">
+                        <span className="bg-gradient-to-r from-blue-500 to-indigo-500 px-2 rounded-xl">
+                          {item.title}
+                        </span>{" "}
+                        <span className="text-green-400 bg-green-100 px-2 rounded-xl">
+                          {item.date}
+                        </span>
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="px-3 text-left">
-                    <h4 className="text-lg font-semibold">{item.name}</h4>
-                    <p className="text-sm text-gray-500">
-                      <span className="bg-blue-400 px-2 rounded-xl">
-                        {item.title}
-                      </span>{" "}
-                      <span className="text-gray-700 bg-green-400 px-2 rounded-xl">
-                        {item.date}
-                      </span>
-                    </p>
-                  </div>
+                  <p className="text-gray-600 mb-4">"{item.review}"</p>
                 </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
 
-                <p className="text-gray-600 mb-4">
-                  "{item.review}"
-                </p>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
+        {/* small arrows */}
+        <style jsx global>{`
+          .swiper-button-prev,
+          .swiper-button-next {
+            width: 28px;
+            height: 28px;
+          }
 
-      {/* small arrows */}
-      <style jsx global>{`
-        .swiper-button-prev,
-        .swiper-button-next {
-          width: 28px;
-          height: 28px;
-        }
-
-        .swiper-button-prev::after,
-        .swiper-button-next::after {
-          font-size: 14px;
-        }
-      `}</style>
+          .swiper-button-prev::after,
+          .swiper-button-next::after {
+            font-size: 14px;
+          }
+        `}</style>
+      </Container>
     </section>
   );
 }

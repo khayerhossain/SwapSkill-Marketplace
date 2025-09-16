@@ -67,7 +67,7 @@ export default function AboutSection() {
               variants={textVariants}
               initial="hidden"
               animate="visible"
-              className="flex flex-col sm:flex-row items-center sm:justify-start gap-8 py-4 mt-6"
+              className="flex items-center justify-center lg:justify-start gap-8 py-4 mt-6"
             >
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">10K+</div>

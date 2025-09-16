@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import axiosInstance from "@/lib/axiosInstance";
 
 
-export default function LoginPage() {
+export default function RegisterFrom() {
   const [regform, setRegForm] = useState({ name: "", email: "", password: "" });
 
   const handleChangeReg = (e) => {
@@ -22,7 +22,7 @@ export default function LoginPage() {
       const { data } = await axiosInstance.post("/register", regform);
 
       if (data.success) {
-        toast.success("Registration successful!");
+        toast.success("Registration successful!!");
 
         // Auto-login after registration
         const res = await signIn("credentials", {

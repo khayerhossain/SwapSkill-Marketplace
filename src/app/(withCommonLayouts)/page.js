@@ -9,10 +9,11 @@ import HeroSection from "@/UI/HomePage/HeroSection";
 import NewsletterSection from "@/UI/HomePage/NewsletterSection";
 import CurrentSkillsPage from "@/UI/HomePage/CurrentSkills";
 
+
 export default async function HomeScreen() {
   return (
     <>
-      <HeroSection />
+      <HeroSection /> 
       <AboutSection />
       <WhyChooseUs></WhyChooseUs>
       <CurrentSkillsPage />

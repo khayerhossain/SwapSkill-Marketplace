@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import axiosInstance from "@/lib/axiosInstance";
 
 
-export default function LoginPage() {
+export default function RegisterFrom() {
   const [regform, setRegForm] = useState({ name: "", email: "", password: "" });
 
   const handleChangeReg = (e) => {

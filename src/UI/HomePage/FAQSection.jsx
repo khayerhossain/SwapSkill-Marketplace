@@ -1,12 +1,10 @@
 "use client";
 import Container from "@/components/shared/Container";
-import "aos/dist/aos.css";
-import {  useState } from "react";
+import { useState } from "react";
 import { FaRegCircle } from "react-icons/fa";
-
-import AOS from "aos";
-import { AnimatePresence, motion } from "framer-motion"; // For smooth animations
+import { AnimatePresence, motion } from "framer-motion";
 import { FaChevronDown } from "react-icons/fa";
+
 const faqs = [
   {
     question: "What is SwapSkill and how does it work?",
@@ -32,19 +30,14 @@ const faqs = [
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(0);
-  AOS.init({
-  duration: 2000,
-  once: false,
-});
 
   return (
-    // Implement Frequently Asked Questions section
     <Container>
-      <section data-aos="fade-right" className="py-16 bg-white">
+      <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-12">
             {/* Left side */}
-            <div className="md:w-1/2 space-y-8 flex flex-col  justify-between ">
+            <div className="md:w-1/2 space-y-8 flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-4 py-2 px-4 border border-base-300 w-fit rounded-lg">
                   <FaRegCircle className=" text-purple-600" />
@@ -52,12 +45,17 @@ export default function FAQSection() {
                     Got questions? We’ve got answers!
                   </p>
                 </div>
-                <h1 className="text-4xl md:text-5xl lg:text-4xl font-bold text-gray-900 mt-5 ">
+                <h1 className="text-4xl md:text-5xl lg:text-4xl font-bold text-gray-900 mt-5">
                   Frequently asked questions
                 </h1>
+                <p className="text-gray-600 text-sm md:text-base mt-3 max-w-md">
+                  Here are some of the most common questions about SwapSkill to
+                  help you get started quickly.
+                </p>
               </div>
+
               <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl shadow-md p-6">
-                <h2 className=" font-semibold text-gray-900 mb-2">
+                <h2 className="font-semibold text-gray-900 mb-2">
                   Still have questions?
                 </h2>
                 <p className="text-gray-600 mb-4 max-w-sm text-sm">
@@ -95,7 +93,7 @@ export default function FAQSection() {
                     aria-expanded={openIndex === index}
                     aria-controls={`faq-answer-${index}`}
                   >
-                    <span className="font-semibold text-gray-900  pr-4">
+                    <span className="font-semibold text-gray-900 pr-4">
                       {faq.question}
                     </span>
                     <FaChevronDown
@@ -111,10 +109,10 @@ export default function FAQSection() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        transition={{ duration: 0.2, ease: "easeInOut" }}
                         className="overflow-hidden"
                       >
-                        <p className="p-5 text-gray-600 text-xs md:text-base leading-relaxed ">
+                        <p className="p-5 text-gray-600 text-xs md:text-base leading-relaxed">
                           {faq.answer}
                         </p>
                       </motion.div>

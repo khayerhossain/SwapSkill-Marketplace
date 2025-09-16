@@ -2,44 +2,68 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { MessageSquare, Eye } from "lucide-react"; 
+import { AiOutlineMessage, AiOutlineEye, AiOutlineClockCircle, AiOutlineStar } from "react-icons/ai";
+import { MdWorkOutline } from "react-icons/md";
+import { GoLocation } from "react-icons/go";
 
 export default function SkillsPage() {
   const [skills, setSkills] = useState([]);
-  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [sort, setSort] = useState("newest");
   const limit = 6;
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchSkills = async () => {
-      const res = await fetch(
-        `/api/find-skills?search=${search}&page=${page}&limit=${limit}&sort=${sort}`
-      );
-      const data = await res.json();
-      setSkills(data.skills);
-      setTotalPages(data.totalPages);
+      setLoading(true);
+      try {
+        const res = await fetch(
+          `/api/find-skills?search=${searchQuery}&page=${page}&limit=${limit}&sort=${sort}`
+        );
+        const data = await res.json();
+        setSkills(data.skills);
+        setTotalPages(data.totalPages);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchSkills();
-  }, [search, page, sort]);
+  }, [searchQuery, page, sort]);
+
+  const handleSearch = () => {
+    setPage(1);
+    setSearchQuery(searchInput.trim());
+  };
 
   return (
     <div className="max-w-6xl mx-auto pt-24 px-4">
-      {/* Page Title */}
       <h1 className="text-3xl font-bold text-center mb-8">
          Explore <span className="text-blue-600">Skills</span>
       </h1>
 
-      {/* Search & Sort (Centered) */}
+      {/* Search & Sort */}
       <div className="flex flex-col md:flex-row justify-center items-center mb-8 gap-4">
         <input
           type="text"
-          placeholder=" Search skills..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search skills..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           className="border border-gray-300 p-3 rounded-lg w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-sm"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSearch(); 
+          }}
         />
+        <button
+          onClick={handleSearch}
+          className="px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow cursor-pointer"
+        >
+          Search
+        </button>
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
@@ -50,14 +74,17 @@ export default function SkillsPage() {
         </select>
       </div>
 
-      {/* Skills Cards */}
+      {loading && <p className="text-center text-gray-500 mb-4">Loading...</p>}
+      {!loading && skills.length === 0 && (
+        <p className="text-center text-red-500 mb-4">No Skills Found!</p>
+      )}
+
       <div className="grid gap-6 md:grid-cols-2">
         {skills.map((skill) => (
           <div
             key={skill._id}
             className="bg-white border border-gray-200 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col"
           >
-            {/* Profile Section */}
             <div className="flex items-center gap-4 mb-4">
               <img
                 src={skill.userImage || "https://via.placeholder.com/80"}
@@ -70,7 +97,6 @@ export default function SkillsPage() {
               </div>
             </div>
 
-            {/* Skill & Description */}
             <div className="flex items-center gap-2 mb-3 flex-wrap">
               <span className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs px-3 py-1 rounded-full shadow">
                 {skill.skillName}
@@ -91,31 +117,29 @@ export default function SkillsPage() {
                 : skill.description}
             </p>
 
-            {/* Extra Info */}
+            {/* Extra Info with React Icons */}
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-gray-500">
-              <span>📌 Experience: {skill.experience}</span>
-              <span>⏰ {skill.availability}</span>
-              <span>📍 {skill.location}</span>
-              <span>⭐ {skill.rating} ({skill.reviewsCount})</span>
+              <span className="flex items-center gap-1"><MdWorkOutline /> {skill.experience}</span>
+              <span className="flex items-center gap-1"><AiOutlineClockCircle /> {skill.availability}</span>
+              <span className="flex items-center gap-1"><GoLocation /> {skill.location}</span>
+              <span className="flex items-center gap-1"><AiOutlineStar /> {skill.rating} ({skill.reviewsCount})</span>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex gap-3 mt-5 flex-wrap">
               <button className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow">
-                <MessageSquare size={16} /> Message
+                <AiOutlineMessage size={16} /> Message
               </button>
               <Link
                 href={`/find-skills/${skill._id}`}
                 className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow"
               >
-                <Eye size={16} /> See Details
+                <AiOutlineEye size={16} /> See Details
               </Link>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Pagination */}
       <div className="flex justify-center items-center gap-3 mt-10">
         <button
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}

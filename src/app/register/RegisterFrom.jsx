@@ -22,7 +22,7 @@ export default function RegisterFrom() {
       const { data } = await axiosInstance.post("/register", regform);
 
       if (data.success) {
-        toast.success("Registration successful!");
+        toast.success("Registration successful!!");
 
         // Auto-login after registration
         const res = await signIn("credentials", {

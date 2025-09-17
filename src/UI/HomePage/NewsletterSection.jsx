@@ -14,7 +14,7 @@ export default function NewsletterSection() {
     setMessage("");
 
     try {
-      const res = await axios.post("/api/newsletter", { email });
+      const res = await axios.post("/api/subscribers", { email });
       if (res.data?.success) {
         setMessage(" Subscribed successfully!");
         setEmail("");

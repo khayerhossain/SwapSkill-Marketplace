@@ -2,7 +2,6 @@ import React from "react";
 import WhyChooseUs from "@/UI/HomePage/WhyChooseUs";
 import FAQSection from "@/UI/HomePage/FAQSection";
 import ReviewsSection from "@/UI/HomePage/ReviewsSection";
-import SkillMarquee from "@/UI/HomePage/CurrentSkills";
 import PopularSkills from "@/UI/HomePage/PopularSkills";
 import AboutSection from "@/UI/HomePage/AboutSection";
 import HeroSection from "@/UI/HomePage/HeroSection";

@@ -51,7 +51,7 @@ export default function SubscribersPage() {
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">
-        Newsletter Subscribers
+        Newsletter <span className="bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">Subscribers</span> 
       </h1>
 
       {loading ? (
@@ -97,7 +97,9 @@ export default function SubscribersPage() {
                   <td className="p-3 text-center">
                     <button
                       onClick={() => handleRemove(sub._id)}
-                      className="px-4 py-1.5 text-sm rounded-md bg-red-500 text-white font-medium hover:bg-red-600 transition"
+                      className="cursor-pointer px-5 py-2 text-sm rounded-lg font-semibold text-white shadow-md 
+                      bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 
+                      transition transform hover:scale-105 hover:shadow-lg"
                     >
                       Remove
                     </button>

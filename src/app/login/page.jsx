@@ -1,19 +1,19 @@
 "use client";
 import Container from "@/components/shared/Container";
+import axiosInstance from "@/lib/axiosInstance";
 import { AnimatePresence, motion } from "framer-motion";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-
-import axiosInstance from "@/lib/axiosInstance";
-
+import loginImage from "../../assets/auth/login.gif";
+import registerImage from "../../assets/auth/register.gif";
 
 export default function LoginPage() {
   const [regform, setRegForm] = useState({ name: "", email: "", password: "" });
 
   const handleChangeReg = (e) => {
-   setRegForm({ ...regform, [e.target.name]: e.target.value });
+    setRegForm({ ...regform, [e.target.name]: e.target.value });
   };
 
   const handleSubmitReg = async (e) => {
@@ -155,9 +155,7 @@ export default function LoginPage() {
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.7, ease: [0.6, -0.05, 0.01, 0.99] }}
               className={`flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 ${
-                isToggled
-                  ? "bg-white"
-                  : "bg-gradient-to-r from-purple-600 to-indigo-600 bg-no-repeat bg-cover text-white"
+                isToggled ? "bg-white" : "bg-white"
               }`}
             >
               <AnimatePresence mode="wait">
@@ -213,10 +211,23 @@ export default function LoginPage() {
                       >
                         Login
                       </motion.button>
-                    </form> 
+                    </form>
                     {message && (
-          <p className="mt-4 text-center text-red-400 font-medium">{message}</p>
-        )}
+                      <p className="mt-4 text-center text-red-400 font-medium">
+                        {message}
+                      </p>
+                    )}
+                    <p className="text-black py-2 px-1">
+                      Don’t have an account? please
+                      <motion.button
+                        onClick={() => setIsToggled(false)}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="text-purple-600 underline font-bold ml-2 cursor-pointer"
+                      >
+                        Register
+                      </motion.button>
+                    </p>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -225,22 +236,13 @@ export default function LoginPage() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6"
+                    className="flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6 w-full h-full"
                   >
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
-                      Hello, Friend!
-                    </h1>
-                    <p className="text-sm sm:text-lg max-w-[80%] sm:max-w-xs">
-                      Sign up to embark on an exciting journey with us.
-                    </p>
-                    <motion.button
-                      onClick={() => setIsToggled(true)}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="px-4 sm:px-6 py-2 sm:py-3 bg-white text-purple-600 font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-300 text-sm sm:text-base"
-                    >
-                      Go to Login
-                    </motion.button>
+                    <img
+                      className="w-full h-full"
+                      src={loginImage.src}
+                      alt=""
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -252,9 +254,7 @@ export default function LoginPage() {
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.7, ease: [0.6, -0.05, 0.01, 0.99] }}
               className={`flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 ${
-                isToggled
-                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 bg-no-repeat bg-cover text-white"
-                  : "bg-white"
+                isToggled ? "bg-white" : "bg-white"
               }`}
             >
               <AnimatePresence mode="wait">
@@ -265,22 +265,13 @@ export default function LoginPage() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6"
+                    className="flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6 w-full h-full"
                   >
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
-                      Welcome Back!
-                    </h1>
-                    <p className="text-sm sm:text-lg max-w-[80%] sm:max-w-xs">
-                      New here? Create an account to join the adventure.
-                    </p>
-                    <motion.button
-                      onClick={() => setIsToggled(false)}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="px-4 sm:px-6 py-2 sm:py-3 bg-white text-purple-600 font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-300 text-sm sm:text-base"
-                    >
-                      Sign Up
-                    </motion.button>
+                    <img
+                      className="w-full h-full"
+                      src={registerImage.src}
+                      alt=""
+                    />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -350,8 +341,22 @@ export default function LoginPage() {
                       </motion.button>
                     </form>
                     {message && (
-          <p className="mt-4 text-center text-red-400 font-medium">{message}</p>
-        )}
+                      <p className="mt-4 text-center text-red-400 font-medium">
+                        {message}
+                      </p>
+                    )}
+
+                    <p className="text-black py-2 px-1">
+                      Already have an account? please
+                      <motion.button
+                        onClick={() => setIsToggled(true)}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="text-purple-600 underline font-bold ml-2 cursor-pointer"
+                      >
+                        Login
+                      </motion.button>
+                    </p>
                   </motion.div>
                 )}
               </AnimatePresence>

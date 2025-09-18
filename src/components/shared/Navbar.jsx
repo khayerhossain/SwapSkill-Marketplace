@@ -1,11 +1,11 @@
 "use client";
-import { useSession, signOut } from "next-auth/react";
-import Link from "next/link";
-import { usePathname } from "next/navigation"; 
-import React from "react";
-import Container from "./Container";
-import logo from "../../assets/logo.png"
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import logo from "../../assets/logo.png";
+import Container from "./Container";
+import ThemeToggle from "./ThemeToggle";
 
 export default function NavbarPage() {
   const { data: session } = useSession();
@@ -70,7 +70,7 @@ export default function NavbarPage() {
             </div>
             {/* Project Name */}
             <Link href="/" className="text-xl font-bold">
-              <Image src={logo} alt="logo" className="w-28 h-12"/>
+              <Image src={logo} alt="logo" className="w-28 h-12" />
             </Link>
           </div>
 
@@ -92,6 +92,7 @@ export default function NavbarPage() {
                 </li>
               ))}
             </ul>
+            <p> <ThemeToggle></ThemeToggle></p>
           </div>
 
           {/* Navbar End: Profile + Buttons */}

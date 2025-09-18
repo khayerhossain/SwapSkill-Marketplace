@@ -69,7 +69,7 @@ export default function NewsletterSection() {
                 </svg>
               </div>
 
-              <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-2">
+              <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-red-500 mb-2">
                 SUBSCRIBE<span className="text-red-500">.</span>
               </h1>
 

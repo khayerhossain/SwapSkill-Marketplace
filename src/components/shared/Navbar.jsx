@@ -58,8 +58,8 @@ export default function NavbarPage() {
                       href={link.path}
                       className={`${
                         pathname === link.path
-                          ? "font-semibold text-black border-2 border-black"
-                          : "font-semibold text-gray-600"
+                          ? "font-semibold text-base-content border-2 border-base-content"
+                          : "font-semibold text-base-content/70"
                       }`}
                     >
                       {link.name}
@@ -83,8 +83,8 @@ export default function NavbarPage() {
                     href={link.path}
                     className={`transition ${
                       pathname === link.path
-                        ? "font-semibold text-black underline border-black"
-                        : "font-semibold text-gray-600 hover:text-black"
+                        ? "font-semibold text-base-content underline border-base-content"
+                        : "font-semibold text-base-content/70 hover:text-base-content"
                     }`}
                   >
                     {link.name}
@@ -98,7 +98,7 @@ export default function NavbarPage() {
           {/* Navbar End: Profile + Buttons */}
           <div className="navbar-end flex items-center gap-2 px-0">
             {session?.user?.name && (
-              <div className="px-3 py-3 rounded-full bg-gray-200 text-black font-medium">
+              <div className="px-3 py-3 rounded-full bg-base-200 text-base-content font-medium">
                 {session.user.name}
               </div>
             )}

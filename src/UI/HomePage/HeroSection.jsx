@@ -43,7 +43,7 @@ const gradientVariants = {
 
 export default function HeroSection() {
   return (
-    <section className="relative bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 min-h-screen flex items-center overflow-hidden">
+    <section className="relative bg-base-100 min-h-screen flex items-center overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <motion.div
@@ -114,7 +114,7 @@ export default function HeroSection() {
               variants={textVariants}
               initial="hidden"
               animate="visible"
-              className="text-xl md:text-xl text-gray-600 leading-relaxed max-w-lg"
+              className="text-xl md:text-xl text-base-content/70 leading-relaxed max-w-lg"
             >
               A revolutionary platform where you{" "}
               <span className="font-semibold text-purple-600">
@@ -130,7 +130,7 @@ export default function HeroSection() {
               variants={textVariants}
               initial="hidden"
               animate="visible"
-              className="text-lg text-gray-500 max-w-lg"
+              className="text-lg text-base-content/60 max-w-lg"
             >
               Join thousands of learners and unlock endless opportunities to
               grow, connect, and monetize your expertise.
@@ -188,7 +188,7 @@ export default function HeroSection() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="group w-full sm:w-auto px-8 py-4 rounded-2xl border-2 border-gray-300 text-gray-700 font-semibold hover:border-purple-400 hover:text-purple-600 hover:bg-purple-50 transition-all duration-300 backdrop-blur-sm bg-white/70"
+                className="group w-full sm:w-auto px-8 py-4 rounded-2xl border-2 border-base-300 text-base-content/80 font-semibold hover:border-primary hover:text-primary hover:bg-primary/10 transition-all duration-300 backdrop-blur-sm bg-base-100/70"
               >
                 <span className="flex items-center justify-center gap-2">
                   Explore Now

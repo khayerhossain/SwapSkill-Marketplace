@@ -21,10 +21,25 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html data-theme="light" lang="en">
+    <html suppressHydrationWarning data-theme="light" lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-base-100 text-base-content`}
       >
+      {/* No-flash theme script: sets initial data-theme before hydration */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              try {
+                var stored = localStorage.getItem('theme');
+                var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var theme = stored === 'light' || stored === 'dark' ? stored : (stored === 'system' ? (systemDark ? 'dark' : 'light') : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+              } catch (e) {}
+            })();
+          `,
+        }}
+      />
       <ThemeProvider>
 
           <NextAuthSessionProvider>

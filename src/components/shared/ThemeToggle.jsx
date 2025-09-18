@@ -5,7 +5,9 @@ import { useContext } from "react";
 
 
 const ThemeToggle = () => {
-  const { isDark, setIsDark } = useContext(ThemeContext);
+  const { theme, setTheme, appliedTheme } = useContext(ThemeContext);
+
+  const isDark = appliedTheme === "dark";
 
   return (
     <label className="flex items-center gap-2 cursor-pointer">
@@ -13,9 +15,9 @@ const ThemeToggle = () => {
         type="checkbox"
         className="toggle"
         checked={isDark}
-        onChange={() => setIsDark(!isDark)}
+        onChange={() => setTheme(isDark ? "light" : "dark")}
       />
-      <span className={`${isDark ? "text-white" : "text-black"}`}>
+      <span className={`${isDark ? "text-white" : "text-base-content"}`}>
         {isDark ? "🌙 Dark" : "☀️ Light"}
       </span>
     </label>

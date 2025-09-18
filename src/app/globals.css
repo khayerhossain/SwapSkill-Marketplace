@@ -41,3 +41,18 @@ body {
   background: linear-gradient(to right, #7e22ce, #1d4ed8); /* darker on hover */
   transform: scale(1.03); /* slight zoom effect */
 }
+
+/* Dark mode overrides for legacy hardcoded classes */
+[data-theme="dark"] .bg-white { background-color: hsl(var(--b2)) !important; }
+[data-theme="dark"] .bg-gray-50 { background-color: hsl(var(--b2)) !important; }
+[data-theme="dark"] .bg-gray-100 { background-color: hsl(var(--b2)) !important; }
+[data-theme="dark"] .bg-gray-200 { background-color: hsl(var(--b3)) !important; }
+[data-theme="dark"] .border-gray-100 { border-color: hsl(var(--b3)) !important; }
+[data-theme="dark"] .border-gray-200 { border-color: hsl(var(--b3)) !important; }
+[data-theme="dark"] .border-gray-300 { border-color: hsl(var(--b3)) !important; }
+[data-theme="dark"] .text-black { color: hsl(var(--bc)) !important; }
+[data-theme="dark"] .text-gray-900 { color: hsl(var(--bc)) !important; }
+[data-theme="dark"] .text-gray-800 { color: hsl(var(--bc)) !important; }
+[data-theme="dark"] .text-gray-700 { color: color-mix(in oklab, hsl(var(--bc)) 85%, transparent) !important; }
+[data-theme="dark"] .text-gray-600 { color: color-mix(in oklab, hsl(var(--bc)) 70%, transparent) !important; }
+[data-theme="dark"] .text-gray-500 { color: color-mix(in oklab, hsl(var(--bc)) 55%, transparent) !important; }

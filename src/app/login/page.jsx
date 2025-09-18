@@ -143,7 +143,7 @@ export default function LoginPage() {
       <Container>
         <div className="flex min-h-screen items-center justify-center bg-no-repeat bg-cover text-white p-4 sm:p-6 md:p-8">
           <motion.div
-            className="relative w-full  md:h-[80vh]  flex flex-col md:flex-row overflow-hidden  shadow-lg md:border border-purple-600 bg-white"
+            className="relative w-full  md:h-[80vh]  flex flex-col md:flex-row overflow-hidden  shadow-lg md:border border-purple-600 bg-white "
             variants={containerVariants}
             initial="initial"
             animate="animate"

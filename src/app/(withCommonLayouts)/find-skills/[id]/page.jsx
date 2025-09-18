@@ -208,10 +208,10 @@ export default function SkillDetailsPage({ params }) {
                 <span className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium">
                   {skill.skillName}
                 </span>
-                {skill.tags.slice(0, 3).map((tag) => (
+                {(skill?.tags || []).map((tag) => (
                   <span
                     key={tag}
-                    className="bg-white/10 backdrop-blur-sm text-white px-3 py-2 rounded-full text-sm"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full font-medium transition-colors duration-200"
                   >
                     {tag}
                   </span>

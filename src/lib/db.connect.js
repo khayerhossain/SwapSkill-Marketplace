@@ -4,6 +4,7 @@ export const collectionNamesObj = {
   usersCollection: "users",
   skillsDirectoryCollection: 'skills-directory',
   newsLatterSubscribersCollection:"subscribers",
+  
 };
 
 const uri = process.env.MONGODB_URI;

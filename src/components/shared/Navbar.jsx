@@ -11,12 +11,15 @@ export default function NavbarPage() {
   const { data: session } = useSession();
   const pathname = usePathname(); // get current route
 
-  // List of nav links
+  // Landing page section links + Dashboard
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Find Skills", path: "/find-skills" },
-    { name: "Community", path: "/community" },
-    { name: "Projects", path: "/skillForm" },
+    { name: "About", path: "/#about" },
+    { name: "Why Choose Us", path: "/#why-choose-us" },
+    { name: "Skills", path: "/#current-skills" },
+    { name: "Reviews", path: "/#reviews" },
+    { name: "FAQ", path: "/#faq" },
+    { name: "Newsletter", path: "/#newsletter" },
     { name: "Dashboard", path: "/dashboard" },
   ];
 
@@ -24,7 +27,7 @@ export default function NavbarPage() {
     <div className="navbar bg-base-100 fixed top-0 left-0 w-full z-50 px-0">
       <Container>
         <div className="flex justify-between w-full items-center">
-          {/* Navbar Start: Project Name + Mobile Menu */}
+          {/* Navbar Start: Logo + Mobile Menu */}
           <div className="navbar-start flex items-center gap-4 px-0">
             <div className="dropdown">
               <div
@@ -56,6 +59,7 @@ export default function NavbarPage() {
                   <li key={link.path}>
                     <Link
                       href={link.path}
+                      scroll={true}
                       className={`${
                         pathname === link.path
                           ? "font-semibold text-base-content border-2 border-base-content"
@@ -68,7 +72,7 @@ export default function NavbarPage() {
                 ))}
               </ul>
             </div>
-            {/* Project Name */}
+            {/* Logo */}
             <Link href="/" className="text-xl font-bold">
               <Image src={logo} alt="logo" className="w-28 h-12" />
             </Link>
@@ -81,6 +85,7 @@ export default function NavbarPage() {
                 <li key={link.path}>
                   <Link
                     href={link.path}
+                    scroll={true}
                     className={`transition ${
                       pathname === link.path
                         ? "font-semibold text-base-content underline border-base-content"
@@ -92,10 +97,12 @@ export default function NavbarPage() {
                 </li>
               ))}
             </ul>
-            <p> <ThemeToggle></ThemeToggle></p>
+            <p>
+              <ThemeToggle />
+            </p>
           </div>
 
-          {/* Navbar End: Profile + Buttons */}
+          {/* Navbar End: Profile + Auth */}
           <div className="navbar-end flex items-center gap-2 px-0">
             {session?.user?.name && (
               <div className="px-3 py-3 rounded-full bg-base-200 text-base-content font-medium">

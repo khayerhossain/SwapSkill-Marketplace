@@ -58,7 +58,7 @@ export default function SkillsPage() {
   return (
     <section>
       <Container>
-        <div className="mx-auto pt-24 px-4">
+        <div className="mx-auto px-4">
           {/* Title + Description + Search + Sorting */}
           <div className="flex flex-col mb-6">
             {/* Left section */}
@@ -117,7 +117,7 @@ export default function SkillsPage() {
           )}
 
           {/* Cards */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
             {skills.map((skill) => (
               <div
                 key={skill._id}
@@ -183,7 +183,7 @@ export default function SkillsPage() {
                     <MessageSquare size={16} /> Message
                   </button>
                   <Link
-                    href={`/find-skills/${skill._id}`}
+                    href={`/appBar/find-skills/${skill._id}`}
                     className="flex items-center justify-center gap-2 w-1/2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow cursor-pointer"
                   >
                     <Eye size={16} /> See Details

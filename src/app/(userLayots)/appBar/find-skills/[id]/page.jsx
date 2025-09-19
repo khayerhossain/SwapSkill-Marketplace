@@ -1,6 +1,8 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import axiosInstance from "@/lib/axiosInstance";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { FaFacebook } from "react-icons/fa";
 
 function Calendar() {
@@ -142,16 +144,17 @@ function Calendar() {
   );
 }
 
-export default function SkillDetailsPage({ params }) {
-  const { id } = use(params);
+export default function SkillDetailsPage() {
+  const params = useParams();
+  const id = params?.id;
   const [skill, setSkill] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSkill = async () => {
       try {
-        const res = await fetch(`/api/find-skills/${id}`);
-        const data = await res.json();
+        if (!id) return;
+        const { data } = await axiosInstance.get(`/find-skills/${id}`);
         setSkill(data);
       } catch (err) {
         console.error(err);

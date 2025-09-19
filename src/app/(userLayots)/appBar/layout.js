@@ -1,0 +1,99 @@
+"use client";
+
+import Link from "next/link";
+import Sidebar from "@/components/shared/SideBar";
+import { useState } from "react";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { signOut, useSession } from "next-auth/react";
+import { FiLogOut } from "react-icons/fi";
+import { IoMdClose, IoMdMenu } from "react-icons/io";
+
+export default function AppBarLayout({ children }) {
+  const [collapsed, setCollapsed] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
+  return (
+    <div className="min-h-screen bg-base-100 text-base-content">
+      <div className="flex">
+        {/* Large Screen Sidebar - flush left */}
+        <div className={`hidden md:block ${collapsed ? "w-[6rem]" : "w-[20%]"} bg-base-200 text-base-content border-r border-base-300`}>
+          <div className="p-4 flex items-center justify-between">
+            <span className="font-semibold">Menu</span>
+            <button
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              className="btn btn-ghost btn-xs"
+              onClick={() => setCollapsed(!collapsed)}
+            >
+              {collapsed ? <IoIosArrowForward /> : <IoIosArrowBack />}
+            </button>
+          </div>
+          <Sidebar useAppBarPaths collapsed={collapsed} />
+        </div>
+
+        {/* Main Content */}
+        <div className="w-full md:w-[80%] md:ml-8">
+          <header className="flex items-center justify-between p-4 border-b border-base-300">
+            <div className="flex items-center gap-3">
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsOpen(true)}
+                className="p-2 text-2xl text-base-content bg-base-200 rounded-md md:hidden"
+                aria-label="Open Menu"
+              >
+                <IoMdMenu />
+              </button>
+              <h1 className="text-xl font-bold">App Bar</h1>
+            </div>
+            <div className="flex items-center gap-3">
+              {session?.user && (
+                <Link href="/dashboard" className="btn btn-ghost btn-sm">Profile</Link>
+              )}
+              {session?.user && (
+                <button
+                  aria-label="Logout"
+                  onClick={() => signOut()}
+                  className="btn btn-ghost btn-sm text-error"
+                  title="Logout"
+                >
+                  <FiLogOut />
+                </button>
+              )}
+            </div>
+          </header>
+          <main className="w-full">{children}</main>
+        </div>
+      </div>
+
+      {/* Drawer for Mobile */}
+      {isOpen && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-base-content/50 z-40"
+            onClick={() => setIsOpen(false)}
+          ></div>
+
+          {/* Sidebar Drawer */}
+          <div
+            className={`fixed top-0 left-0 h-full w-72 bg-base-200 text-base-content shadow-lg transform transition-transform duration-300 z-50
+              ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+          >
+            <div className="flex justify-between items-center p-4 border-b border-base-300">
+              <h1 className="text-xl font-bold">Menu</h1>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-2xl text-base-content"
+                aria-label="Close Menu"
+              >
+                <IoMdClose />
+              </button>
+            </div>
+            <Sidebar useAppBarPaths collapsed={false} onClick={() => setIsOpen(false)} />
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+

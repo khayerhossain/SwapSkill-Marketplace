@@ -2,30 +2,56 @@
 
 import Sidebar from "@/components/shared/SideBar";
 import { useState } from "react";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { IoMdClose, IoMdMenu } from "react-icons/io";
+import { signOut, useSession } from "next-auth/react";
+import { FiLogOut } from "react-icons/fi";
 
 export default function DashboardLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const { data: session } = useSession();
 
   return (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-base-100 text-base-content">
         <div className="flex">
           {/* Large Screen Sidebar */}
-          <div className="hidden md:block w-[20%] bg-gray-800 text-white">
-            <div className="p-4 border-b border-gray-700">
+          <div className={`hidden md:block ${collapsed ? "w-[6rem]" : "w-[20%]"} bg-base-200 text-base-content`}>
+            <div className="p-4 border-b border-base-300 flex items-center justify-between">
               <h1 className="text-xl font-bold">Dashboard</h1>
+              <button
+                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                className="btn btn-ghost btn-xs"
+                onClick={() => setCollapsed(!collapsed)}
+              >
+                {collapsed ? <IoIosArrowForward /> : <IoIosArrowBack />}
+              </button>
             </div>
-            <Sidebar />
+            <Sidebar collapsed={collapsed} />
           </div>
 
           {/* Main Content */}
-          <div className="w-full md:w-[80%] md:ml-8">{children}</div>
+          <div className="w-full md:w-[80%] md:ml-8">
+            <div className="flex items-center justify-end gap-3 p-4 border-b border-base-300">
+              {session?.user && (
+                <button
+                  aria-label="Logout"
+                  onClick={() => signOut()}
+                  className="btn btn-ghost btn-sm text-error"
+                  title="Logout"
+                >
+                  <FiLogOut />
+                </button>
+              )}
+            </div>
+            {children}
+          </div>
         </div>
 
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed top-4 left-4 p-3 text-2xl text-white bg-gray-800 rounded-md md:hidden z-50"
+          className="fixed top-4 left-4 p-3 text-2xl text-base-content bg-base-200 rounded-md md:hidden z-50"
         >
           <IoMdMenu />
         </button>
@@ -35,25 +61,25 @@ export default function DashboardLayout({ children }) {
           <>
             {/* Overlay */}
             <div
-              className="fixed inset-0 bg-black bg-opacity-50 z-40"
+              className="fixed inset-0 bg-base-content/50 z-40"
               onClick={() => setIsOpen(false)}
             ></div>
 
             {/* Sidebar Drawer */}
             <div
-              className={`fixed top-0 left-0 h-full w-72 bg-gray-900 text-white shadow-lg transform transition-transform duration-300 z-50
+              className={`fixed top-0 left-0 h-full w-72 bg-base-200 text-base-content shadow-lg transform transition-transform duration-300 z-50
               ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
             >
-              <div className="flex justify-between items-center p-4 border-b border-gray-700">
+              <div className="flex justify-between items-center p-4 border-b border-base-300">
                 <h1 className="text-xl font-bold">Dashboard</h1>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-2xl text-white"
+                  className="text-2xl text-base-content"
                 >
                   <IoMdClose />
                 </button>
               </div>
-              <Sidebar onClick={() => setIsOpen(false)} />
+              <Sidebar collapsed={false} onClick={() => setIsOpen(false)} />
             </div>
           </>
         )}

@@ -33,7 +33,7 @@ export default function LoginPage() {
         });
         if (res?.ok) {
           toast.success("Logged in successfully");
-          window.location.href = "/";
+          window.location.href = "/appBar";
         } else toast.error("Auto login failed!");
       } else toast.error(data.error || "Something went wrong!");
     } catch (err) {
@@ -55,7 +55,7 @@ export default function LoginPage() {
       if (result?.error) toast.error("Invalid credentials");
       else {
         toast.success("Logged in successfully");
-        router.replace("/");
+        router.replace("/appBar");
       }
     } catch (err) {
       setMessage(err.response?.data?.message || "Something went wrong");

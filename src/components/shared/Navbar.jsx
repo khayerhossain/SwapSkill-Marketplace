@@ -119,11 +119,11 @@ export default function NavbarPage() {
               </button>
             ) : (
               <>
-                <Link href="/login" className="btn">
+                <Link href="/login" className="btn bg-gray-800 rounded-lg text-white">
                   Login
                 </Link>
-                <Link href="/register" className="btn">
-                  Register
+                <Link href="/register" className="btn bg-red-500 text-white rounded-lg">
+                  Sign Up
                 </Link>
               </>
             )}

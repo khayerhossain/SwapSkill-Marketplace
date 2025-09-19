@@ -15,8 +15,8 @@ export default function AppBarLayout({ children }) {
   return (
     <div className="min-h-screen bg-base-100 text-base-content">
       <div className="flex">
-        {/* Large Screen Sidebar - flush left */}
-        <div className={`hidden md:block ${collapsed ? "w-[6rem]" : "w-[20%]"} bg-base-200 text-base-content border-r border-base-300`}>
+        {/* Large Screen Sidebar - Fixed Position */}
+        <div className={`hidden md:block fixed left-0 top-0 h-screen z-30 ${collapsed ? "w-[6rem]" : "w-[20%]"} bg-base-200 text-base-content border-r border-base-300`}>
           <div className="p-4 flex items-center justify-between">
             <span className="font-semibold">Menu</span>
             <button
@@ -27,11 +27,11 @@ export default function AppBarLayout({ children }) {
               {collapsed ? <IoIosArrowForward /> : <IoIosArrowBack />}
             </button>
           </div>
-          <Sidebar useAppBarPaths collapsed={collapsed} />
+          <Sidebar useAppBarPaths collapsed={collapsed} isDashboard={false} />
         </div>
 
         {/* Main Content */}
-        <div className="w-full md:w-[80%] md:ml-8">
+        <div className={`w-full ${collapsed ? "md:ml-[6rem]" : "md:ml-[20%]"}`}>
           <header className="flex items-center justify-between p-4 border-b border-base-300">
             <div className="flex items-center gap-3">
               {/* Mobile Menu Button */}

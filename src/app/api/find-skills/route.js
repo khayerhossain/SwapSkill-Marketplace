@@ -9,18 +9,28 @@ export async function GET(request) {
     const limit = parseInt(url.searchParams.get("limit")) || 10;
     const sortParam = url.searchParams.get("sort") || "newest";
 
-    const collection = await dbConnect(collectionNamesObj.skillsDirectoryCollection);
+    const collection = await dbConnect(
+      collectionNamesObj.skillsDirectoryCollection
+    );
 
-    // Build query: search in skillName, category, or tags
-    const query = search
-      ? {
-          $or: [
-            { skillName: { $regex: search, $options: "i" } },
-            { category: { $regex: search, $options: "i" } },
-            { tags: { $regex: search, $options: "i" } },
-          ],
-        }
-      : {};
+    // Base query: must be verified
+    let query = { verification: true };
+
+    // If search query exists, merge it with verification condition
+    if (search) {
+      query = {
+        $and: [
+          { verification: true },
+          {
+            $or: [
+              { skillName: { $regex: search, $options: "i" } },
+              { category: { $regex: search, $options: "i" } },
+              { tags: { $regex: search, $options: "i" } },
+            ],
+          },
+        ],
+      };
+    }
 
     // Sorting
     const sort = sortParam === "oldest" ? { createdAt: 1 } : { createdAt: -1 };
@@ -36,34 +46,44 @@ export async function GET(request) {
       .toArray();
 
     return new Response(
-      JSON.stringify({ skills, total, page, totalPages: Math.ceil(total / limit) }),
+      JSON.stringify({
+        skills,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+      }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
 
 export async function POST(request) {
   try {
     const body = await request.json(); // form থেকে আসা data
-    const collection = await dbConnect(collectionNamesObj.skillsDirectoryCollection);
+    const collection = await dbConnect(
+      collectionNamesObj.skillsDirectoryCollection
+    );
 
     // createdAt auto add হবে
-    const newSkill = { 
-      ...body, 
-      createdAt: new Date() 
+    const newSkill = {
+      ...body,
+      createdAt: new Date(),
     };
 
     const result = await collection.insertOne(newSkill);
 
-    return new Response(JSON.stringify({ success: true, id: result.insertedId }), {
-      status: 201,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ success: true, id: result.insertedId }),
+      {
+        status: 201,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,

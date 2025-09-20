@@ -2,7 +2,7 @@
 
 import { ThemeContext } from "@/context/ThemeProvider";
 import { useContext } from "react";
-
+import { Sun, Moon } from "lucide-react";
 
 const ThemeToggle = () => {
   const { theme, setTheme, appliedTheme } = useContext(ThemeContext);
@@ -17,8 +17,12 @@ const ThemeToggle = () => {
         checked={isDark}
         onChange={() => setTheme(isDark ? "light" : "dark")}
       />
-      <span className={`${isDark ? "text-white" : "text-base-content"}`}>
-        {isDark ? "🌙 Dark" : "☀️ Light"}
+      <span>
+        {isDark ? (
+          <Moon className="w-5 h-5 text-white" />
+        ) : (
+          <Sun className="w-5 h-5 text-yellow-500" />
+        )}
       </span>
     </label>
   );

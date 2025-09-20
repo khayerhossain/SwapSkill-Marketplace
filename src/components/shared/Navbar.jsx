@@ -26,6 +26,7 @@ export default function NavbarPage() {
     // { name: "FAQ", path: "/#faq" },
     // { name: "Newsletter", path: "/#newsletter" },
     { name: "Dashboard", path: "/dashboard" },
+    { name: "Pricing", path: "/pricing" },
     { name: "Quiz", path: "/quiz" },
     { name: "Test", path: "/test-categories" },
    
@@ -81,12 +82,13 @@ export default function NavbarPage() {
               </ul>
             </div>
             {/* Logo */}
-            <Link href="/" className="text-xl font-bold">
+            <Link href="/" className="text-xl font-bold flex">
               <Image
                 src={logo}
                 alt="logo"
-                className={`w-28 h-12 ${theme ==='light' ? '' : "filter invert brightness-0"} `}
+                className={`w-12 h-8 ${theme ==='light' ? '' : ""} `}
               />
+              <h1 className="font-light">SwapSkill</h1>
             </Link>
           </div>
 
@@ -125,7 +127,7 @@ export default function NavbarPage() {
             {session ? (
               <button
                 onClick={() => signOut()}
-                className="btn bg-red-500 text-white rounded-2xl"
+                className="btn bg-red-500 text-white rounded-lg"
               >
                 Logout
               </button>

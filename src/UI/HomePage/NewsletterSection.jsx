@@ -36,7 +36,7 @@ export default function NewsletterSection() {
       <Container>
         <div
           className={`relative w-ful rounded-3xl shadow-2xl overflow-hidden ${
-            theme === "light" ? "" : " shadow-red-500"
+            theme === "light" ? "" : " "
           }`}
         >
           <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-b from-red-600 to-red-500" />
@@ -76,11 +76,11 @@ export default function NewsletterSection() {
               </div>
 
               <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-red-500 mb-2">
-                SU
+                SUBS
                 <span
                   className={`${theme === "light" ? "text-red" : "text-white"}`}
                 >
-                  BSCRIBE
+                  CRIBE
                 </span>
                 <span className="text-red-500">.</span>
               </h1>

@@ -4,7 +4,7 @@ import Container from "./Container";
 
 export default function FooterPage() {
   return (
-    <footer className="bg-neutral text-neutral-content py-10 mt-10
+    <footer className="bg-neutral text-neutral-content py-16 mt-10
   ">
       <Container>
         <div className="footer sm:footer-horizontal">

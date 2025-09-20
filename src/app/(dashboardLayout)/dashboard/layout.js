@@ -6,6 +6,8 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { IoMdClose, IoMdMenu } from "react-icons/io";
 import { signOut, useSession } from "next-auth/react";
 import { FiLogOut } from "react-icons/fi";
+import Link from "next/link";
+import NotificationDropdown from "@/components/shared/NotificationDropdown";
 
 export default function DashboardLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,6 +35,12 @@ export default function DashboardLayout({ children }) {
           {/* Main Content */}
           <div className={`w-full ${collapsed ? "md:ml-[6rem]" : "md:ml-[20%]"}`}>
             <div className="flex items-center justify-end gap-3 p-4 border-b border-base-300">
+              {session?.user && <NotificationDropdown />}
+              {session?.user && (
+                <Link href="/dashboard/profile" className="px-3 py-2 rounded-full bg-base-200 text-base-content font-medium">
+                  {session.user.name || "Profile"}
+                </Link>
+              )}
               {session?.user && (
                 <button
                   aria-label="Logout"

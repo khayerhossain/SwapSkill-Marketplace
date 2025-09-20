@@ -7,6 +7,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { signOut, useSession } from "next-auth/react";
 import { FiLogOut } from "react-icons/fi";
 import { IoMdClose, IoMdMenu } from "react-icons/io";
+import NotificationDropdown from "@/components/shared/NotificationDropdown";
 
 export default function AppBarLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -45,8 +46,11 @@ export default function AppBarLayout({ children }) {
               <h1 className="text-xl font-bold">App Bar</h1>
             </div>
             <div className="flex items-center gap-3">
+              {session?.user && <NotificationDropdown />}
               {session?.user && (
-                <Link href="/dashboard" className="btn btn-ghost btn-sm">Profile</Link>
+                <Link href="/dashboard/profile" className="px-3 py-2 rounded-full bg-base-200 text-base-content font-medium">
+                  {session.user.name || "Profile"}
+                </Link>
               )}
               {session?.user && (
                 <button

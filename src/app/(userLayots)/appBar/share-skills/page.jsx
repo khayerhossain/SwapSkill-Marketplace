@@ -1,32 +1,59 @@
 "use client";
 import { useState } from "react";
 import Swal from "sweetalert2";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 export default function SkillForm() {
   const [formData, setFormData] = useState({
     userName: "",
+    age: "",
+    gender: "",
+    homeTown: "",
+    studyOrWorking: "",
+    userImage: "",
     category: "",
     description: "",
-    skills: "",
     experience: "",
     availability: "",
+    availabilityType: "",
     location: "",
-    rating: "",
-    imageUrl: "",
-    gender: "",
-    studyOrWorking: "",
+    timeZone: "",
+    skillsToTeach: "",
+    skillsToLearn: "",
+    swapPreference: "",
+    portfolioLink: "",
+    languages: "",
+    tags: "",
+    responseTime: "",
+    email: "",
+    phone: "",
+    facebook: "",
+    instagram: "",
+    twitter: "",
   });
 
+  const [imagePreview, setImagePreview] = useState(null);
   const router = useRouter();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setFormData({ ...formData, userImage: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const res = await fetch("/api/skills", {
         method: "POST",
@@ -35,26 +62,21 @@ export default function SkillForm() {
       });
 
       const data = await res.json();
-      
+
       if (res.ok && data.success) {
-        const newProfileId = data.profileId || data.insertedId;
-        
-        // User ID - Get from your authentication system
-        const userId = "current-user-id"; // Replace with actual user ID
-        
         Swal.fire({
           title: "Do you want to start the Quiz?",
           text: "Choose your option!",
           icon: "warning",
           showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
+          confirmButtonColor: "#000",
+          cancelButtonColor: "#555",
           confirmButtonText: "Yes, go to Quiz!",
           cancelButtonText: "No, go to Find Page",
         }).then((result) => {
           if (result.isConfirmed) {
-            router.push(`/quiz?profileId=${newProfileId}&userId=${userId}&category=${encodeURIComponent(formData.category)}&showPopup=true`);
-          } else if (result.isDismissed) {
+            router.push(`/quiz?profileId=${data.insertedId}`);
+          } else {
             router.push("/find-skills");
           }
         });
@@ -65,226 +87,295 @@ export default function SkillForm() {
       console.error("Submission error:", error);
       Swal.fire("Error!", "Submission failed.", "error");
     }
-
-    setFormData({
-      userName: "",
-      category: "",
-      description: "",
-      skills: "",
-      experience: "",
-      availability: "",
-      location: "",
-      rating: "",
-      gender: "",
-      imageUrl: "",
-      studyOrWorking: "",
-    });
   };
 
   return (
-    <section className="max-w-2xl mx-auto bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl shadow-2xl border border-orange-200">
-      <h2 className="text-3xl font-extrabold mb-6 text-orange-600 text-center tracking-wide">
-        Add Your Skill
+    <section className="max-w-6xl mx-auto bg-white p-10 rounded-xl shadow-xl border border-gray-200">
+      {/* Title Left */}
+      <h2 className="text-3xl font-bold mb-8 text-gray-800 text-left">
+        Share Your Skills
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Name */}
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold text-gray-700 mb-2">
-            Your Name
-          </label>
-          <input
-            type="text"
-            name="userName"
-            placeholder="Your Name"
-            value={formData.userName}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          />
+
+      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
+        {/* User Name */}
+        <input
+          type="text"
+          name="userName"
+          placeholder="Full Name"
+          value={formData.userName}
+          onChange={handleChange}
+          className="col-span-1 p-3 border border-gray-400 rounded-lg"
+          required
+        />
+
+        {/* Age */}
+        <input
+          type="number"
+          name="age"
+          placeholder="Age"
+          value={formData.age}
+          onChange={handleChange}
+          className="col-span-1 p-3 border border-gray-400 rounded-lg"
+        />
+
+        {/* Gender */}
+        <select
+          name="gender"
+          value={formData.gender}
+          onChange={handleChange}
+          className="col-span-1 p-3 border border-gray-400 rounded-lg"
+        >
+          <option value="">Select Gender</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+
+        {/* Home Town */}
+        <input
+          type="text"
+          name="homeTown"
+          placeholder="Home Town"
+          value={formData.homeTown}
+          onChange={handleChange}
+          className="col-span-1 p-3 border border-gray-400 rounded-lg"
+        />
+
+        {/* Study/Working */}
+        <input
+          type="text"
+          name="studyOrWorking"
+          placeholder="Study or Working"
+          value={formData.studyOrWorking}
+          onChange={handleChange}
+          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+        />
+
+        {/* Image (20%) + Description (80%) */}
+        <div className="col-span-2 grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
+          {/* Image Upload */}
+          <div className="md:col-span-1 flex flex-col items-center border-2 border-dashed border-gray-400 p-4 rounded-lg">
+            {imagePreview ? (
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="h-32 w-32 object-cover rounded-lg mb-2"
+              />
+            ) : (
+              <div className="h-32 w-32 flex items-center justify-center border border-gray-300 rounded-lg mb-2">
+                <span className="text-gray-500 text-xs text-center">
+                  Upload
+                </span>
+              </div>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
+              id="fileUpload"
+            />
+            <label
+              htmlFor="fileUpload"
+              className="px-3 py-1 bg-black text-white text-sm rounded-lg cursor-pointer hover:bg-gray-800"
+            >
+              Choose
+            </label>
+          </div>
+
+          {/* Description */}
+          <div className="md:col-span-4">
+            <textarea
+              name="description"
+              placeholder="Description"
+              value={formData.description}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-400 rounded-lg h-32 lg:h-[200px] resize-none"
+            />
+          </div>
         </div>
 
         {/* Category */}
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold text-gray-700 mb-2">
-            Category
-          </label>
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          >
-            <option value="">Select category</option>
-            <option value="Programming">Programming</option>
-            <option value="Design">Design</option>
-            <option value="Marketing">Marketing</option>
-            <option value="UI/UX">UI/UX</option>
-          </select>
-        </div>
+        <input
+          type="text"
+          name="category"
+          placeholder="Skill Category"
+          value={formData.category}
+          onChange={handleChange}
+          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+        />
 
-        {/* Study Or Working */}
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold text-gray-700 mb-2">
-            Study Or Working
-          </label>
-          <input
-            type="text"
-            name="studyOrWorking"
-            placeholder="Study Or Working"
-            value={formData.studyOrWorking}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          />
-        </div>
+        {/* Skills To Teach */}
+        <input
+          type="text"
+          name="skillsToTeach"
+          placeholder="Skills to Teach (comma separated)"
+          value={formData.skillsToTeach}
+          onChange={handleChange}
+          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+        />
 
-        {/* Description */}
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold text-gray-700 mb-2">
-            Description
-          </label>
-          <textarea
-            name="description"
-            placeholder="Short Description"
-            value={formData.description}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition resize-none h-24"
-            required
-          />
-        </div>
-
-        {/* Gender */}
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold text-gray-700 mb-2">
-            Gender
-          </label>
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          >
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-
-        {/* Rating */}
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold text-gray-700 mb-2">
-            Rating
-          </label>
-          <select
-            name="rating"
-            value={formData.rating}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          >
-            <option value="">Select Rating</option>
-            <option value="1">1 Star</option>
-            <option value="2">2 Stars</option>
-            <option value="3">3 Stars</option>
-            <option value="4">4 Stars</option>
-            <option value="5">5 Stars</option>
-          </select>
-        </div>
-
-        {/* Skills */}
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold text-gray-700 mb-2">
-            Skills
-          </label>
-          <input
-            type="text"
-            name="skills"
-            placeholder="Your Skills (comma separated)"
-            value={formData.skills}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          />
-        </div>
+        {/* Skills To Learn */}
+        <input
+          type="text"
+          name="skillsToLearn"
+          placeholder="Skills to Learn (comma separated)"
+          value={formData.skillsToLearn}
+          onChange={handleChange}
+          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+        />
 
         {/* Experience */}
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold text-gray-700 mb-2">
-            Experience
-          </label>
-          <select
-            name="experience"
-            value={formData.experience}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          >
-            <option value="">Select Experience</option>
-            <option value="Fresher">Fresher</option>
-            <option value="1 Year">1-2 Years</option>
-            <option value="2 Years">3-4 Years</option>
-            <option value="3 Years">5+ Years</option>
-          </select>
-        </div>
+        <input
+          type="text"
+          name="experience"
+          placeholder="Experience (e.g. 2 years)"
+          value={formData.experience}
+          onChange={handleChange}
+          className="col-span-1 p-3 border border-gray-400 rounded-lg"
+        />
 
         {/* Availability */}
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold text-gray-700 mb-2">
-            Availability
-          </label>
-          <select
-            name="availability"
-            value={formData.availability}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          >
-            <option value="">Select Availability</option>
-            <option value="weekends(sat-sun)">Weekends (Sat-Sun)</option>
-            <option value="weekends(sun-wed)">Weekends (Sun-Wed)</option>
-            <option value="weekends(fri-mon)">Weekends (Fri-Mon)</option>
-            <option value="weekends(thu-sun)">Weekends (Thu-Sun)</option>
-          </select>
-        </div>
+        <input
+          type="text"
+          name="availability"
+          placeholder="Availability (e.g. Weekends)"
+          value={formData.availability}
+          onChange={handleChange}
+          className="col-span-1 p-3 border border-gray-400 rounded-lg"
+        />
+
+        {/* Availability Type */}
+        <select
+          name="availabilityType"
+          value={formData.availabilityType}
+          onChange={handleChange}
+          className="col-span-1 p-3 border border-gray-400 rounded-lg"
+        >
+          <option value="">Select Availability Type</option>
+          <option>Online</option>
+          <option>Offline</option>
+          <option>Hybrid</option>
+        </select>
 
         {/* Location */}
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold text-gray-700 mb-2">
-            Location
-          </label>
-          <input
-            type="text"
-            name="location"
-            placeholder="Location"
-            value={formData.location}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          />
-        </div>
+        <input
+          type="text"
+          name="location"
+          placeholder="Location"
+          value={formData.location}
+          onChange={handleChange}
+          className="col-span-1 p-3 border border-gray-400 rounded-lg"
+        />
 
-        {/* Image URL */}
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold text-gray-700 mb-2">
-            Image Url (optional)
-          </label>
-          <input
-            type="text"
-            name="imageUrl"
-            placeholder="Enter image URL or leave blank"
-            value={formData.imageUrl}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-          />
-        </div>
+        {/* Time Zone */}
+        <input
+          type="text"
+          name="timeZone"
+          placeholder="Time Zone (e.g. Asia/Dhaka)"
+          value={formData.timeZone}
+          onChange={handleChange}
+          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+        />
 
-        {/* Submit Button */}
+        {/* Swap Preference */}
+        <input
+          type="text"
+          name="swapPreference"
+          placeholder="Swap Preference"
+          value={formData.swapPreference}
+          onChange={handleChange}
+          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+        />
+
+        {/* Portfolio Link */}
+        <input
+          type="text"
+          name="portfolioLink"
+          placeholder="Portfolio Link"
+          value={formData.portfolioLink}
+          onChange={handleChange}
+          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+        />
+
+        {/* Languages */}
+        <input
+          type="text"
+          name="languages"
+          placeholder="Languages (comma separated)"
+          value={formData.languages}
+          onChange={handleChange}
+          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+        />
+
+        {/* Tags */}
+        <input
+          type="text"
+          name="tags"
+          placeholder="Tags (comma separated)"
+          value={formData.tags}
+          onChange={handleChange}
+          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+        />
+
+        {/* Response Time */}
+        <input
+          type="text"
+          name="responseTime"
+          placeholder="Response Time (e.g. Within 24 hours)"
+          value={formData.responseTime}
+          onChange={handleChange}
+          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+        />
+
+        {/* Contact Info */}
+        <input
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          value={formData.email}
+          onChange={handleChange}
+          className="col-span-1 p-3 border border-gray-400 rounded-lg"
+        />
+        <input
+          type="text"
+          name="phone"
+          placeholder="Phone Number"
+          value={formData.phone}
+          onChange={handleChange}
+          className="col-span-1 p-3 border border-gray-400 rounded-lg"
+        />
+
+        {/* Social Media */}
+        <input
+          type="text"
+          name="facebook"
+          placeholder="Facebook Link"
+          value={formData.facebook}
+          onChange={handleChange}
+          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+        />
+        <input
+          type="text"
+          name="instagram"
+          placeholder="Instagram Link"
+          value={formData.instagram}
+          onChange={handleChange}
+          className="col-span-1 p-3 border border-gray-400 rounded-lg"
+        />
+        <input
+          type="text"
+          name="twitter"
+          placeholder="Twitter Link"
+          value={formData.twitter}
+          onChange={handleChange}
+          className="col-span-1 p-3 border border-gray-400 rounded-lg"
+        />
+
+        {/* Submit */}
         <button
           type="submit"
-          className="w-full py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-xl shadow-lg hover:scale-105 transform transition"
+          className="col-span-2 py-3 bg-black text-white font-bold rounded-lg hover:bg-gray-800 transition"
         >
           Submit
         </button>

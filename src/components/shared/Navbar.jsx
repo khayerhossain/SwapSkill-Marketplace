@@ -26,6 +26,9 @@ export default function NavbarPage() {
     { name: "FAQ", path: "/#faq" },
     { name: "Newsletter", path: "/#newsletter" },
     { name: "Dashboard", path: "/dashboard" },
+    { name: "Quiz", path: "/quiz" },
+    { name: "Test", path: "/test-categories" },
+   
   ];
 
   return (

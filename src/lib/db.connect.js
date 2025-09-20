@@ -4,6 +4,7 @@ export const collectionNamesObj = {
   usersCollection: "users",
   skillsDirectoryCollection: "skills-directory",
   newsLatterSubscribersCollection: "subscribers",
+  testQNACollection: "test-qna" // All quiz data will be in this collection
 };
 
 const uri = process.env.MONGODB_URI;

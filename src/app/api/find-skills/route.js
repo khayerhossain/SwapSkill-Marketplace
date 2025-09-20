@@ -46,3 +46,28 @@ export async function GET(request) {
     );
   }
 }
+
+export async function POST(request) {
+  try {
+    const body = await request.json(); // form থেকে আসা data
+    const collection = await dbConnect(collectionNamesObj.skillsDirectoryCollection);
+
+    // createdAt auto add হবে
+    const newSkill = { 
+      ...body, 
+      createdAt: new Date() 
+    };
+
+    const result = await collection.insertOne(newSkill);
+
+    return new Response(JSON.stringify({ success: true, id: result.insertedId }), {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}

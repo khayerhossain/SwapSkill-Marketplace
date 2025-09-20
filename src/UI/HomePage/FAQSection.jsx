@@ -1,9 +1,9 @@
 "use client";
 import Container from "@/components/shared/Container";
-import { useState } from "react";
-import { FaRegCircle } from "react-icons/fa";
+import { ThemeContext } from "@/context/ThemeProvider";
 import { AnimatePresence, motion } from "framer-motion";
-import { FaChevronDown } from "react-icons/fa";
+import { use, useState } from "react";
+import { FaChevronDown, FaRegCircle } from "react-icons/fa";
 
 const faqs = [
   {
@@ -31,6 +31,9 @@ const faqs = [
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(0);
 
+  const { theme } = use(ThemeContext);
+  console.log("dark mood light mood", theme);
+
   return (
     <Container>
       <section className="py-12 bg-white">
@@ -54,11 +57,25 @@ export default function FAQSection() {
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl shadow-md p-6">
-                <h2 className="font-semibold text-gray-900 mb-2">
+              <div
+                className={`${
+                  theme === "light"
+                    ? "bg-gradient-to-br from-purple-100 to-purple-200"
+                    : " border"
+                } rounded-xl shadow-md p-6`}
+              >
+                <h2
+                  className={`font-semibold ${
+                    theme === "light" ? "text-gray-900" : "text-black"
+                  } mb-2`}
+                >
                   Still have questions?
                 </h2>
-                <p className="text-gray-600 mb-4 max-w-sm text-sm">
+                <p
+                  className={` ${
+                    theme === "light" ? "text-gray-600" : "text-black"
+                  } mb-4 max-w-sm text-sm`}
+                >
                   If you can&apos;t find the answer you&apos;re looking for, our
                   support team is ready to assist you.
                 </p>
@@ -68,7 +85,7 @@ export default function FAQSection() {
                     boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className="group relative w-full sm:w-auto px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+                  className={`text-white group relative w-full sm:w-auto px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden`}
                 >
                   <span className="absolute inset-0 bg-gradient-to-r from-purple-700 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                   <span className="relative flex items-center justify-center gap-2 text-xs">
@@ -89,7 +106,7 @@ export default function FAQSection() {
                     onClick={() =>
                       setOpenIndex(openIndex === index ? null : index)
                     }
-                    className="flex justify-between items-center w-full text-left p-5 focus:outline-none focus:ring-2 focus:ring-purple-300 transition-colors duration-200 hover:bg-purple-50"
+                    className={`flex justify-between items-center w-full text-left p-5 focus:outline-none focus:ring-2 focus:ring-purple-300 transition-colors duration-200 hover:bg-purple-50 ${theme ==='light' ? '':'hover:text-black'}`}
                     aria-expanded={openIndex === index}
                     aria-controls={`faq-answer-${index}`}
                   >

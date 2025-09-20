@@ -1,12 +1,14 @@
 "use client";
-import { useState } from "react";
-import axios from "axios";
 import Container from "@/components/shared/Container";
+import { ThemeContext } from "@/context/ThemeProvider";
+import axios from "axios";
+import { use, useState } from "react";
 
 export default function NewsletterSection() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const { theme } = use(ThemeContext);
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -32,7 +34,11 @@ export default function NewsletterSection() {
   return (
     <section className="min-h-[420px] flex items-center justify-center bg-white p-6 mt-0 lg:mt-16">
       <Container>
-        <div className="relative w-ful rounded-3xl shadow-2xl overflow-hidden">
+        <div
+          className={`relative w-ful rounded-3xl shadow-2xl overflow-hidden ${
+            theme === "light" ? "" : " shadow-red-500"
+          }`}
+        >
           <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-b from-red-600 to-red-500" />
 
           <div className="relative bg-white rounded-3xl p-12 shadow-inner md:p-16">
@@ -70,7 +76,13 @@ export default function NewsletterSection() {
               </div>
 
               <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-red-500 mb-2">
-                SUBSCRIBE<span className="text-red-500">.</span>
+                SU
+                <span
+                  className={`${theme === "light" ? "text-red" : "text-white"}`}
+                >
+                  BSCRIBE
+                </span>
+                <span className="text-red-500">.</span>
               </h1>
 
               <p className="text-gray-500 mb-8">
@@ -90,7 +102,9 @@ export default function NewsletterSection() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="w-full bg-transparent border-none px-4 py-4 text-gray-700 placeholder-gray-300 focus:outline-none text-lg"
+                      className={`w-full bg-transparent  px-4 py-4 text-gray-700 placeholder-gray-300 focus:outline-none text-lg ${
+                        theme === "light" ? "" : " border-b border-white"
+                      }`}
                     />
                     <div className="h-[1px] bg-gray-200 w-full" />
                   </label>

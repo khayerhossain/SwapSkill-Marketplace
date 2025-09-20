@@ -1,8 +1,10 @@
 "use client";
+import { ThemeContext } from "@/context/ThemeProvider";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { use } from "react";
 import logo from "../../assets/logo.png";
 import Container from "./Container";
 import ThemeToggle from "./ThemeToggle";
@@ -10,6 +12,9 @@ import ThemeToggle from "./ThemeToggle";
 export default function NavbarPage() {
   const { data: session } = useSession();
   const pathname = usePathname(); // get current route
+  const { theme } = use(ThemeContext);
+
+  console.log(theme);
 
   // Landing page section links + Dashboard
   const navLinks = [
@@ -74,7 +79,11 @@ export default function NavbarPage() {
             </div>
             {/* Logo */}
             <Link href="/" className="text-xl font-bold">
-              <Image src={logo} alt="logo" className="w-28 h-12" />
+              <Image
+                src={logo}
+                alt="logo"
+                className={`w-28 h-12 ${theme ==='light' ? '' : "filter invert brightness-0"} `}
+              />
             </Link>
           </div>
 

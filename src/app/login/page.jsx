@@ -13,12 +13,11 @@ export default function LoginPage() {
   const [regform, setRegForm] = useState({ name: "", email: "", password: "" });
   const [form, setForm] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
-  const [isToggled, setIsToggled] = useState(false);
+  const [isToggled, setIsToggled] = useState(false); // false = register, true = login
   const router = useRouter();
 
-  const handleChangeReg = (e) => {
+  const handleChangeReg = (e) =>
     setRegForm({ ...regform, [e.target.name]: e.target.value });
-  };
 
   const handleSubmitReg = async (e) => {
     e.preventDefault();
@@ -62,7 +61,6 @@ export default function LoginPage() {
     }
   };
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0, y: 40 },
     visible: {
@@ -77,13 +75,15 @@ export default function LoginPage() {
     <Container>
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-600 via-indigo-600 to-purple-700 p-6 sm:p-8">
         <motion.div
-          className="relative w-full max-w-6xl h-[85vh] flex flex-col md:flex-row overflow-hidden rounded-3xl shadow-2xl bg-white/10 backdrop-blur-lg border border-white/20"
+          className={`relative w-full max-w-6xl h-[85vh] flex flex-col md:flex-row ${
+            isToggled ? "md:flex-row" : "md:flex-row-reverse"
+          } overflow-hidden rounded-3xl shadow-2xl bg-white/10 backdrop-blur-lg border border-white/20`}
           initial="hidden"
           animate="visible"
           exit="exit"
           variants={containerVariants}
         >
-          {/* LEFT PANEL */}
+          {/* LEFT/RIGHT PANEL (Dynamic order) */}
           <motion.div
             key={isToggled ? "login-panel" : "register-panel"}
             className="flex-1 flex items-center justify-center p-6 md:p-10"
@@ -206,7 +206,7 @@ export default function LoginPage() {
             </AnimatePresence>
           </motion.div>
 
-          {/* RIGHT PANEL */}
+          {/* IMAGE PANEL (order auto change by flex-row / flex-row-reverse) */}
           <motion.div
             className="flex-1 hidden md:flex items-center justify-center bg-gradient-to-br from-purple-500 to-indigo-600"
             initial={{ x: 50, opacity: 0 }}

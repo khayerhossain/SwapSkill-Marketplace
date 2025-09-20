@@ -19,12 +19,12 @@ export default function NavbarPage() {
   // Landing page section links + Dashboard
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "About", path: "/#about" },
-    { name: "Why Choose Us", path: "/#why-choose-us" },
-    { name: "Skills", path: "/#current-skills" },
-    { name: "Reviews", path: "/#reviews" },
-    { name: "FAQ", path: "/#faq" },
-    { name: "Newsletter", path: "/#newsletter" },
+    // { name: "About", path: "/#about" },
+    // { name: "Why Choose Us", path: "/#why-choose-us" },
+    // { name: "Skills", path: "/#current-skills" },
+    // { name: "Reviews", path: "/#reviews" },
+    // { name: "FAQ", path: "/#faq" },
+    // { name: "Newsletter", path: "/#newsletter" },
     { name: "Dashboard", path: "/dashboard" },
     { name: "Quiz", path: "/quiz" },
     { name: "Test", path: "/test-categories" },

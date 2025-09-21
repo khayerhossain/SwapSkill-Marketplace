@@ -1,49 +1,145 @@
 "use client";
 
+import { Badge } from "@/components/Badge";
 import Container from "@/components/shared/Container";
 
-function CurrentSkillsPage() {
-  const marqueeLogo = [
-    { logo: "/assets/marquee/coding-5-64.png", skillName: "Coding" },
-    { logo: "/assets/marquee/hand-writing.png", skillName: "Hand Writing" },
-    { logo: "/assets/marquee/archer.png", skillName: "Archer" },
-    { logo: "/assets/marquee/chef-49.png", skillName: "Chef" },
-    { logo: "/assets/marquee/Dance.png", skillName: "Dance" },
-    { logo: "/assets/marquee/designer-2-69.png", skillName: "Design" },
-    { logo: "/assets/marquee/driving.png", skillName: "Driving" },
-    { logo: "/assets/marquee/fishing-40.png", skillName: "Fishing" },
-    { logo: "/assets/marquee/music-27.png", skillName: "Music" },
-    { logo: "/assets/marquee/running-90.png", skillName: "Running" },
-    { logo: "/assets/marquee/swimming-29.png", skillName: "Swimming" },
-    { logo: "/assets/marquee/team-work-1-75.png", skillName: "Team Work" },
-  ];
+const skillsData = [
+  {
+    name: "Coding",
+    logo: "/assets/marquee/coding-5-64.png",
+    students: "15.2k",
+    subSkills: ["JavaScript", "Python", "React"],
+  },
+  {
+    name: "Hand Writing",
+    logo: "/assets/marquee/hand-writing.png",
+    students: "9.8k",
+    subSkills: ["Cursive", "Calligraphy", "Note Taking"],
+  },
+  {
+    name: "Archer",
+    logo: "/assets/marquee/archer.png",
+    students: "6.3k",
+    subSkills: ["Bow", "Crossbow", "Target Practice"],
+  },
+  {
+    name: "Chef",
+    logo: "/assets/marquee/chef-49.png",
+    students: "8.4k",
+    subSkills: ["Cooking", "Baking", "Food Styling"],
+  },
+  {
+    name: "Dance",
+    logo: "/assets/marquee/Dance.png",
+    students: "7.9k",
+    subSkills: ["Hip Hop", "Ballet", "Salsa"],
+  },
+  {
+    name: "Design",
+    logo: "/assets/marquee/designer-2-69.png",
+    students: "12.8k",
+    subSkills: ["UI/UX", "Graphic Design", "Figma"],
+  },
+  {
+    name: "Driving",
+    logo: "/assets/marquee/driving.png",
+    students: "5.4k",
+    subSkills: ["Car", "Bike", "Truck"],
+  },
+  {
+    name: "Fishing",
+    logo: "/assets/marquee/fishing-40.png",
+    students: "6.2k",
+    subSkills: ["River", "Sea", "Fly Fishing"],
+  },
+  {
+    name: "Music",
+    logo: "/assets/marquee/music-27.png",
+    students: "6.7k",
+    subSkills: ["Piano", "Guitar", "Music Theory"],
+  },
+  {
+    name: "Running",
+    logo: "/assets/marquee/running-90.png",
+    students: "4.9k",
+    subSkills: ["Sprint", "Marathon", "Relay"],
+  },
+  {
+    name: "Swimming",
+    logo: "/assets/marquee/swimming-29.png",
+    students: "5.1k",
+    subSkills: ["Freestyle", "Butterfly", "Backstroke"],
+  },
+  {
+    name: "Team Work",
+    logo: "/assets/marquee/team-work-1-75.png",
+    students: "7.5k",
+    subSkills: ["Collaboration", "Leadership", "Communication"],
+  },
+];
 
+export default function CurrentSkillsPage() {
   return (
     <Container>
-      <div className="py-10">
-        <div className="max-w-6xl mx-auto text-center space-y-4">
-          <h1 className="text-3xl font-bold">Our Skills Overview</h1>
-          <p className="md:text-xl text-gray-600">
-            A quick look at the diverse skills available from coding and design
-            to cooking, music, and more.
+      <div className="py-14">
+        {/* Title */}
+        <div className="max-w-6xl mx-auto text-center space-y-3">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+            Explore <span className="text-red-500">Skill Categories</span>
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Browse through a variety of popular skill categories and connect with
+            expert tutors ready to help you grow.
           </p>
         </div>
 
-        {/* Static grid layout 2 rows x 6 columns */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 mt-10">
-          {marqueeLogo.map((item, index) => (
+        {/* Cards grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+          {skillsData.map((skill, index) => (
             <div
               key={index}
-              className="flex flex-col items-center bg-white rounded-xl border border-gray-200 shadow-md p-6"
+              className="relative bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-6 shadow-md hover:shadow-lg transition"
             >
-              <img
-                src={item.logo}
-                alt={item.skillName}
-                className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-3"
-              />
-              <h1 className="font-semibold text-sm text-gray-800">
-                {item.skillName}
-              </h1>
+              {/* Top row */}
+              <div className="flex justify-between items-center mb-4">
+                <img
+                  src={skill.logo}
+                  alt={skill.name}
+                  className="w-12 h-12 object-contain"
+                />
+                <span className="bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-200 text-xs px-3 py-1 rounded-full">
+                  {skill.students} students
+                </span>
+              </div>
+
+              {/* Title */}
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                {skill.name}
+              </h2>
+
+              {/* Subskills */}
+              <div className="flex flex-wrap gap-2 mb-3">
+                {skill.subSkills.slice(0, 3).map((s, i) => (
+                  <Badge
+                    key={i}
+                    variant="outline"
+                    className="text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-700"
+                  >
+                    {s}
+                  </Badge>
+                ))}
+                <Badge
+                  variant="outline"
+                  className="text-gray-500 dark:text-gray-400 border-gray-300 dark:border-gray-700"
+                >
+                  +2
+                </Badge>
+              </div>
+
+              {/* Footer */}
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                5 skills available
+              </p>
             </div>
           ))}
         </div>
@@ -51,5 +147,3 @@ function CurrentSkillsPage() {
     </Container>
   );
 }
-
-export default CurrentSkillsPage;

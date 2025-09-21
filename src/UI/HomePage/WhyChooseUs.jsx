@@ -25,7 +25,7 @@ export default function WhyChooseUs() {
           <div className="grid sm:grid-cols-1 md:grid-cols-4 gap-8">
             {/* Card 1 */}
             <motion.div
-              className="bg-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition duration-300 flex flex-col items-center text-center h-64"
+              className="bg-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition duration-300 flex flex-col items-center text-center h-64 border border-gray-200 dark:border-neutral-800"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -40,7 +40,7 @@ export default function WhyChooseUs() {
 
             {/* Card 2 */}
             <motion.div
-              className="bg-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition duration-300 flex flex-col items-center text-center h-64"
+              className="bg-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition duration-300 flex flex-col items-center text-center h-64 border border-gray-200 dark:border-neutral-800"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -55,7 +55,7 @@ export default function WhyChooseUs() {
 
             {/* Card 3 */}
             <motion.div
-              className="bg-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition duration-300 flex flex-col items-center text-center h-64"
+              className="bg-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition duration-300 flex flex-col items-center text-center h-64 border border-gray-200 dark:border-neutral-800"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
@@ -70,7 +70,7 @@ export default function WhyChooseUs() {
 
             {/* Card 4 */}
             <motion.div
-              className="bg-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition duration-300 flex flex-col items-center text-center h-64"
+              className="bg-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition duration-300 flex flex-col items-center text-center h-64 border border-gray-200 dark:border-neutral-800"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}

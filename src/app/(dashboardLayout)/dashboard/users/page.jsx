@@ -1,6 +1,8 @@
 "use client";
+import axiosInstance from "@/lib/axiosInstance";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -10,23 +12,26 @@ export default function UsersPage() {
   }, []);
 
   const fetchUsers = async () => {
-    const res = await fetch("/api/users");
-    const data = await res.json();
-    setUsers(data);
+    try {
+      const { data } = await axiosInstance.get("/users");
+      setUsers(data);
+    } catch (error) {
+      console.error("Failed to fetch users", error);
+    }
   };
 
   const handleStatusChange = async (id, newStatus) => {
-    await fetch("/api/users", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status: newStatus }),
-    });
+    try {
+      await axiosInstance.patch("/users", { id, status: newStatus });
 
-    setUsers((prev) =>
-      prev.map((u) =>
-        String(u._id) === String(id) ? { ...u, status: newStatus } : u
-      )
-    );
+      setUsers((prev) =>
+        prev.map((u) =>
+          String(u._id) === String(id) ? { ...u, status: newStatus } : u
+        )
+      );
+    } catch (error) {
+      Swal.fire("Error!", "Failed to update status.", "error");
+    }
   };
 
   const handleRemove = async (id) => {
@@ -40,12 +45,14 @@ export default function UsersPage() {
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await fetch(`/api/users?id=${id}`, { method: "DELETE" });
+        try {
+          await axiosInstance.delete(`/users?id=${id}`);
 
-        if (res.ok) {
-          setUsers((prev) => prev.filter((u) => String(u._id) !== String(id)));
+          setUsers((prev) =>
+            prev.filter((u) => String(u._id) !== String(id))
+          );
           Swal.fire("Deleted!", "User has been removed.", "success");
-        } else {
+        } catch (error) {
           Swal.fire("Error!", "Failed to delete user.", "error");
         }
       }
@@ -88,8 +95,8 @@ export default function UsersPage() {
                       onChange={(e) => handleStatusChange(user._id, e.target.value)}
                       className="p-2 border rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-orange-400 focus:outline-none cursor-pointer"
                     >
-                      <option value="active">✅ Active</option>
-                      <option value="deactive">❌ Deactive</option>
+                      <option value="active"> Active</option>
+                      <option value="deactive"> Deactive</option>
                     </select>
                   </td>
                   <td className="px-6 py-4 text-center">
@@ -128,8 +135,8 @@ export default function UsersPage() {
                   onChange={(e) => handleStatusChange(user._id, e.target.value)}
                   className="p-2 border rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-orange-400 focus:outline-none text-sm"
                 >
-                  <option value="active">✅ Active</option>
-                  <option value="deactive">❌ Deactive</option>
+                  <option value="active"> Active</option>
+                  <option value="deactive"> Deactive</option>
                 </select>
                 <button
                   onClick={() => handleRemove(user._id)}

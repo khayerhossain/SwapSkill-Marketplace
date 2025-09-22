@@ -130,7 +130,7 @@ export default function QuizPage() {
             Quiz parameters missing. Please try again from the profile.
           </p>
           <button
-            onClick={() => router.push('/skills-form')}
+            onClick={() => router.push('/appBar/share-skills')}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Go Back to Skills Form

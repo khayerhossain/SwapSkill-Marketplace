@@ -1,18 +1,18 @@
-// contexts/NotificationContext.js (নতুন ফাইল তৈরি করুন)
+// contexts/NotificationContext.js (create a new file)
 "use client";
 
-import { createContext, useContext, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { createContext, useContext, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 
-// Context তৈরি করুন
+// Create context
 const NotificationContext = createContext(undefined);
 
-// Provider কম্পোনেন্ট
+// Provider component
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const router = useRouter();
 
-  // নোটিফিকেশন যোগ করার ফাংশন
+  // Function to add a new notification
   const addNotification = useCallback((notification) => {
     const newNotification = {
       id: Date.now() + Math.random(),
@@ -23,49 +23,54 @@ export const NotificationProvider = ({ children }) => {
       type: notification.type || "info",
       profileId: notification.profileId,
       userId: notification.userId,
-      category: notification.category
+      category: notification.category,
     };
-    
-    setNotifications(prev => [newNotification, ...prev]);
+
+    setNotifications((prev) => [newNotification, ...prev]);
   }, []);
 
-  // নোটিফিকেশন read mark করার ফাংশন
+  // Function to mark a notification as read
   const markAsRead = useCallback((id) => {
-    setNotifications(prev =>
-      prev.map(notification =>
+    setNotifications((prev) =>
+      prev.map((notification) =>
         notification.id === id ? { ...notification, read: true } : notification
       )
     );
   }, []);
 
-  // সব নোটিফিকেশন read mark করার ফাংশন
+  // Function to mark all notifications as read
   const markAllAsRead = useCallback(() => {
-    setNotifications(prev =>
-      prev.map(notification => ({ ...notification, read: true }))
+    setNotifications((prev) =>
+      prev.map((notification) => ({ ...notification, read: true }))
     );
   }, []);
 
-  // Unread count পাওয়ার ফাংশন
+  // Function to get unread notification count
   const getUnreadCount = useCallback(() => {
-    return notifications.filter(n => !n.read).length;
+    return notifications.filter((n) => !n.read).length;
   }, [notifications]);
 
-  // নোটিফিকেশন action হ্যান্ডলার
-  const handleNotificationAction = useCallback((notificationId, userChoice) => {
-    const notification = notifications.find(n => n.id === notificationId);
-    if (!notification) return;
+  // Handle notification actions
+  const handleNotificationAction = useCallback(
+    (notificationId, userChoice) => {
+      const notification = notifications.find((n) => n.id === notificationId);
+      if (!notification) return;
 
-    // Mark as read
-    markAsRead(notificationId);
+      // Mark as read
+      markAsRead(notificationId);
 
-    if (notification.type === "formSuccess") {
-      if (userChoice === "quiz") {
-        router.push(`/quiz?profileId=${notification.profileId}&userId=${notification.userId}&category=${notification.category}&showPopup=true`);
-      } else {
-        router.push("/find-skills");
+      if (notification.type === "formSuccess") {
+        if (userChoice === "quiz") {
+          router.push(
+            `/quiz?profileId=${notification.profileId}&userId=${notification.userId}&category=${notification.category}&showPopup=true`
+          );
+        } else {
+          router.push("/appBar/find-skills");
+        }
       }
-    }
-  }, [notifications, markAsRead, router]);
+    },
+    [notifications, markAsRead, router]
+  );
 
   // Context value
   const value = {
@@ -74,7 +79,7 @@ export const NotificationProvider = ({ children }) => {
     markAsRead,
     markAllAsRead,
     getUnreadCount,
-    handleNotificationAction
+    handleNotificationAction,
   };
 
   return (
@@ -87,11 +92,13 @@ export const NotificationProvider = ({ children }) => {
 // Custom hook
 export const useNotification = () => {
   const context = useContext(NotificationContext);
-  
+
   if (context === undefined) {
-    throw new Error('useNotification must be used within a NotificationProvider');
+    throw new Error(
+      "useNotification must be used within a NotificationProvider"
+    );
   }
-  
+
   return context;
 };
 

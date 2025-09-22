@@ -51,7 +51,7 @@ export default function AppBarLayout({ children }) {
             
             <div className="flex items-center gap-4">
               {/* Notification Dropdown */}
-              {session?.user && <NotificationDropdown />}
+               <NotificationDropdown />
               
               {/* User Profile */}
               {session?.user && (

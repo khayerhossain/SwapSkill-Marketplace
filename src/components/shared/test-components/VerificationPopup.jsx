@@ -28,7 +28,7 @@ export default function VerificationPopup({
       <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-2xl">
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="text-5xl mb-3">🎯</div>
+          <div className="text-5xl mb-3"></div>
           <h2 className="text-2xl font-bold text-gray-800">
             Profile Saved — Verification Required
           </h2>
@@ -42,7 +42,7 @@ export default function VerificationPopup({
           
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
             <div className="flex items-center mb-3">
-              <span className="text-blue-600 font-semibold">📚 Category:</span>
+              <span className="text-blue-600 font-semibold"> Category:</span>
               <span className="ml-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
                 {profileData?.category || 'Programming'}
               </span>
@@ -50,19 +50,19 @@ export default function VerificationPopup({
             
             <div className="text-sm text-gray-700 space-y-2">
               <div className="flex items-center">
-                <span className="w-6">⏱️</span>
+                <span className="w-6"></span>
                 <span>Time: 30 minutes</span>
               </div>
               <div className="flex items-center">
-                <span className="w-6">❓</span>
+                <span className="w-6"></span>
                 <span>Number of questions: 10</span>
               </div>
               <div className="flex items-center">
-                <span className="w-6">✅</span>
+                <span className="w-6"></span>
                 <span>Passing mark: 70%</span>
               </div>
               <div className="flex items-center">
-                <span className="w-6">🏆</span>
+                <span className="w-6"></span>
                 <span>Badge: Gold/Silver/Bronze</span>
               </div>
             </div>
@@ -98,7 +98,7 @@ export default function VerificationPopup({
         {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-500">
-            💡 If you pass the test, you will get a Verified badge and it will be shown on your profile.
+             If you pass the test, you will get a Verified badge and it will be shown on your profile.
           </p>
         </div>
       </div>

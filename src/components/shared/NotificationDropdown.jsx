@@ -1,17 +1,21 @@
-// components/shared/NotificationDropdown.js
 "use client";
 
 import { useState, useRef, useEffect } from "react";
 import { IoNotificationsOutline, IoNotifications } from "react-icons/io5";
-import { useNotification } from '@/context/NotificationContext';
-
+import { useNotification } from "@/context/NotificationContext";
 
 const NotificationDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const { notifications, markAsRead, markAllAsRead, getUnreadCount, handleNotificationAction } = useNotification();
+  const {
+    notifications,
+    markAsRead,
+    markAllAsRead,
+    getUnreadCount,
+    handleNotificationAction,
+  } = useNotification();
 
-  // Dropdown বাইরে ক্লিক করলে বন্ধ করার জন্য
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -35,10 +39,10 @@ const NotificationDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  // নোটিফিকেশন একশন হ্যান্ডলার
+  // Handle notification actions
   const handleAction = (notification, userChoice) => {
     handleNotificationAction(notification.id, userChoice);
-    setIsOpen(false); // ড্রপডাউন বন্ধ করুন
+    setIsOpen(false); // Close dropdown
   };
 
   return (
@@ -75,27 +79,42 @@ const NotificationDropdown = () => {
               </button>
             )}
           </div>
-          
+
           {/* Notifications List */}
           <div className="max-h-96 overflow-y-auto">
             {notifications.length > 0 ? (
               notifications.map((notification) => (
-                <div key={notification.id} className="border-b border-gray-100 last:border-b-0">
+                <div
+                  key={notification.id}
+                  className="border-b border-gray-100 last:border-b-0"
+                >
                   {notification.type === "formSuccess" ? (
-                    // সুইট অ্যালার্টের মতো নোটিফিকেশন
-                    <div className={`p-4 ${!notification.read ? "bg-yellow-50" : ""}`}>
+                    // Special notification with actions
+                    <div
+                      className={`p-4 ${
+                        !notification.read ? "bg-yellow-50" : ""
+                      }`}
+                    >
                       <div className="flex items-start gap-3 mb-3">
-                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                          !notification.read ? "bg-yellow-100 text-yellow-600" : "bg-gray-100 text-gray-400"
-                        }`}>
+                        <div
+                          className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                            !notification.read
+                              ? "bg-yellow-100 text-yellow-600"
+                              : "bg-gray-100 text-gray-400"
+                          }`}
+                        >
                           ⚠️
                         </div>
                         <div>
-                          <h4 className="font-semibold text-gray-800">Do you want to start the Quiz?</h4>
-                          <p className="text-sm text-gray-600 mt-1">Choose your option!</p>
+                          <h4 className="font-semibold text-gray-800">
+                            Do you want to start the Quiz?
+                          </h4>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Choose your option!
+                          </p>
                         </div>
                       </div>
-                      
+
                       <div className="flex gap-2 mt-4">
                         <button
                           onClick={() => handleAction(notification, "quiz")}
@@ -112,7 +131,7 @@ const NotificationDropdown = () => {
                       </div>
                     </div>
                   ) : (
-                    // সাধারণ নোটিফিকেশন
+                    // Normal notification
                     <div
                       className={`p-3 hover:bg-gray-50 cursor-pointer ${
                         !notification.read ? "bg-blue-50" : ""
@@ -120,13 +139,19 @@ const NotificationDropdown = () => {
                       onClick={() => markAsRead(notification.id)}
                     >
                       <div className="flex items-start gap-3">
-                        <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
-                          !notification.read ? "bg-blue-500" : "bg-gray-300"
-                        }`} />
+                        <div
+                          className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                            !notification.read ? "bg-blue-500" : "bg-gray-300"
+                          }`}
+                        />
                         <div className="flex-1 min-w-0">
-                          <h4 className={`font-medium text-sm ${
-                            !notification.read ? "text-blue-800" : "text-gray-800"
-                          }`}>
+                          <h4
+                            className={`font-medium text-sm ${
+                              !notification.read
+                                ? "text-blue-800"
+                                : "text-gray-800"
+                            }`}
+                          >
                             {notification.title}
                           </h4>
                           <p className="text-xs text-gray-600 mt-1">

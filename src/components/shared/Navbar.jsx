@@ -27,8 +27,9 @@ export default function NavbarPage() {
     // { name: "Newsletter", path: "/#newsletter" },
     { name: "Dashboard", path: "/dashboard" },
     { name: "Pricing", path: "/pricing" },
-    { name: "Quiz", path: "/quiz" },
-    { name: "Test", path: "/test-categories" },
+    // { name: "Quiz", path: "/quiz" },
+    // { name: "Test", path: "/test-categories" },
+    { name: "Skills", path: "/appBar/find-skills" },
    
   ];
 

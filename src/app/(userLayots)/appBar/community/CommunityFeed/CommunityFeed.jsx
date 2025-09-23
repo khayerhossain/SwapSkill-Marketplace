@@ -55,7 +55,10 @@ export default function CommunityFeed() {
     if (!content.trim() && !mediaPreview) return; // don't post empty
     const newPost = {
       id: Date.now(),
-      user: { name: "You", avatar: "https://i.pravatar.cc/40?img=10" },
+      user: {
+        name: "Khayer Hossain",
+        avatar: "https://i.pravatar.cc/40?img=10",
+      },
       time: "Just now",
       text: content,
       image: mediaPreview?.url || null,
@@ -79,7 +82,7 @@ export default function CommunityFeed() {
               className="w-10 h-10 rounded-full"
             />
             <div>
-              <p className="text-sm font-semibold">You</p>
+              <p className="text-sm font-semibold">Khayer Hossain</p>
               <p className="text-xs text-gray-500">
                 Share something with the community
               </p>

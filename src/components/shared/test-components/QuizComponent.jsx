@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { BiSolidMessageAltError } from 'react-icons/bi';
+import { MdError } from 'react-icons/md';
 
 export default function QuizComponent({ profileId, userId, category, onComplete }) {
   const [quizData, setQuizData] = useState(null);
@@ -147,8 +149,8 @@ export default function QuizComponent({ profileId, userId, category, onComplete 
 
   if (error) {
     return (
-      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg text-center">
-        <div className="text-6xl mb-4">❌</div>
+      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg text-center flex flex-col justify-center items-center">
+        <h1 className=" mb-4 text-6xl  text-red-600"><MdError /></h1>
         <h2 className="text-2xl font-bold text-red-600 mb-4">Error</h2>
         <p className="text-gray-700 mb-6">{error}</p>
         <div className="space-x-4">
@@ -249,7 +251,7 @@ export default function QuizComponent({ profileId, userId, category, onComplete 
           <div className={`text-xl font-mono px-3 py-1 rounded ${
             timeLeft < 300 ? 'text-red-500 bg-red-50' : 'text-gray-600 bg-gray-50'
           }`}>
-            ⏱️ {formatTime(timeLeft)}
+             {formatTime(timeLeft)}
           </div>
         </div>
         
@@ -352,7 +354,7 @@ export default function QuizComponent({ profileId, userId, category, onComplete 
       {quizData.questions.length - answeredCount > 0 && (
         <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
           <div className="text-sm text-yellow-800">
-            ⚠️ {quizData.questions.length - answeredCount} questions left unanswered
+             {quizData.questions.length - answeredCount} questions left unanswered
           </div>
         </div>
       )}

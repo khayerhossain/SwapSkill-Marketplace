@@ -1,7 +1,9 @@
+// components/SkillForm.js
 "use client";
 import { useState } from "react";
-import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import { useNotification } from "@/context/NotificationContext";
+
 
 export default function SkillForm() {
   const [formData, setFormData] = useState({
@@ -34,6 +36,7 @@ export default function SkillForm() {
 
   const [imagePreview, setImagePreview] = useState(null);
   const router = useRouter();
+  const { addNotification } = useNotification();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -51,43 +54,56 @@ export default function SkillForm() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const res = await fetch("/api/skills", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+  try {
+    const res = await fetch("/api/skills", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      // সব প্রয়োজনীয় ডাটা সহ নোটিফিকেশন যোগ করুন
+      addNotification({
+        title: "Do you want to start the Quiz?",
+        message: "Choose your option!",
+        type: "formSuccess",
+        profileId: data.insertedId,
+        userId: "current-user-id", // এখানে আপনার user ID বসান
+        category: formData.category || "General" // category যোগ করুন
       });
 
-      const data = await res.json();
+      // ফর্ম রিসেট
+      setFormData({
+        userName: "", age: "", gender: "", homeTown: "", studyOrWorking: "", 
+        userImage: "", category: "", description: "", experience: "", 
+        availability: "", availabilityType: "", location: "", timeZone: "", 
+        skillsToTeach: "", skillsToLearn: "", swapPreference: "", 
+        portfolioLink: "", languages: "", tags: "", responseTime: "", 
+        email: "", phone: "", facebook: "", instagram: "", twitter: ""
+      });
+      setImagePreview(null);
 
-      if (res.ok && data.success) {
-        Swal.fire({
-          title: "Do you want to start the Quiz?",
-          text: "Choose your option!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#000",
-          cancelButtonColor: "#555",
-          confirmButtonText: "Yes, go to Quiz!",
-          cancelButtonText: "No, go to Find Page",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            router.push(`/quiz?profileId=${data.insertedId}`);
-          } else {
-            router.push("/find-skills");
-          }
-        });
-      } else {
-        Swal.fire("Error!", data.error || "Something went wrong.", "error");
-      }
-    } catch (error) {
-      console.error("Submission error:", error);
-      Swal.fire("Error!", "Submission failed.", "error");
+    } else {
+      addNotification({
+        title: "Error!",
+        message: data.error || "Something went wrong.",
+        type: "error"
+      });
     }
-  };
+  } catch (error) {
+    console.error("Submission error:", error);
+    addNotification({
+      title: "Error!",
+      message: "Submission failed.",
+      type: "error"
+    });
+  }
+};
 
   return (
     <section className="max-w-6xl mx-auto bg-white p-10 rounded-xl shadow-xl border border-gray-200">

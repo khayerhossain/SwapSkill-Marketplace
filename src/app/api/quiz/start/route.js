@@ -12,18 +12,18 @@ export async function POST(request) {
 
     const testQNACollection = await dbConnect(collectionNamesObj.testQNACollection);
 
-    const existingSession = await testQNACollection.findOne({
-      userId: userId,
-      profileId: profileId,
-      type: 'quiz-session',
-      expiresAt: { $gt: new Date() }
-    });
+    // const existingSession = await testQNACollection.findOne({
+    //   userId: userId,
+    //   profileId: profileId,
+    //   type: 'quiz-session',
+    //   expiresAt: { $gt: new Date() }
+    // });
 
-    if (existingSession) {
-      return Response.json({ 
-        message: 'You already have an active quiz session. Please try again later.' 
-      }, { status: 400 });
-    }
+    // if (existingSession) {
+    //   return Response.json({ 
+    //     message: 'You already have an active quiz session. Please try again later.' 
+    //   }, { status: 400 });
+    // }
 
     const categoryData = await testQNACollection.findOne({ 
       category: category,

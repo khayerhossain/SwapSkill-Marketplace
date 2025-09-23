@@ -10,7 +10,9 @@ import {
   FaBox,
   FaUser,
   FaCog,
+  FaMoneyCheckAlt
 } from "react-icons/fa";
+
 
 const Sidebar = ({
   onClick,
@@ -43,6 +45,7 @@ const Sidebar = ({
   const dashboardCommonItems = [
     { name: "Profile", icon: <FaUser />, path: "/dashboard/profile", role: "all" },
     { name: "Settings", icon: <FaCog />, path: "/dashboard/settings", role: "all" },
+    { name: "My Payment", icon: <FaMoneyCheckAlt />, path: "/dashboard/my-payment", role: "all" },
   ];
 
   // Extra items only for admin

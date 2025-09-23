@@ -41,6 +41,9 @@ export default function DashboardLayout({ children }) {
                   {session.user.name || "Profile"}
                 </Link>
               )}
+              
+
+
               {session?.user && (
                 <button
                   aria-label="Logout"

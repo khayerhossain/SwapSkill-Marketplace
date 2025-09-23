@@ -5,7 +5,6 @@ import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/context/ThemeProvider";
 import { NotificationProvider } from "@/context/NotificationContext";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -27,15 +26,12 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      <ThemeProvider>
-
+        <ThemeProvider>
           <NotificationProvider>
-            <NextAuthSessionProvider>
-          {children}
-        </NextAuthSessionProvider>
-        <Toaster position="top-center" />
+            <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
+            <Toaster position="top-center" />
           </NotificationProvider>
-      </ThemeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

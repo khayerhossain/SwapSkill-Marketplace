@@ -46,7 +46,6 @@ const Sidebar = ({
   const dashboardCommonItems = [
     { name: "Profile", icon: <FaUser />, path: "/dashboard/profile", role: "all" },
     { name: "Settings", icon: <FaCog />, path: "/dashboard/settings", role: "all" },
-   ,
     { name: "All Users", icon: <FaUsers />, path: "/dashboard/users", role: "all" },
   ];
 //  aaaaa

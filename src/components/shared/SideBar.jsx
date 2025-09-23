@@ -10,7 +10,8 @@ import {
   FaBox,
   FaUser,
   FaCog,
-  FaMoneyCheckAlt
+  
+  FaUsers,
 } from "react-icons/fa";
 
 
@@ -46,8 +47,9 @@ const Sidebar = ({
     { name: "Profile", icon: <FaUser />, path: "/dashboard/profile", role: "all" },
     { name: "Settings", icon: <FaCog />, path: "/dashboard/settings", role: "all" },
    ,
+    { name: "All Users", icon: <FaUsers />, path: "/dashboard/users", role: "all" },
   ];
-
+//  aaaaa
   // Extra items only for admin
   const dashboardAdminItems = [
     { name: "Dashboard", icon: <FaHome />, path: dashboardPath, role: "admin" },

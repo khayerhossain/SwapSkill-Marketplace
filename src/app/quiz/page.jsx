@@ -123,7 +123,7 @@ export default function QuizPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
-          <div className="text-6xl mb-4">❌A2......</div>
+          <div className="text-6xl mb-4"></div>
           <h2 className="text-2xl font-bold text-red-600 mb-4">Invalid Quiz Access</h2>
           <p className="text-gray-600 mb-4">Error: {getErrorReason()}</p>
           <p className="text-gray-600 mb-6">

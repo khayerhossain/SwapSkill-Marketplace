@@ -51,6 +51,7 @@ const Sidebar = ({
       icon: <FaUserCheck />,
       path: "/dashboard/admin/users",
     },
+    { name: "ManageSkills", icon: <FaUsers />, path: "/dashboard/manageSkills", role: "all" },
   ];
 
   const menuItems = isDashboard ? dashboardItems : appBarItems;

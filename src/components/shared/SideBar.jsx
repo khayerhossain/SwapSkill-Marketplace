@@ -11,7 +11,7 @@ import {
   FaCog,
   FaUsers,
 } from "react-icons/fa";
- 
+
 const Sidebar = ({
   onClick,
   useAppBarPaths = false,
@@ -37,8 +37,7 @@ const Sidebar = ({
     { name: "Community", icon: <FaUserFriends />, path: communityPath },
     { name: "Find Skills", icon: <FaBox />, path: findSkillsPath },
     { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath }, 
-    { name: "Payment Access", icon: <FaBox />, path: userPayment, role: "all" },
-    
+    { name: "Payment Access", icon: <FaBox />, path: userPayment,},
   ];
 
   const dashboardItems = [

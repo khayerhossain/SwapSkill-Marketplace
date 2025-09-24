@@ -53,7 +53,7 @@ export default function PaymentDetails() {
          Payment History &  Access Timer
         </h2>
         {payments.length > 0 ? (
-          payments.map((payment, index) => (
+          payments?.map((payment, index) => (
             <SinglePaymentCard key={index} payment={payment} />
           ))
         ) : (

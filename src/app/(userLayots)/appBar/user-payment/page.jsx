@@ -1,22 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
+import axios from "axios";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { SinglePaymentCard } from "./SinglePayment";
+
 export default function PaymentDetails() {
-  const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [payments, setPayments] = useState([]);
 
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/user-payment");
-        if (!res.ok) throw new Error("Failed to fetch");
-        const data = await res.json();
-        setPayments(data.payments);
-      } catch (err) {
-        console.error(err);
+        const res = await axios.get(
+          "http://localhost:3000/api/user-payment",
+          {}
+        );
+        console.log("payments PaymentDetails asche", res.data);
+        setPayments(res.data?.payments || []);
+      } catch (error) {
+        console.error("Error fetching payments:", error);
       } finally {
         setLoading(false);
       }
@@ -24,8 +27,7 @@ export default function PaymentDetails() {
 
     fetchPayments();
   }, []);
-  console.log("payments PaymentDetails asche", payments);
-
+  console.log("data  ", payments);
   if (loading) return <p className="text-white">Loading...</p>;
 
   if (!payments.length)
@@ -50,11 +52,14 @@ export default function PaymentDetails() {
         animate="visible"
       >
         <h2 className="text-3xl font-bold mb-4 text-center pb-5">
-         Payment History &  Access Timer
+          Payment History & Access Timer
         </h2>
         {payments.length > 0 ? (
           payments?.map((payment, index) => (
-            <SinglePaymentCard key={index} payment={payment} />
+            <SinglePaymentCard
+              key={index}
+              payment={payment}
+            ></SinglePaymentCard>
           ))
         ) : (
           <p className="text-gray-400 text-center text-lg">

@@ -66,6 +66,8 @@ export function SinglePaymentCard({ payment }) {
     return "shadow-green-500/50";
   };
 
+  console.log("aaaa", payment.data);
+
   return (
     <motion.div
       className={`bg-zinc-900 border border-transparent border-white rounded-2xl p-8 hover:shadow-2xl flex flex-col md:flex-row items-center justify-between transition-all duration-300 hover:border-red-500 ${getGlowClass(

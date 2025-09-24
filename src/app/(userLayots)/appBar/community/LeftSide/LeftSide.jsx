@@ -1,6 +1,10 @@
 "use client";
 
+import { useSession } from "next-auth/react";
+
 export default function LeftSide() {
+  const { data: session } = useSession();
+
   const shortcuts = [
     { name: "Art and Drawing", icon: "🎨" },
     { name: "Dribbble Pro", icon: "🏀" },
@@ -17,8 +21,8 @@ export default function LeftSide() {
           alt="Profile"
           className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-gray-200 shadow"
         />
-        <h2 className="text-xl font-bold text-gray-800">Reinhard Van Zry</h2>
-        <p className="text-sm text-gray-500">@Reinhard_</p>
+        <h2 className="text-xl font-bold text-gray-800">{session?.user?.name}</h2>
+        <p className="text-sm text-gray-500">{session?.user?.email}</p>
 
         <div className="flex justify-around mt-5 text-sm text-gray-700">
           <div className="text-center">

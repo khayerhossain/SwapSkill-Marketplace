@@ -20,7 +20,7 @@ export default function DashboardLayout({ children }) {
           {/* Large Screen Sidebar - Fixed Position */}
           <div className={`hidden md:block fixed left-0 top-0 h-screen z-30 ${collapsed ? "w-[6rem]" : "w-[20%]"} bg-base-200 text-base-content border-r border-base-300`}>
             <div className="p-4 border-b border-base-300 flex items-center justify-between">
-              <h1 className="text-xl font-bold">Dashboard</h1>
+              <h1 className="text-xl font-bold">Swap Skill</h1>
               <button
                 aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
                 className="btn btn-ghost btn-xs"

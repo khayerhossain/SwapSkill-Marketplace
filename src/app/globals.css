@@ -56,3 +56,14 @@ body {
 [data-theme="dark"] .text-gray-700 { color: color-mix(in oklab, hsl(var(--bc)) 85%, transparent) !important; }
 [data-theme="dark"] .text-gray-600 { color: color-mix(in oklab, hsl(var(--bc)) 70%, transparent) !important; }
 [data-theme="dark"] .text-gray-500 { color: color-mix(in oklab, hsl(var(--bc)) 55%, transparent) !important; }
+
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+  }
+}

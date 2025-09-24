@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
-import Swal from "sweetalert2";
+
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useNotification } from "@/context/NotificationContext";
 
 export default function SkillForm() {
   const [formData, setFormData] = useState({
@@ -32,8 +33,18 @@ export default function SkillForm() {
     twitter: "",
   });
 
+  // 🔹 audio state (null by default)
+  const [audio, setAudio] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const router = useRouter();
+  const { addNotification } = useNotification();
+
+  // 🔹 Ensure Audio runs only on client
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setAudio(new Audio("/sounds/notification.mp3"));
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -64,34 +75,48 @@ export default function SkillForm() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        Swal.fire({
+        // 🔹 Play notification sound (if loaded)
+        if (audio) audio.play();
+
+        addNotification({
           title: "Do you want to start the Quiz?",
-          text: "Choose your option!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#000",
-          cancelButtonColor: "#555",
-          confirmButtonText: "Yes, go to Quiz!",
-          cancelButtonText: "No, go to Find Page",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            router.push(`/quiz?profileId=${data.insertedId}`);
-          } else {
-            router.push("/find-skills");
-          }
+          message: "Choose your option!",
+          type: "formSuccess",
+          profileId: data.insertedId,
+          userId: "current-user-id", // replace with actual user ID
+          category: formData.category || "General",
         });
+
+        // Reset form
+        setFormData({
+          userName: "", age: "", gender: "", homeTown: "", studyOrWorking: "",
+          userImage: "", category: "", description: "", experience: "",
+          availability: "", availabilityType: "", location: "", timeZone: "",
+          skillsToTeach: "", skillsToLearn: "", swapPreference: "",
+          portfolioLink: "", languages: "", tags: "", responseTime: "",
+          email: "", phone: "", facebook: "", instagram: "", twitter: ""
+        });
+        setImagePreview(null);
+
       } else {
-        Swal.fire("Error!", data.error || "Something went wrong.", "error");
+        addNotification({
+          title: "Error!",
+          message: data.error || "Something went wrong.",
+          type: "error",
+        });
       }
     } catch (error) {
       console.error("Submission error:", error);
-      Swal.fire("Error!", "Submission failed.", "error");
+      addNotification({
+        title: "Error!",
+        message: "Submission failed.",
+        type: "error",
+      });
     }
   };
 
   return (
     <section className="max-w-6xl mx-auto bg-white p-10 rounded-xl shadow-xl border border-gray-200">
-      {/* Title Left */}
       <h2 className="text-3xl font-bold mb-8 text-gray-800 text-left">
         Share Your Skills
       </h2>
@@ -196,15 +221,24 @@ export default function SkillForm() {
         </div>
 
         {/* Category */}
-        <input
+        <select
           type="text"
           name="category"
           placeholder="Skill Category"
           value={formData.category}
           onChange={handleChange}
           className="col-span-2 p-3 border border-gray-400 rounded-lg"
-        />
+        >
+          <option value="">Select Availability Category</option>
+          <option>Programming</option>
+          <option>Design</option>
+          <option>Dance</option>
+          <option>Sports</option>
+          <option>Teamwork</option>
+          <option>Marketing</option>          
+          </select>   
 
+          
         {/* Skills To Teach */}
         <input
           type="text"
@@ -372,7 +406,7 @@ export default function SkillForm() {
           className="col-span-1 p-3 border border-gray-400 rounded-lg"
         />
 
-        {/* Submit */}
+  {/* Submit */}
         <button
           type="submit"
           className="col-span-2 py-3 bg-black text-white font-bold rounded-lg hover:bg-gray-800 transition"

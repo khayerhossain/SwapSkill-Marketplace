@@ -61,6 +61,14 @@ export default function LoginPage() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      await signIn("google", { callbackUrl: "/appBar" });
+    } catch (err) {
+      toast.error("Google login failed!");
+    }
+  };
+
   const containerVariants = {
     hidden: { opacity: 0, y: 40 },
     visible: {
@@ -83,7 +91,7 @@ export default function LoginPage() {
           exit="exit"
           variants={containerVariants}
         >
-          {/* LEFT/RIGHT PANEL (Dynamic order) */}
+          {/* LEFT/RIGHT PANEL */}
           <motion.div
             key={isToggled ? "login-panel" : "register-panel"}
             className="flex-1 flex items-center justify-center p-6 md:p-10"
@@ -94,6 +102,7 @@ export default function LoginPage() {
           >
             <AnimatePresence mode="wait">
               {isToggled ? (
+                // LOGIN
                 <motion.div
                   key="login-form"
                   className="w-full max-w-md bg-white rounded-2xl p-8 shadow-lg"
@@ -133,6 +142,22 @@ export default function LoginPage() {
                       Login
                     </motion.button>
                   </form>
+
+                  {/* GOOGLE LOGIN */}
+                  <div className="mt-6">
+                    <button
+                      onClick={handleGoogleLogin}
+                      className="w-full py-3 border border-gray-300 bg-white text-gray-700 font-semibold rounded-xl shadow-sm hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
+                    >
+                      <img
+                        src="https://www.svgrepo.com/show/355037/google.svg"
+                        alt="google"
+                        className="w-5 h-5"
+                      />
+                      Continue with Google
+                    </button>
+                  </div>
+
                   <p className="mt-6 text-center text-gray-600">
                     Don’t have an account?
                     <span
@@ -144,6 +169,7 @@ export default function LoginPage() {
                   </p>
                 </motion.div>
               ) : (
+                // REGISTER
                 <motion.div
                   key="register-form"
                   className="w-full max-w-md bg-white rounded-2xl p-8 shadow-lg"
@@ -192,6 +218,22 @@ export default function LoginPage() {
                       Sign Up
                     </motion.button>
                   </form>
+
+                  {/* GOOGLE SIGNUP */}
+                  <div className="mt-6">
+                    <button
+                      onClick={handleGoogleLogin}
+                      className="w-full py-3 border border-gray-300 bg-white text-gray-700 font-semibold rounded-xl shadow-sm hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
+                    >
+                      <img
+                        src="https://www.svgrepo.com/show/355037/google.svg"
+                        alt="google"
+                        className="w-5 h-5"
+                      />
+                      Continue with Google
+                    </button>
+                  </div>
+
                   <p className="mt-6 text-center text-gray-600">
                     Already have an account?
                     <span
@@ -206,7 +248,7 @@ export default function LoginPage() {
             </AnimatePresence>
           </motion.div>
 
-          {/* IMAGE PANEL (order auto change by flex-row / flex-row-reverse) */}
+          {/* IMAGE PANEL */}
           <motion.div
             className="flex-1 hidden md:flex items-center justify-center bg-gradient-to-br from-purple-500 to-indigo-600"
             initial={{ x: 50, opacity: 0 }}

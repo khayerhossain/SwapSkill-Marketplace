@@ -5,11 +5,14 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-
 import axiosInstance from "@/lib/axiosInstance";
 
 export default function RegisterFrom() {
   const [regform, setRegForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [message, setMessage] = useState("");
+  const [isToggled, setIsToggled] = useState(false);
+  const router = useRouter();
 
   const handleChangeReg = (e) => {
     setRegForm({ ...regform, [e.target.name]: e.target.value });
@@ -19,17 +22,13 @@ export default function RegisterFrom() {
     e.preventDefault();
     try {
       const { data } = await axiosInstance.post("/register", regform);
-
       if (data.success) {
         toast.success("Registration successful!!");
-
-        // Auto-login after registration
         const res = await signIn("credentials", {
           redirect: false,
           email: regform.email,
           password: regform.password,
         });
-
         if (res?.ok) {
           toast.success("Logged in successfully");
           window.location.href = "/";
@@ -43,11 +42,6 @@ export default function RegisterFrom() {
       setMessage(err.response?.data?.message || "Something went wrong");
     }
   };
-
-  // login
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [message, setMessage] = useState("");
-  const router = useRouter();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -72,9 +66,6 @@ export default function RegisterFrom() {
     }
   };
 
-  const [isToggled, setIsToggled] = useState(false);
-
-  // Animation variants for the container
   const containerVariants = {
     initial: { scale: 0.95, opacity: 0 },
     animate: {
@@ -89,7 +80,6 @@ export default function RegisterFrom() {
     },
   };
 
-  // Animation variants for text content
   const textVariants = {
     initial: { y: 30, opacity: 0 },
     animate: {
@@ -104,13 +94,13 @@ export default function RegisterFrom() {
     <Container>
       <div className="flex min-h-screen items-center justify-center bg-no-repeat bg-cover text-white p-4 sm:p-6 md:p-8">
         <motion.div
-          className="relative w-full  md:h-[80vh]  flex flex-col md:flex-row overflow-hidden  shadow-lg md:border border-purple-600 bg-white"
+          className="relative w-full  md:h-[80vh] flex flex-col md:flex-row overflow-hidden shadow-lg md:border border-purple-600 bg-white"
           variants={containerVariants}
           initial="initial"
           animate="animate"
           exit="exit"
         >
-          {/* LEFT SIDE */}
+          {/* LEFT SIDE (Login) */}
           <motion.div
             key={isToggled ? "login-left" : "text-left"}
             animate={{ x: 0, opacity: 1 }}
@@ -118,7 +108,7 @@ export default function RegisterFrom() {
             className={`flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 ${
               isToggled
                 ? "bg-white"
-                : "bg-gradient-to-r from-purple-600 to-indigo-600 bg-no-repeat bg-cover text-white"
+                : "bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
             }`}
           >
             <AnimatePresence mode="wait">
@@ -129,7 +119,7 @@ export default function RegisterFrom() {
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  className="w-full max-w-[90%] sm:max-w-md mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg border border-purple-200"
+                  className="w-full max-w-[90%] sm:max-w-md mx-auto bg-white/90 rounded-2xl p-6 sm:p-8 shadow-lg border border-purple-200"
                 >
                   <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">
                     Login Now
@@ -138,43 +128,55 @@ export default function RegisterFrom() {
                     onSubmit={handleSubmit}
                     className="space-y-4 sm:space-y-5"
                   >
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
-                        Username or Email
-                      </label>
-                      <input
-                        required
-                        name="email"
-                        type="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        className="w-full px-3 text-black sm:px-4 py-2 bg-gray-50 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors duration-300 text-sm sm:text-base placeholder:text-gray-500 placeholder:text-xs"
-                        placeholder="Enter your username or email"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
-                        Password
-                      </label>
-                      <input
-                        name="password"
-                        type="password"
-                        value={form.password}
-                        onChange={handleChange}
-                        className="w-full px-3 sm:px-4 py-2 text-black bg-gray-50 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors duration-300 text-sm sm:text-base placeholder:text-gray-500 placeholder:text-xs "
-                        placeholder="Enter your password"
-                        required
-                      />
-                    </div>
+                    <input
+                      required
+                      name="email"
+                      type="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 text-black bg-gray-50 border border-purple-300 rounded-lg"
+                      placeholder="Enter your email"
+                    />
+                    <input
+                      required
+                      name="password"
+                      type="password"
+                      value={form.password}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 text-black bg-gray-50 border border-purple-300 rounded-lg"
+                      placeholder="Enter your password"
+                    />
                     <motion.button
                       type="submit"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="w-full py-2 sm:py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 text-sm sm:text-base"
+                      className="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold"
                     >
                       Login
                     </motion.button>
                   </form>
+
+                  {/* Google Login */}
+                  <div className="mt-4">
+                    <button
+                      onClick={() => signIn("google")}
+                      className="w-full flex items-center justify-center gap-2 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-md"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 488 512"
+                        fill="currentColor"
+                      >
+                        <path d="M488 261.8c0-17.8-1.6-35-4.7-51.7H249v97.9h135c-5.8 31.1-23 57.4-49 75v62h79.2c46.4-42.8 73.8-105.9 73.8-183.2z" />
+                        <path d="M249 492c66.1 0 121.5-21.7 161.9-58.8l-79.2-62c-22 15.1-50.1 24-82.7 24-63.7 0-117.8-43.1-137.2-101.2H29v63.7C69.7 437.4 153.6 492 249 492z" />
+                        <path d="M111.8 293.9c-4.6-13.7-7.2-28.2-7.2-43.1s2.6-29.4 7.2-43.1V144H29c-14.4 28.5-22.7 60.7-22.7 96.8s8.3 68.3 22.7 96.8l82.8-63.7z" />
+                        <path d="M249 97.8c35.9 0 68.2 12.4 93.5 36.4l70.1-70.1C370.4 27.6 315 4 249 4 153.6 4 69.7 58.6 29 144l82.8 63.7C131.2 140.9 185.3 97.8 249 97.8z" />
+                      </svg>
+                      Continue with Google
+                    </button>
+                  </div>
+
                   {message && (
                     <p className="mt-4 text-center text-red-400 font-medium">
                       {message}
@@ -188,19 +190,15 @@ export default function RegisterFrom() {
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  className="flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6"
+                  className="flex flex-col items-center text-center space-y-4"
                 >
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
-                    Hello, Friend!
-                  </h1>
-                  <p className="text-sm sm:text-lg max-w-[80%] sm:max-w-xs">
+                  <h1 className="text-3xl font-extrabold">Hello, Friend!</h1>
+                  <p className="text-sm max-w-xs">
                     Sign up to embark on an exciting journey with us.
                   </p>
                   <motion.button
                     onClick={() => setIsToggled(true)}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="px-4 sm:px-6 py-2 sm:py-3 bg-white text-purple-600 font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-300 text-sm sm:text-base"
+                    className="px-6 py-2 bg-white text-purple-600 rounded-full font-semibold"
                   >
                     Go to Login
                   </motion.button>
@@ -209,14 +207,14 @@ export default function RegisterFrom() {
             </AnimatePresence>
           </motion.div>
 
-          {/* RIGHT SIDE */}
+          {/* RIGHT SIDE (Register) */}
           <motion.div
             key={isToggled ? "text-right" : "signup-right"}
             animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.7, ease: [0.6, -0.05, 0.01, 0.99] }}
+            transition={{ duration: 0.7 }}
             className={`flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 ${
               isToggled
-                ? "bg-gradient-to-r from-purple-600 to-indigo-600 bg-no-repeat bg-cover text-white"
+                ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
                 : "bg-white"
             }`}
           >
@@ -228,19 +226,15 @@ export default function RegisterFrom() {
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  className="flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6"
+                  className="flex flex-col items-center text-center space-y-4"
                 >
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
-                    Welcome Back!
-                  </h1>
-                  <p className="text-sm sm:text-lg max-w-[80%] sm:max-w-xs">
+                  <h1 className="text-3xl font-extrabold">Welcome Back!</h1>
+                  <p className="text-sm max-w-xs">
                     New here? Create an account to join the adventure.
                   </p>
                   <motion.button
                     onClick={() => setIsToggled(false)}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="px-4 sm:px-6 py-2 sm:py-3 bg-white text-purple-600 font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-300 text-sm sm:text-base"
+                    className="px-6 py-2 bg-white text-purple-600 rounded-full font-semibold"
                   >
                     Sign Up
                   </motion.button>
@@ -252,66 +246,70 @@ export default function RegisterFrom() {
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  className="w-full max-w-[90%] sm:max-w-md mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg border border-purple-200"
+                  className="w-full max-w-md mx-auto bg-white/90 rounded-2xl p-6 shadow-lg"
                 >
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6">
                     Sign Up Now
                   </h2>
-                  <form
-                    onSubmit={handleSubmitReg}
-                    className="space-y-4 sm:space-y-5"
-                  >
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
-                        Name
-                      </label>
-                      <input
-                        required
-                        name="name"
-                        type="text"
-                        value={regform.name}
-                        onChange={handleChangeReg}
-                        className="w-full px-3 text-black sm:px-4 py-2 bg-gray-50 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors duration-300 text-sm placeholder:text-gray-500 placeholder:text-xs sm:text-base"
-                        placeholder="Enter your name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
-                        Username or Email
-                      </label>
-                      <input
-                        required
-                        name="email"
-                        type="email"
-                        value={regform.email}
-                        onChange={handleChangeReg}
-                        className="w-full text-black px-3 sm:px-4 py-2 bg-gray-50 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors placeholder:text-gray-500 placeholder:text-xs duration-300 text-sm sm:text-base"
-                        placeholder="Enter your username or email"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
-                        Password
-                      </label>
-                      <input
-                        name="password"
-                        type="password"
-                        value={regform.password}
-                        onChange={handleChangeReg}
-                        className="w-full text-black px-3 sm:px-4 py-2 bg-gray-50 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder:text-gray-500 placeholder:text-xs transition-colors duration-300 text-sm sm:text-base"
-                        placeholder="Enter your password"
-                        required
-                      />
-                    </div>
+                  <form onSubmit={handleSubmitReg} className="space-y-4">
+                    <input
+                      required
+                      name="name"
+                      type="text"
+                      value={regform.name}
+                      onChange={handleChangeReg}
+                      className="w-full px-3 py-2 text-black bg-gray-50 border border-purple-300 rounded-lg"
+                      placeholder="Enter your name"
+                    />
+                    <input
+                      required
+                      name="email"
+                      type="email"
+                      value={regform.email}
+                      onChange={handleChangeReg}
+                      className="w-full px-3 py-2 text-black bg-gray-50 border border-purple-300 rounded-lg"
+                      placeholder="Enter your email"
+                    />
+                    <input
+                      required
+                      name="password"
+                      type="password"
+                      value={regform.password}
+                      onChange={handleChangeReg}
+                      className="w-full px-3 py-2 text-black bg-gray-50 border border-purple-300 rounded-lg"
+                      placeholder="Enter your password"
+                    />
                     <motion.button
                       type="submit"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="w-full py-2 sm:py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 text-sm sm:text-base"
+                      className="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold"
                     >
                       Sign Up
                     </motion.button>
                   </form>
+
+                  {/* Google Signup */}
+                  <div className="mt-4">
+                    <button
+                      onClick={() => signIn("google")}
+                      className="w-full flex items-center justify-center gap-2 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-md"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 488 512"
+                        fill="currentColor"
+                      >
+                        <path d="M488 261.8c0-17.8-1.6-35-4.7-51.7H249v97.9h135c-5.8 31.1-23 57.4-49 75v62h79.2c46.4-42.8 73.8-105.9 73.8-183.2z" />
+                        <path d="M249 492c66.1 0 121.5-21.7 161.9-58.8l-79.2-62c-22 15.1-50.1 24-82.7 24-63.7 0-117.8-43.1-137.2-101.2H29v63.7C69.7 437.4 153.6 492 249 492z" />
+                        <path d="M111.8 293.9c-4.6-13.7-7.2-28.2-7.2-43.1s2.6-29.4 7.2-43.1V144H29c-14.4 28.5-22.7 60.7-22.7 96.8s8.3 68.3 22.7 96.8l82.8-63.7z" />
+                        <path d="M249 97.8c35.9 0 68.2 12.4 93.5 36.4l70.1-70.1C370.4 27.6 315 4 249 4 153.6 4 69.7 58.6 29 144l82.8 63.7C131.2 140.9 185.3 97.8 249 97.8z" />
+                      </svg>
+                      Continue with Google
+                    </button>
+                  </div>
+
                   {message && (
                     <p className="mt-4 text-center text-red-400 font-medium">
                       {message}

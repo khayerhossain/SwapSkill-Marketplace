@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
-import { Check } from "lucide-react";
 import Container from "@/components/shared/Container";
-
+import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 export default function Pricing() {
   const [billing, setBilling] = useState("monthly");
-
+  const router = useRouter();
   const plans = [
     {
       name: "Learner",
@@ -53,7 +53,7 @@ export default function Pricing() {
     },
     {
       name: "Custom",
-      monthly: "—",
+      monthly: "175",
       yearly: "—",
       description: "Tailored solution for your unique learning needs.",
       features: [
@@ -65,6 +65,24 @@ export default function Pricing() {
       button: "Request Quote",
     },
   ];
+
+  const handlePrice = (name) => {
+      const plan = plans.find(p => p.name === name);
+  if (!plan) {
+    console.error("Plan not found:", name);
+    return;
+  }
+
+  // build query safely
+  const params = new URLSearchParams({
+    name: plan.name ?? "",
+    price: String(plan.monthly ?? ""),
+  });
+
+  const path = `/checkout?${params.toString()}`;
+  console.log("router.push argument:", path, typeof path); 
+  router.push(path); 
+  };
 
   return (
     <div className="bg-black h-auto py-16 text-white mt-5">
@@ -131,7 +149,8 @@ export default function Pricing() {
                 </ul>
               </div>
               <button
-                className={`mt-auto py-2 px-4 rounded-md font-semibold text-sm ${
+                onClick={() => handlePrice(plan.name)}
+                className={`mt-auto py-2 px-4 rounded-md font-semibold text-center text-sm ${
                   plan.button === "Contact Us" ||
                   plan.button === "Request Quote"
                     ? "bg-red-700 hover:bg-red-800"

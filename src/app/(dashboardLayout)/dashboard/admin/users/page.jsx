@@ -16,7 +16,15 @@ export default function UsersPage() {
       const { data } = await axiosInstance.get("/users");
       setUsers(data);
     } catch (error) {
-      console.error("Failed to fetch users", error);
+      if (error.response) {
+        console.error(
+          "Server responded with:",
+          error.response.status,
+          error.response.data
+        );
+      } else {
+        console.error("Error setting up request:", error.message);
+      }
     }
   };
 
@@ -131,8 +139,8 @@ export default function UsersPage() {
                     <button
                       onClick={() => handleRemove(user._id)}
                       className="bg-red-500 text-white px-3 py-2 rounded-lg shadow hover:bg-red-600 transition text-sm flex items-center gap-1"
-                    ><Trash2 className="w-4 h-4" />
-                      Remove
+                    >
+                      <Trash2 className="w-4 h-4" /> Remove
                     </button>
                   </td>
                 </tr>
@@ -181,9 +189,9 @@ export default function UsersPage() {
                   </button>
                   <button
                     onClick={() => handleRemove(user._id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded-lg shadow hover:bg-red-600 transition text-xs"
-                  ><Trash2 className="w-4 h-4" />
-                    
+                    className="bg-red-500 text-white px-2 py-1 rounded-lg shadow hover:bg-red-600 transition text-xs flex items-center gap-1"
+                  >
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>

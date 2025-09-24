@@ -70,7 +70,7 @@ export function SinglePaymentCard({ payment }) {
 
   return (
     <motion.div
-      className={`bg-zinc-900 border border-transparent border-white rounded-2xl p-8 hover:shadow-2xl flex flex-col md:flex-row items-center justify-between transition-all duration-300 hover:border-red-500 ${getGlowClass(
+      className={` border   rounded-2xl p-8 hover:shadow-2xl flex flex-col md:flex-row items-center justify-between transition-all duration-300 hover:border-red-500 ${getGlowClass(
         percentageRemaining
       )}`}
       whileHover={{ scale: 1.02 }}
@@ -80,7 +80,7 @@ export function SinglePaymentCard({ payment }) {
     >
       {/* Left Column: Time Left & Progress */}
       <div className="w-full md:w-1/2 flex flex-col items-center justify-center relative md:border-r md:border-zinc-800 md:pr-8">
-        <h3 className="text-xl font-bold text-white mb-2 pb-2 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-16 after:h-0.5 after:bg-red-500">
+        <h3 className="text-xl font-bold  mb-2 pb-2 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-16 after:h-0.5 after:bg-red-500">
           Time Left
         </h3>
         {timeLeft && (
@@ -128,7 +128,7 @@ export function SinglePaymentCard({ payment }) {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            <p className="text-4xl font-bold text-white">
+            <p className="text-4xl text-black font-bold">
               {percentageRemaining.toFixed(0)}%
             </p>
             <p className="text-gray-400 text-sm font-light mt-1">remaining</p>
@@ -138,13 +138,13 @@ export function SinglePaymentCard({ payment }) {
 
       {/* Right Column: Payment Details */}
       <div className="w-full md:w-1/2 flex-1 space-y-4 mt-8 md:mt-0 md:pl-8">
-        <h3 className="text-xl font-bold text-white mb-4 pb-2 relative after:absolute after:bottom-0 after:left-0 after:w-16 after:h-0.5 after:bg-red-500">
+        <h3 className="text-xl font-bold  mb-4 pb-2 relative after:absolute after:bottom-0 after:left-0 after:w-16 after:h-0.5 after:bg-red-500">
           Payment Details
         </h3>
         <div className="grid grid-cols-1 gap-4">
           <div className="flex items-center space-x-3 transition-transform duration-200 hover:translate-x-1">
             <FaBolt className="text-red-500" />
-            <p className="text-gray-300 font-light">
+            <p className="">
               Plan:{" "}
               <span className="font-semibold text-red-500">
                 {payment.planName}
@@ -153,41 +153,37 @@ export function SinglePaymentCard({ payment }) {
           </div>
           <div className="flex items-center space-x-3 transition-transform duration-200 hover:translate-x-1">
             <FaTag className="text-gray-400" />
-            <p className="text-gray-300 font-light">
-              Price:{" "}
-              <span className="font-semibold text-white">{payment.price}</span>
+            <p className="">
+              Price: <span className="font-bold">{payment.price}</span>
             </p>
           </div>
           <div className="flex items-center space-x-3 transition-transform duration-200 hover:translate-x-1">
             <FaCalendarAlt className="text-gray-400" />
-            <p className="text-gray-300 font-light">
+            <p className="">
               Date:{" "}
-              <span className="font-normal text-gray-400">
+              <span className="font-bold">
                 {new Date(payment.date).toLocaleString()}
               </span>
             </p>
           </div>
           <div className="flex items-center space-x-3 transition-transform duration-200 hover:translate-x-1">
             <FaUserCircle className="text-gray-400" />
-            <p className="text-gray-300 font-light">
-              User Name:{" "}
-              <span className="font-normal text-gray-400">
-                {payment.userName}
-              </span>
+            <p className="">
+              User Name: <span className="font-bold">{payment.userName}</span>
             </p>
           </div>
           <div className="flex items-center space-x-3 transition-transform duration-200 hover:translate-x-1">
             <FaEnvelope className="text-gray-400" />
-            <p className="text-gray-300 font-light">
+            <p className="t">
               Email:{" "}
-              <span className="font-normal text-gray-400">{payment.email}</span>
+              <span className="font-bold">{payment.email}</span>
             </p>
           </div>
           <div className="flex items-center space-x-3 transition-transform duration-200 hover:translate-x-1">
             <FaReceipt className="text-gray-400" />
-            <p className="text-gray-300 font-light">
+            <p className="">
               Transaction ID:{" "}
-              <span className="font-normal text-gray-400">
+              <span className="font-bold">
                 {payment.transactionId}
               </span>
             </p>

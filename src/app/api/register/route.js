@@ -31,6 +31,7 @@ export async function POST(request) {
       role: "user",
       createdAt: now,
       updatedAt: now,
+      status: "active",
     });
 
     return NextResponse.json({

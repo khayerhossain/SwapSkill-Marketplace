@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
 import {
   FaHome,
   FaUserCheck,
@@ -13,7 +12,6 @@ import {
   FaUsers,
 } from "react-icons/fa";
 
-
 const Sidebar = ({
   onClick,
   useAppBarPaths = false,
@@ -21,8 +19,6 @@ const Sidebar = ({
   isDashboard = false,
 }) => {
   const pathname = usePathname();
-  const { data: session } = useSession();
-  const role = session?.user?.role || "user";
 
   const communityPath = useAppBarPaths ? "/appBar/community" : "/community";
   const findSkillsPath = useAppBarPaths
@@ -33,12 +29,11 @@ const Sidebar = ({
     : "/share-skills";
   const dashboardPath = useAppBarPaths ? "/dashboard" : "/dashboard";
 
-  // AppBar items (for user navigation)
   const appBarItems = [
-    { name: "Home", icon: <FaHome />, path: "/", role: "all" },
-    { name: "Community", icon: <FaUserFriends />, path: communityPath, role: "all" },
-    { name: "Find Skills", icon: <FaBox />, path: findSkillsPath, role: "all" },
-    { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath, role: "all" },
+    { name: "Home", icon: <FaHome />, path: "/" },
+    { name: "Community", icon: <FaUserFriends />, path: communityPath },
+    { name: "Find Skills", icon: <FaBox />, path: findSkillsPath },
+    { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath },
   ];
 
   // Dashboard items (Profile + Settings visible for all)
@@ -74,7 +69,7 @@ const Sidebar = ({
 
   return (
     <ul className={`space-y-2 ${collapsed ? "px-2" : "px-4"} h-screen`}>
-      {filteredItems.map((item, index) => (
+      {menuItems.map((item, index) => (
         <li key={index}>
           <Link
             href={item.path}

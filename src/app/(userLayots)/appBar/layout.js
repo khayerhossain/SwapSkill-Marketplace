@@ -22,7 +22,7 @@ export default function AppBarLayout({ children }) {
         {/* Large Screen Sidebar */}
         <div className={`hidden md:block fixed left-0 top-0 h-screen z-30 ${collapsed ? "w-[6rem]" : "w-[20%]"} bg-base-200 text-base-content border-r border-base-300`}>
           <div className="p-4 flex items-center justify-between">
-            <span className="font-semibold">Menu</span>
+            <span className="font-semibold">Swap Skill</span>
             <button
               aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
               className="btn btn-ghost btn-xs"

@@ -3,7 +3,6 @@ import axiosInstance from "@/lib/axiosInstance";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
 
@@ -16,7 +15,15 @@ export default function UsersPage() {
       const { data } = await axiosInstance.get("/users");
       setUsers(data);
     } catch (error) {
-      console.error("Failed to fetch users", error);
+      if (error.response) {
+        console.error(
+          "Server responded with:",
+          error.response.status,
+          error.response.data
+        );
+      } else {
+        console.error("Error setting up request:", error.message);
+      }
     }
   };
 
@@ -48,9 +55,7 @@ export default function UsersPage() {
         try {
           await axiosInstance.delete(`/users?id=${id}`);
 
-          setUsers((prev) =>
-            prev.filter((u) => String(u._id) !== String(id))
-          );
+          setUsers((prev) => prev.filter((u) => String(u._id) !== String(id)));
           Swal.fire("Deleted!", "User has been removed.", "success");
         } catch (error) {
           Swal.fire("Error!", "Failed to delete user.", "error");
@@ -69,10 +74,18 @@ export default function UsersPage() {
           <table className="w-full border border-gray-200 rounded-lg shadow-sm overflow-hidden">
             <thead>
               <tr className="bg-gradient-to-r from-orange-500 to-pink-500 text-white">
-                <th className="px-6 py-3 text-sm font-semibold text-center">Name</th>
-                <th className="px-6 py-3 text-sm font-semibold text-center">Email</th>
-                <th className="px-6 py-3 text-sm font-semibold text-center">Status</th>
-                <th className="px-6 py-3 text-sm font-semibold text-center">Action</th>
+                <th className="px-6 py-3 text-sm font-semibold text-center">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-sm font-semibold text-center">
+                  Email
+                </th>
+                <th className="px-6 py-3 text-sm font-semibold text-center">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-sm font-semibold text-center">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -92,7 +105,9 @@ export default function UsersPage() {
                   <td className="px-6 py-4 text-center">
                     <select
                       value={user.status || "active"}
-                      onChange={(e) => handleStatusChange(user._id, e.target.value)}
+                      onChange={(e) =>
+                        handleStatusChange(user._id, e.target.value)
+                      }
                       className="p-2 border rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-orange-400 focus:outline-none cursor-pointer"
                     >
                       <option value="active"> Active</option>
@@ -111,7 +126,10 @@ export default function UsersPage() {
               ))}
               {users.length === 0 && (
                 <tr>
-                  <td colSpan="4" className="text-center py-6 text-gray-500 italic">
+                  <td
+                    colSpan="4"
+                    className="text-center py-6 text-gray-500 italic"
+                  >
                     No users found...
                   </td>
                 </tr>
@@ -148,7 +166,9 @@ export default function UsersPage() {
             </div>
           ))}
           {users.length === 0 && (
-            <p className="text-center text-gray-500 italic">No users found...</p>
+            <p className="text-center text-gray-500 italic">
+              No users found...
+            </p>
           )}
         </div>
       </section>

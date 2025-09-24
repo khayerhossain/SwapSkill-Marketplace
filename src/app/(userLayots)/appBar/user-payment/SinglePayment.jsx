@@ -70,7 +70,7 @@ export function SinglePaymentCard({ payment }) {
 
   return (
     <motion.div
-      className={` border   rounded-2xl p-8 hover:shadow-2xl flex flex-col md:flex-row items-center justify-between transition-all duration-300 hover:border-red-500 ${getGlowClass(
+      className={` border rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between ${getGlowClass(
         percentageRemaining
       )}`}
       whileHover={{ scale: 1.02 }}

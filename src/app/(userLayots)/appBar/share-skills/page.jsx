@@ -33,13 +33,11 @@ export default function SkillForm() {
     twitter: "",
   });
 
-  // 🔹 audio state (null by default)
   const [audio, setAudio] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const router = useRouter();
   const { addNotification } = useNotification();
 
-  // 🔹 Ensure Audio runs only on client
   useEffect(() => {
     if (typeof window !== "undefined") {
       setAudio(new Audio("/sounds/notification.mp3"));
@@ -75,7 +73,6 @@ export default function SkillForm() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // 🔹 Play notification sound (if loaded)
         if (audio) audio.play();
 
         addNotification({
@@ -83,21 +80,38 @@ export default function SkillForm() {
           message: "Choose your option!",
           type: "formSuccess",
           profileId: data.insertedId,
-          userId: "current-user-id", // replace with actual user ID
+          userId: "current-user-id",
           category: formData.category || "General",
         });
 
-        // Reset form
         setFormData({
-          userName: "", age: "", gender: "", homeTown: "", studyOrWorking: "",
-          userImage: "", category: "", description: "", experience: "",
-          availability: "", availabilityType: "", location: "", timeZone: "",
-          skillsToTeach: "", skillsToLearn: "", swapPreference: "",
-          portfolioLink: "", languages: "", tags: "", responseTime: "",
-          email: "", phone: "", facebook: "", instagram: "", twitter: ""
+          userName: "",
+          age: "",
+          gender: "",
+          homeTown: "",
+          studyOrWorking: "",
+          userImage: "",
+          category: "",
+          description: "",
+          experience: "",
+          availability: "",
+          availabilityType: "",
+          location: "",
+          timeZone: "",
+          skillsToTeach: "",
+          skillsToLearn: "",
+          swapPreference: "",
+          portfolioLink: "",
+          languages: "",
+          tags: "",
+          responseTime: "",
+          email: "",
+          phone: "",
+          facebook: "",
+          instagram: "",
+          twitter: "",
         });
         setImagePreview(null);
-
       } else {
         addNotification({
           title: "Error!",
@@ -115,6 +129,96 @@ export default function SkillForm() {
     }
   };
 
+  // 🔹 Reusable Floating Input
+  const FloatingInput = ({
+    label,
+    type = "text",
+    name,
+    value,
+    onChange,
+    className = "",
+    ...props
+  }) => (
+    <div className={`relative ${className}`}>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        className="peer w-full p-3 border border-gray-400 rounded-lg bg-transparent placeholder-transparent focus:outline-none focus:ring-2 focus:ring-black"
+        placeholder={label}
+        {...props}
+      />
+      <label
+        htmlFor={name}
+        className="absolute left-3 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all 
+          peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
+          peer-placeholder-shown:text-base peer-focus:-top-2.5 
+          peer-focus:text-sm peer-focus:text-black"
+      >
+        {label}
+      </label>
+    </div>
+  );
+
+  // 🔹 Reusable Floating Textarea
+  const FloatingTextarea = ({
+    label,
+    name,
+    value,
+    onChange,
+    className = "",
+  }) => (
+    <div className={`relative ${className}`}>
+      <textarea
+        name={name}
+        value={value}
+        onChange={onChange}
+        className="peer w-full p-3 border border-gray-400 rounded-lg bg-transparent placeholder-transparent focus:outline-none focus:ring-2 focus:ring-black resize-none h-32 lg:h-[200px]"
+        placeholder={label}
+      />
+      <label
+        htmlFor={name}
+        className="absolute left-3 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all 
+          peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
+          peer-placeholder-shown:text-base peer-focus:-top-2.5 
+          peer-focus:text-sm peer-focus:text-black"
+      >
+        {label}
+      </label>
+    </div>
+  );
+
+  // 🔹 Reusable Floating Select
+  const FloatingSelect = ({
+    label,
+    name,
+    value,
+    onChange,
+    options,
+    className = "",
+  }) => (
+    <div className={`relative ${className}`}>
+      <select
+        name={name}
+        value={value}
+        onChange={onChange}
+        className="peer w-full p-3 border border-gray-400 rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-black"
+      >
+        <option value="" disabled hidden></option>
+        {options.map((opt, i) => (
+          <option key={i}>{opt}</option>
+        ))}
+      </select>
+      <label
+        htmlFor={name}
+        className="absolute left-3 -top-2.5 bg-white px-1 text-sm text-gray-600"
+      >
+        {label}
+      </label>
+    </div>
+  );
+
   return (
     <section className="max-w-6xl mx-auto bg-white p-10 rounded-xl shadow-xl border border-gray-200">
       <h2 className="text-3xl font-bold mb-8 text-gray-800 text-left">
@@ -122,61 +226,44 @@ export default function SkillForm() {
       </h2>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
-        {/* User Name */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Full Name"
           name="userName"
-          placeholder="Full Name"
           value={formData.userName}
           onChange={handleChange}
-          className="col-span-1 p-3 border border-gray-400 rounded-lg"
           required
         />
-
-        {/* Age */}
-        <input
+        <FloatingInput
+          label="Age"
           type="number"
           name="age"
-          placeholder="Age"
           value={formData.age}
           onChange={handleChange}
-          className="col-span-1 p-3 border border-gray-400 rounded-lg"
         />
 
-        {/* Gender */}
-        <select
+        <FloatingSelect
+          label="Gender"
           name="gender"
           value={formData.gender}
           onChange={handleChange}
-          className="col-span-1 p-3 border border-gray-400 rounded-lg"
-        >
-          <option value="">Select Gender</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Other</option>
-        </select>
+          options={["Male", "Female", "Other"]}
+        />
 
-        {/* Home Town */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Home Town"
           name="homeTown"
-          placeholder="Home Town"
           value={formData.homeTown}
           onChange={handleChange}
-          className="col-span-1 p-3 border border-gray-400 rounded-lg"
         />
-
-        {/* Study/Working */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Study or Working"
           name="studyOrWorking"
-          placeholder="Study or Working"
           value={formData.studyOrWorking}
           onChange={handleChange}
-          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+          className="col-span-2"
         />
 
-        {/* Image (20%) + Description (80%) */}
+        {/* Image + Description */}
         <div className="col-span-2 grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
           {/* Image Upload */}
           <div className="md:col-span-1 flex flex-col items-center border-2 border-dashed border-gray-400 p-4 rounded-lg">
@@ -209,204 +296,158 @@ export default function SkillForm() {
           </div>
 
           {/* Description */}
-          <div className="md:col-span-4">
-            <textarea
-              name="description"
-              placeholder="Description"
-              value={formData.description}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-400 rounded-lg h-32 lg:h-[200px] resize-none"
-            />
-          </div>
+          <FloatingTextarea
+            label="Description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            className="md:col-span-4"
+          />
         </div>
 
-        {/* Category */}
-        <select
-          type="text"
+        <FloatingSelect
+          label="Skill Category"
           name="category"
-          placeholder="Skill Category"
           value={formData.category}
           onChange={handleChange}
-          className="col-span-2 p-3 border border-gray-400 rounded-lg"
-        >
-          <option value="">Select Availability Category</option>
-          <option>Programming</option>
-          <option>Design</option>
-          <option>Dance</option>
-          <option>Sports</option>
-          <option>Teamwork</option>
-          <option>Marketing</option>          
-          </select>   
+          options={[
+            "Programming",
+            "Design",
+            "Dance",
+            "Sports",
+            "Teamwork",
+            "Marketing",
+            "Music",
+            "Cooking",
+            "Photography",
+            "Writing",
+            "Driving",
+            "Handwriting",
+            "Swimming",
+            "Fishing",
+            "Other",
+          ]}
+          className="col-span-2"
+        />
 
-          
-        {/* Skills To Teach */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Skills to Teach (comma separated)"
           name="skillsToTeach"
-          placeholder="Skills to Teach (comma separated)"
           value={formData.skillsToTeach}
           onChange={handleChange}
-          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+          className="col-span-2"
         />
-
-        {/* Skills To Learn */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Skills to Learn (comma separated)"
           name="skillsToLearn"
-          placeholder="Skills to Learn (comma separated)"
           value={formData.skillsToLearn}
           onChange={handleChange}
-          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+          className="col-span-2"
         />
-
-        {/* Experience */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Experience (e.g. 2 years)"
           name="experience"
-          placeholder="Experience (e.g. 2 years)"
           value={formData.experience}
           onChange={handleChange}
-          className="col-span-1 p-3 border border-gray-400 rounded-lg"
         />
-
-        {/* Availability */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Availability (e.g. Weekends)"
           name="availability"
-          placeholder="Availability (e.g. Weekends)"
           value={formData.availability}
           onChange={handleChange}
-          className="col-span-1 p-3 border border-gray-400 rounded-lg"
         />
 
-        {/* Availability Type */}
-        <select
+        <FloatingSelect
+          label="Availability Type"
           name="availabilityType"
           value={formData.availabilityType}
           onChange={handleChange}
-          className="col-span-1 p-3 border border-gray-400 rounded-lg"
-        >
-          <option value="">Select Availability Type</option>
-          <option>Online</option>
-          <option>Offline</option>
-          <option>Hybrid</option>
-        </select>
+          options={["Online", "Offline", "Hybrid"]}
+        />
 
-        {/* Location */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Location"
           name="location"
-          placeholder="Location"
           value={formData.location}
           onChange={handleChange}
-          className="col-span-1 p-3 border border-gray-400 rounded-lg"
         />
-
-        {/* Time Zone */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Time Zone (e.g. Asia/Dhaka)"
           name="timeZone"
-          placeholder="Time Zone (e.g. Asia/Dhaka)"
           value={formData.timeZone}
           onChange={handleChange}
-          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+          className="col-span-2"
         />
-
-        {/* Swap Preference */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Swap Preference"
           name="swapPreference"
-          placeholder="Swap Preference"
           value={formData.swapPreference}
           onChange={handleChange}
-          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+          className="col-span-2"
         />
-
-        {/* Portfolio Link */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Portfolio Link"
           name="portfolioLink"
-          placeholder="Portfolio Link"
           value={formData.portfolioLink}
           onChange={handleChange}
-          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+          className="col-span-2"
         />
-
-        {/* Languages */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Languages (comma separated)"
           name="languages"
-          placeholder="Languages (comma separated)"
           value={formData.languages}
           onChange={handleChange}
-          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+          className="col-span-2"
         />
-
-        {/* Tags */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Tags (comma separated)"
           name="tags"
-          placeholder="Tags (comma separated)"
           value={formData.tags}
           onChange={handleChange}
-          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+          className="col-span-2"
         />
-
-        {/* Response Time */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Response Time (e.g. Within 24 hours)"
           name="responseTime"
-          placeholder="Response Time (e.g. Within 24 hours)"
           value={formData.responseTime}
           onChange={handleChange}
-          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+          className="col-span-2"
         />
 
-        {/* Contact Info */}
-        <input
+        <FloatingInput
+          label="Email Address"
           type="email"
           name="email"
-          placeholder="Email Address"
           value={formData.email}
           onChange={handleChange}
-          className="col-span-1 p-3 border border-gray-400 rounded-lg"
         />
-        <input
-          type="text"
+        <FloatingInput
+          label="Phone Number"
           name="phone"
-          placeholder="Phone Number"
           value={formData.phone}
           onChange={handleChange}
-          className="col-span-1 p-3 border border-gray-400 rounded-lg"
         />
-
-        {/* Social Media */}
-        <input
-          type="text"
+        <FloatingInput
+          label="Facebook Link"
           name="facebook"
-          placeholder="Facebook Link"
           value={formData.facebook}
           onChange={handleChange}
-          className="col-span-2 p-3 border border-gray-400 rounded-lg"
+          className="col-span-2"
         />
-        <input
-          type="text"
+        <FloatingInput
+          label="Instagram Link"
           name="instagram"
-          placeholder="Instagram Link"
           value={formData.instagram}
           onChange={handleChange}
-          className="col-span-1 p-3 border border-gray-400 rounded-lg"
         />
-        <input
-          type="text"
+        <FloatingInput
+          label="Twitter Link"
           name="twitter"
-          placeholder="Twitter Link"
           value={formData.twitter}
           onChange={handleChange}
-          className="col-span-1 p-3 border border-gray-400 rounded-lg"
         />
 
-  {/* Submit */}
+        {/* Submit */}
         <button
           type="submit"
           className="col-span-2 py-3 bg-black text-white font-bold rounded-lg hover:bg-gray-800 transition"

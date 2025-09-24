@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react"; 
+import { RiSecurePaymentLine } from "react-icons/ri";
 import {
   FaHome,
   FaUserCheck,
@@ -32,6 +33,9 @@ const Sidebar = ({
   const shareSkillsPath = useAppBarPaths
     ? "/appBar/share-skills"
     : "/share-skills";
+  const userPayment = useAppBarPaths
+    ? "/appBar/user-payment"
+    : "/user-payment";
   const dashboardPath = useAppBarPaths ? "/dashboard" : "/dashboard";
 
   // AppBar items (for user navigation)
@@ -40,6 +44,7 @@ const Sidebar = ({
     { name: "Community", icon: <FaUserFriends />, path: communityPath, role: "all" },
     { name: "Find Skills", icon: <FaBox />, path: findSkillsPath, role: "all" },
     { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath, role: "all" },
+    { name: "Payment Access", icon: <RiSecurePaymentLine />, path: userPayment, role: "all" },
   ];
 
   // Dashboard items (Profile + Settings visible for all)

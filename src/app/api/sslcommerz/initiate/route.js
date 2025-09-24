@@ -16,7 +16,7 @@ export async function POST(req) {
         total_amount: paymentInfo.price,
         currency: "BDT",
         tran_id: `${traxid}`, // use unique tran_id for each api call
-        success_url: "http://localhost:3000/success",
+        success_url: "http://localhost:3000/api/sslcommerz/success",
         fail_url: "http://localhost:3000/fail",
         cancel_url: "http://localhost:3000/cancel",
         ipn_url: "http://localhost:3000/ipn",

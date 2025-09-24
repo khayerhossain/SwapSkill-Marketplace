@@ -15,30 +15,27 @@ export async function POST(req) {
     `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${valId}&store_id=dhali6887a38031a40&store_passwd=dhali6887a38031a40@ssl`
   );
 
-  console.log("Validation Response:", isValidPayment.data);  
+  console.log("Validation Response:", isValidPayment.data);
 
-  if(isValidPayment.data.status !== 'VALID'){
-
-    return NextResponse.json({ message:'invalid'});
-  }  
-
- const paymentCollection = await dbConnect(collectionNamesObj.paymentCollection);
-
-// Debugging logs
-console.log("Tran ID from SSLCommerz:", isValidPayment?.data?.tran_id);
-
-const updatePayment = await paymentCollection.updateOne(
-  { transactionId: isValidPayment?.data?.tran_id },
-  {
-    $set: {
-      status: "success",
-    },
+  if (isValidPayment.data.status !== "VALID") {
+    return NextResponse.redirect("http://localhost:3000/fail");
   }
-);
 
-console.log("Update Result:", updatePayment);
-  
- 
+  const paymentCollection = await dbConnect(collectionNamesObj.paymentCollection);
 
-  return NextResponse.json({ status: "success", data: isValidPayment.data });
+  console.log("Tran ID from SSLCommerz:", isValidPayment?.data?.tran_id);
+
+  const updatePayment = await paymentCollection.updateOne(
+    { transactionId: isValidPayment?.data?.tran_id },
+    {
+      $set: {
+        status: "success",
+      },
+    }
+  );
+
+  console.log("Update Result:", updatePayment);
+
+  // ✅ Redirect to success page if everything is OK
+  return NextResponse.redirect("http://localhost:3000/success");
 }

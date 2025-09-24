@@ -27,13 +27,18 @@ const Sidebar = ({
   const shareSkillsPath = useAppBarPaths
     ? "/appBar/share-skills"
     : "/share-skills";
+  const userPayment = useAppBarPaths
+    ? "/appBar/user-payment"
+    : "/user-payment";
   const dashboardPath = useAppBarPaths ? "/dashboard" : "/dashboard";
 
   const appBarItems = [
     { name: "Home", icon: <FaHome />, path: "/" },
     { name: "Community", icon: <FaUserFriends />, path: communityPath },
     { name: "Find Skills", icon: <FaBox />, path: findSkillsPath },
-    { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath },
+
+    { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath }, 
+    { name: "Payment Access", icon: <FaBox />, path: userPayment,  },
   ];
 
   const dashboardItems = [

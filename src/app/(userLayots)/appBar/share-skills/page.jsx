@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useNotification } from "@/context/NotificationContext";
 
@@ -32,12 +33,18 @@ export default function SkillForm() {
     twitter: "",
   });
 
-  // 🔹 Highlight: Audio object added for notification sound
-  const audio = new Audio("/sounds/notification.mp3"); // 🔊 Sound file in public/sounds/
-
+  // 🔹 audio state (null by default)
+  const [audio, setAudio] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const router = useRouter();
   const { addNotification } = useNotification();
+
+  // 🔹 Ensure Audio runs only on client
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setAudio(new Audio("/sounds/notification.mp3"));
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -68,8 +75,8 @@ export default function SkillForm() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // 🔹 Highlight: Play notification sound when form is successfully submitted
-        audio.play();
+        // 🔹 Play notification sound (if loaded)
+        if (audio) audio.play();
 
         addNotification({
           title: "Do you want to start the Quiz?",
@@ -77,16 +84,16 @@ export default function SkillForm() {
           type: "formSuccess",
           profileId: data.insertedId,
           userId: "current-user-id", // replace with actual user ID
-          category: formData.category || "General"
+          category: formData.category || "General",
         });
 
         // Reset form
         setFormData({
-          userName: "", age: "", gender: "", homeTown: "", studyOrWorking: "", 
-          userImage: "", category: "", description: "", experience: "", 
-          availability: "", availabilityType: "", location: "", timeZone: "", 
-          skillsToTeach: "", skillsToLearn: "", swapPreference: "", 
-          portfolioLink: "", languages: "", tags: "", responseTime: "", 
+          userName: "", age: "", gender: "", homeTown: "", studyOrWorking: "",
+          userImage: "", category: "", description: "", experience: "",
+          availability: "", availabilityType: "", location: "", timeZone: "",
+          skillsToTeach: "", skillsToLearn: "", swapPreference: "",
+          portfolioLink: "", languages: "", tags: "", responseTime: "",
           email: "", phone: "", facebook: "", instagram: "", twitter: ""
         });
         setImagePreview(null);
@@ -95,7 +102,7 @@ export default function SkillForm() {
         addNotification({
           title: "Error!",
           message: data.error || "Something went wrong.",
-          type: "error"
+          type: "error",
         });
       }
     } catch (error) {
@@ -103,7 +110,7 @@ export default function SkillForm() {
       addNotification({
         title: "Error!",
         message: "Submission failed.",
-        type: "error"
+        type: "error",
       });
     }
   };

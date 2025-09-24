@@ -36,36 +36,25 @@ const Sidebar = ({
     { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath },
   ];
 
-  // Dashboard items (Profile + Settings visible for all)
-  const dashboardCommonItems = [
-    { name: "Profile", icon: <FaUser />, path: "/dashboard/profile", role: "all" },
-    { name: "Settings", icon: <FaCog />, path: "/dashboard/settings", role: "all" },
-    { name: "All Users", icon: <FaUsers />, path: "/dashboard/users", role: "all" },
+  const dashboardItems = [
+    { name: "Profile", icon: <FaUser />, path: "/dashboard/profile" },
+    { name: "Settings", icon: <FaCog />, path: "/dashboard/settings" },
+    { name: "Home", icon: <FaUsers />, path: "/" },
+    { name: "Dashboard", icon: <FaHome />, path: dashboardPath },
+    {
+      name: "Subscribers",
+      icon: <FaUserCheck />,
+      path: "/dashboard/admin/subscribers",
+    },
+    {
+      name: "All Users",
+      icon: <FaUserCheck />,
+      path: "/dashboard/admin/users",
+    },
     { name: "ManageSkills", icon: <FaUsers />, path: "/dashboard/manageSkills", role: "all" },
   ];
 
-  // Extra items only for admin
-  const dashboardAdminItems = [
-    { name: "Dashboard", icon: <FaHome />, path: dashboardPath, role: "admin" },
-    { name: "Subscribers", icon: <FaUserCheck />, path: "/dashboard/admin/subscribers", role: "admin" },
-  ];
-
-  let menuItems = [];
-
-  if (isDashboard) {
-    // Dashboard menu = common + admin-only if role = admin
-    menuItems = [...dashboardCommonItems];
-    if (role === "admin") {
-      menuItems = [...menuItems, ...dashboardAdminItems];
-    }
-  } else {
-    // AppBar menu
-    menuItems = appBarItems;
-  }
-
-  const filteredItems = menuItems.filter(
-    (item) => item.role === "all" || item.role === role
-  );
+  const menuItems = isDashboard ? dashboardItems : appBarItems;
 
   return (
     <ul className={`space-y-2 ${collapsed ? "px-2" : "px-4"} h-screen`}>

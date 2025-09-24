@@ -44,7 +44,7 @@ export default function PaymentDetails() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-900 text-white p-4 sm:p-8 flex items-center justify-center">
+    <div className="min-h-screen   p-4 sm:p-8 flex items-center justify-center">
       <motion.div
         className="w-full max-w-4xl space-y-6"
         variants={containerVariants}

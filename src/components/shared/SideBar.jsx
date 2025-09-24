@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react"; 
-import { RiSecurePaymentLine } from "react-icons/ri";
 import {
   FaHome,
   FaUserCheck,
@@ -13,7 +11,7 @@ import {
   FaCog,
   FaUsers,
 } from "react-icons/fa";
-
+ 
 const Sidebar = ({
   onClick,
   useAppBarPaths = false,
@@ -35,42 +33,33 @@ const Sidebar = ({
   const dashboardPath = useAppBarPaths ? "/dashboard" : "/dashboard";
 
   const appBarItems = [
-    { name: "Home", icon: <FaHome />, path: "/", role: "all" },
-    { name: "Community", icon: <FaUserFriends />, path: communityPath, role: "all" },
-    { name: "Find Skills", icon: <FaBox />, path: findSkillsPath, role: "all" },
-    { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath, role: "all" },
-    { name: "Payment Access", icon: <RiSecurePaymentLine />, path: userPayment, role: "all" },
+    { name: "Home", icon: <FaHome />, path: "/" },
+    { name: "Community", icon: <FaUserFriends />, path: communityPath },
+    { name: "Find Skills", icon: <FaBox />, path: findSkillsPath },
+    { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath }, 
+    { name: "Payment Access", icon: <FaBox />, path: userPayment, role: "all" },
+    
   ];
 
-  // Dashboard items (Profile + Settings visible for all)
-  const dashboardCommonItems = [
-    { name: "Profile", icon: <FaUser />, path: "/dashboard/profile", role: "all" },
-    { name: "Settings", icon: <FaCog />, path: "/dashboard/settings", role: "all" },
-    { name: "Home", icon: <FaUsers />, path: "/", role: "all" },
+  const dashboardItems = [
+    { name: "Profile", icon: <FaUser />, path: "/dashboard/profile" },
+    { name: "Settings", icon: <FaCog />, path: "/dashboard/settings" },
+    { name: "Home", icon: <FaUsers />, path: "/" },
+    { name: "Dashboard", icon: <FaHome />, path: dashboardPath },
+    {
+      name: "Subscribers",
+      icon: <FaUserCheck />,
+      path: "/dashboard/admin/subscribers",
+    },
+    {
+      name: "All Users",
+      icon: <FaUserCheck />,
+      path: "/dashboard/admin/users",
+    },
+    { name: "ManageSkills", icon: <FaUsers />, path: "/dashboard/manageSkills", role: "all" },
   ];
-//  aaaaa
-  // Extra items only for admin
-  const dashboardAdminItems = [
-    { name: "Dashboard", icon: <FaHome />, path: dashboardPath, role: "admin" },
-    { name: "Subscribers", icon: <FaUserCheck />, path: "/dashboard/admin/subscribers", role: "admin" },
-  ];
 
-  let menuItems = [];
-
-  if (isDashboard) {
-    // Dashboard menu = common + admin-only if role = admin
-    menuItems = [...dashboardCommonItems];
-    if (role === "admin") {
-      menuItems = [...menuItems, ...dashboardAdminItems];
-    }
-  } else {
-    // AppBar menu
-    menuItems = appBarItems;
-  }
-
-  const filteredItems = menuItems.filter(
-    (item) => item.role === "all" || item.role === role
-  );
+  const menuItems = isDashboard ? dashboardItems : appBarItems;
 
   return (
     <ul className={`space-y-2 ${collapsed ? "px-2" : "px-4"} h-screen`}>

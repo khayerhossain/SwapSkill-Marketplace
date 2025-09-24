@@ -2,6 +2,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { CheckCircle, XCircle, MessageSquare, Trash2 } from "lucide-react";
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -15,19 +16,12 @@ export default function UsersPage() {
       const { data } = await axiosInstance.get("/users");
       setUsers(data);
     } catch (error) {
-      if (error.response) {
-        console.error(
-          "Server responded with:",
-          error.response.status,
-          error.response.data
-        );
-      } else {
-        console.error("Error setting up request:", error.message);
-      }
+      console.error("Failed to fetch users", error);
     }
   };
 
-  const handleStatusChange = async (id, newStatus) => {
+  const handleStatusToggle = async (id, currentStatus) => {
+    const newStatus = currentStatus === "active" ? "deactive" : "active";
     try {
       await axiosInstance.patch("/users", { id, status: newStatus });
 
@@ -54,8 +48,9 @@ export default function UsersPage() {
       if (result.isConfirmed) {
         try {
           await axiosInstance.delete(`/users?id=${id}`);
-
-          setUsers((prev) => prev.filter((u) => String(u._id) !== String(id)));
+          setUsers((prev) =>
+            prev.filter((u) => String(u._id) !== String(id))
+          );
           Swal.fire("Deleted!", "User has been removed.", "success");
         } catch (error) {
           Swal.fire("Error!", "Failed to delete user.", "error");
@@ -64,26 +59,42 @@ export default function UsersPage() {
     });
   };
 
+  const handleMessage = (user) => {
+    Swal.fire({
+      title: `Send message to ${user.name}?`,
+      input: "text",
+      inputPlaceholder: "Type your message here...",
+      showCancelButton: true,
+      confirmButtonText: "Send",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        Swal.fire("Sent!", `Message sent to ${user.email}`, "success");
+        
+      }
+    });
+  };
+
   return (
     <div>
-      <section className="max-w-5xl mx-auto mt-10 bg-white p-6 rounded-xl shadow">
+      <section className="max-w-6xl mx-auto mt-10 bg-white p-6 rounded-xl shadow">
         <h1 className="text-3xl font-bold mb-8 text-center">All Users</h1>
 
-        {/* medium & large screens show table */}
+        {/* Table screens for md and up */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full border border-gray-200 rounded-lg shadow-sm overflow-hidden">
             <thead>
               <tr className="bg-gradient-to-r from-orange-500 to-pink-500 text-white">
-                <th className="px-6 py-3 text-sm font-semibold text-center">
+                <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-center">
                   Name
                 </th>
-                <th className="px-6 py-3 text-sm font-semibold text-center">
+                <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-center">
                   Email
                 </th>
-                <th className="px-6 py-3 text-sm font-semibold text-center">
+                <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-center">
                   Status
                 </th>
-                <th className="px-6 py-3 text-sm font-semibold text-center">
+                <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-center">
                   Action
                 </th>
               </tr>
@@ -96,30 +107,40 @@ export default function UsersPage() {
                     index % 2 === 0 ? "bg-white" : "bg-gray-50"
                   }`}
                 >
-                  <td className="px-6 py-4 text-center font-medium text-gray-700">
+                  <td className="px-4 py-2 md:px-6 md:py-4 text-center font-medium text-gray-700">
                     {user.name}
                   </td>
-                  <td className="px-6 py-4 text-center text-gray-600">
+                  <td className="px-4 py-2 md:px-6 md:py-4 text-center text-gray-600">
                     {user.email}
                   </td>
-                  <td className="px-6 py-4 text-center">
-                    <select
-                      value={user.status || "active"}
-                      onChange={(e) =>
-                        handleStatusChange(user._id, e.target.value)
-                      }
-                      className="p-2 border rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-orange-400 focus:outline-none cursor-pointer"
+                  <td className="px-4 py-2 md:px-6 md:py-4 text-center">
+                    <button
+                      onClick={() => handleStatusToggle(user._id, user.status)}
+                      className=" cursor-pointer flex items-center justify-center gap-2 px-2 md:px-3 py-1 rounded-lg shadow-sm border transition hover:bg-gray-100 mx-auto text-sm"
                     >
-                      <option value="active"> Active</option>
-                      <option value="deactive"> Deactive</option>
-                    </select>
+                      {user.status === "active" ? (
+                        <>
+                          <CheckCircle className="w-4 h-4 text-green-600" /> Active
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="w-4 h-4 text-red-600" /> Deactive
+                        </>
+                      )}
+                    </button>
                   </td>
-                  <td className="px-6 py-4 text-center">
+                  <td className="px-4 py-2 md:px-6 md:py-4 text-center flex flex-wrap gap-2 justify-center">
+                    <button
+                      onClick={() => handleMessage(user)}
+                      className="bg-blue-500 cursor-pointer text-white px-2 md:px-3 py-1 md:py-2 rounded-lg shadow hover:bg-blue-600 transition text-xs md:text-sm flex items-center gap-1"
+                    >
+                      <MessageSquare className="w-4 h-4" /> Message
+                    </button>
                     <button
                       onClick={() => handleRemove(user._id)}
-                      className="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition cursor-pointer"
+                      className="bg-red-500 cursor-pointer text-white px-2 md:px-3 py-1 md:py-2 rounded-lg shadow hover:bg-red-600 transition text-xs md:text-sm flex items-center gap-1"
                     >
-                      Remove
+                      <Trash2 className="w-4 h-4" /> Remove
                     </button>
                   </td>
                 </tr>
@@ -138,7 +159,7 @@ export default function UsersPage() {
           </table>
         </div>
 
-        {/* small screens show card */}
+        {/* Card for small screens */}
         <div className="md:hidden space-y-4">
           {users.map((user) => (
             <div
@@ -148,27 +169,39 @@ export default function UsersPage() {
               <p className="font-semibold text-gray-800">{user.name}</p>
               <p className="text-gray-600 text-sm">{user.email}</p>
               <div className="flex justify-between items-center mt-4">
-                <select
-                  value={user.status || "active"}
-                  onChange={(e) => handleStatusChange(user._id, e.target.value)}
-                  className="p-2 border rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-orange-400 focus:outline-none text-sm"
-                >
-                  <option value="active"> Active</option>
-                  <option value="deactive"> Deactive</option>
-                </select>
                 <button
-                  onClick={() => handleRemove(user._id)}
-                  className="bg-red-500 text-white px-3 py-2 rounded-lg shadow hover:bg-red-600 transition text-sm"
+                  onClick={() => handleStatusToggle(user._id, user.status)}
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg shadow-sm border transition hover:bg-gray-100 text-sm "
                 >
-                  Remove
+                  {user.status === "active" ? (
+                    <>
+                      <CheckCircle className="w-4 h-4 text-green-600" /> Active
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="w-4 h-4 text-red-600" /> Deactive
+                    </>
+                  )}
                 </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleMessage(user)}
+                    className="bg-blue-500 text-white px-2 py-1 rounded-lg shadow hover:bg-blue-600 transition text-xs flex items-center gap-1 "
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleRemove(user._id)}
+                    className="bg-red-500 text-white px-2 py-1 rounded-lg shadow hover:bg-red-600 transition text-xs flex items-center gap-1 "
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
           {users.length === 0 && (
-            <p className="text-center text-gray-500 italic">
-              No users found...
-            </p>
+            <p className="text-center text-gray-500 italic">No users found...</p>
           )}
         </div>
       </section>

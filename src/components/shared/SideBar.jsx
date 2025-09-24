@@ -46,6 +46,7 @@ const Sidebar = ({
     { name: "Profile", icon: <FaUser />, path: "/dashboard/profile", role: "all" },
     { name: "Settings", icon: <FaCog />, path: "/dashboard/settings", role: "all" },
     { name: "All Users", icon: <FaUsers />, path: "/dashboard/users", role: "all" },
+    { name: "ManageSkills", icon: <FaUsers />, path: "/dashboard/manageSkills", role: "all" },
   ];
 
   // Extra items only for admin

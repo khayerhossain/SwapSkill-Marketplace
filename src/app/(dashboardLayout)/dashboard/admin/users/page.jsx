@@ -16,15 +16,7 @@ export default function UsersPage() {
       const { data } = await axiosInstance.get("/users");
       setUsers(data);
     } catch (error) {
-      if (error.response) {
-        console.error(
-          "Server responded with:",
-          error.response.status,
-          error.response.data
-        );
-      } else {
-        console.error("Error setting up request:", error.message);
-      }
+      console.error("Failed to fetch users", error);
     }
   };
 
@@ -78,25 +70,33 @@ export default function UsersPage() {
     }).then((result) => {
       if (result.isConfirmed && result.value) {
         Swal.fire("Sent!", `Message sent to ${user.email}`, "success");
-        // TODO: integrate backend API for sending message
+        
       }
     });
   };
 
   return (
     <div>
-      <section className="max-w-5xl mx-auto mt-10 bg-white p-6 rounded-xl shadow">
+      <section className="max-w-6xl mx-auto mt-10 bg-white p-6 rounded-xl shadow">
         <h1 className="text-3xl font-bold mb-8 text-center">All Users</h1>
 
-        {/* medium & large screens show table */}
+        {/* Table screens for md and up */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full border border-gray-200 rounded-lg shadow-sm overflow-hidden">
             <thead>
               <tr className="bg-gradient-to-r from-orange-500 to-pink-500 text-white">
-                <th className="px-6 py-3 text-sm font-semibold text-center">Name</th>
-                <th className="px-6 py-3 text-sm font-semibold text-center">Email</th>
-                <th className="px-6 py-3 text-sm font-semibold text-center">Status</th>
-                <th className="px-6 py-3 text-sm font-semibold text-center">Action</th>
+                <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-center">
+                  Name
+                </th>
+                <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-center">
+                  Email
+                </th>
+                <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-center">
+                  Status
+                </th>
+                <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-center">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -107,16 +107,16 @@ export default function UsersPage() {
                     index % 2 === 0 ? "bg-white" : "bg-gray-50"
                   }`}
                 >
-                  <td className="px-6 py-4 text-center font-medium text-gray-700">
+                  <td className="px-4 py-2 md:px-6 md:py-4 text-center font-medium text-gray-700">
                     {user.name}
                   </td>
-                  <td className="px-6 py-4 text-center text-gray-600">
+                  <td className="px-4 py-2 md:px-6 md:py-4 text-center text-gray-600">
                     {user.email}
                   </td>
-                  <td className="px-6 py-4 text-center">
+                  <td className="px-4 py-2 md:px-6 md:py-4 text-center">
                     <button
                       onClick={() => handleStatusToggle(user._id, user.status)}
-                      className="flex items-center justify-center gap-2 px-3 py-1 rounded-lg shadow-sm border transition hover:bg-gray-100 mx-auto"
+                      className=" cursor-pointer flex items-center justify-center gap-2 px-2 md:px-3 py-1 rounded-lg shadow-sm border transition hover:bg-gray-100 mx-auto text-sm"
                     >
                       {user.status === "active" ? (
                         <>
@@ -129,16 +129,16 @@ export default function UsersPage() {
                       )}
                     </button>
                   </td>
-                  <td className="px-6 py-4 text-center flex gap-2 justify-center">
+                  <td className="px-4 py-2 md:px-6 md:py-4 text-center flex flex-wrap gap-2 justify-center">
                     <button
                       onClick={() => handleMessage(user)}
-                      className="bg-blue-500 text-white px-3 py-2 rounded-lg shadow hover:bg-blue-600 transition text-sm flex items-center gap-1"
+                      className="bg-blue-500 cursor-pointer text-white px-2 md:px-3 py-1 md:py-2 rounded-lg shadow hover:bg-blue-600 transition text-xs md:text-sm flex items-center gap-1"
                     >
                       <MessageSquare className="w-4 h-4" /> Message
                     </button>
                     <button
                       onClick={() => handleRemove(user._id)}
-                      className="bg-red-500 text-white px-3 py-2 rounded-lg shadow hover:bg-red-600 transition text-sm flex items-center gap-1"
+                      className="bg-red-500 cursor-pointer text-white px-2 md:px-3 py-1 md:py-2 rounded-lg shadow hover:bg-red-600 transition text-xs md:text-sm flex items-center gap-1"
                     >
                       <Trash2 className="w-4 h-4" /> Remove
                     </button>
@@ -147,7 +147,10 @@ export default function UsersPage() {
               ))}
               {users.length === 0 && (
                 <tr>
-                  <td colSpan="4" className="text-center py-6 text-gray-500 italic">
+                  <td
+                    colSpan="4"
+                    className="text-center py-6 text-gray-500 italic"
+                  >
                     No users found...
                   </td>
                 </tr>
@@ -156,7 +159,7 @@ export default function UsersPage() {
           </table>
         </div>
 
-        {/* small screens show card */}
+        {/* Card for small screens */}
         <div className="md:hidden space-y-4">
           {users.map((user) => (
             <div
@@ -168,7 +171,7 @@ export default function UsersPage() {
               <div className="flex justify-between items-center mt-4">
                 <button
                   onClick={() => handleStatusToggle(user._id, user.status)}
-                  className="flex items-center gap-1 px-3 py-1 rounded-lg shadow-sm border transition hover:bg-gray-100 text-sm"
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg shadow-sm border transition hover:bg-gray-100 text-sm "
                 >
                   {user.status === "active" ? (
                     <>
@@ -183,13 +186,13 @@ export default function UsersPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleMessage(user)}
-                    className="bg-blue-500 text-white px-2 py-1 rounded-lg shadow hover:bg-blue-600 transition text-xs flex items-center gap-1"
+                    className="bg-blue-500 text-white px-2 py-1 rounded-lg shadow hover:bg-blue-600 transition text-xs flex items-center gap-1 "
                   >
                     <MessageSquare className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleRemove(user._id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded-lg shadow hover:bg-red-600 transition text-xs flex items-center gap-1"
+                    className="bg-red-500 text-white px-2 py-1 rounded-lg shadow hover:bg-red-600 transition text-xs flex items-center gap-1 "
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

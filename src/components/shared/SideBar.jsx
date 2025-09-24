@@ -24,6 +24,9 @@ const Sidebar = ({
   const findSkillsPath = useAppBarPaths
     ? "/appBar/find-skills"
     : "/find-skills";
+  const profilePath = useAppBarPaths
+    ? "/appBar/profile"
+    : "/profile";
   const shareSkillsPath = useAppBarPaths
     ? "/appBar/share-skills"
     : "/share-skills";
@@ -36,7 +39,7 @@ const Sidebar = ({
     { name: "Home", icon: <FaHome />, path: "/" },
     { name: "Community", icon: <FaUserFriends />, path: communityPath },
     { name: "Find Skills", icon: <FaBox />, path: findSkillsPath },
-
+    { name: "Profile", icon: <FaBox />, path: profilePath },
     { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath }, 
     { name: "Payment Access", icon: <FaBox />, path: userPayment,  },
   ];

@@ -59,6 +59,11 @@ const Sidebar = ({
       icon: <FaUserCheck />,
       path: "/dashboard/admin/users",
     },
+    {
+      name: "All Current Skills",
+      icon: <FaUserCheck />,
+      path: "/dashboard/admin/current-skills",
+    },
     { name: "ManageSkills", icon: <FaUsers />, path: "/dashboard/manageSkills", role: "all" },
   ];
 

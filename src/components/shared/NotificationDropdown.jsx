@@ -1,117 +1,368 @@
+// "use client";
+
+// import { useState, useRef, useEffect } from "react";
+// import { IoNotificationsOutline, IoNotifications } from "react-icons/io5";
+// import { useNotification } from "@/context/NotificationContext";
+
+// const NotificationDropdown = () => {
+//   const [isOpen, setIsOpen] = useState(false);
+//   const dropdownRef = useRef(null);
+//   const {
+//     notifications,
+//     markAsRead,
+//     markAllAsRead,
+//     getUnreadCount,
+//     handleNotificationAction,
+//   } = useNotification();
+
+//   // Close dropdown when clicking outside
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+//         setIsOpen(false);
+//       }
+//     };
+
+//     document.addEventListener("mousedown", handleClickOutside);
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, []);
+
+//   const unreadCount = getUnreadCount();
+
+//   const handleMarkAllAsRead = () => {
+//     markAllAsRead();
+//   };
+
+//   const handleToggleDropdown = () => {
+//     setIsOpen(!isOpen);
+//   };
+
+//   // Handle notification actions
+//   const handleAction = (notification, userChoice) => {
+//     handleNotificationAction(notification.id, userChoice);
+//     setIsOpen(false); // Close dropdown
+//   };
+
+//   return (
+//     <div className="relative" ref={dropdownRef}>
+//       {/* Notification Button */}
+//       <button
+//         onClick={handleToggleDropdown}
+//         className="btn btn-ghost btn-sm relative p-2"
+//       >
+//         {unreadCount > 0 ? (
+//           <IoNotifications className="text-xl text-red-500" />
+//         ) : (
+//           <IoNotificationsOutline className="text-xl" />
+//         )}
+//         {unreadCount > 0 && (
+//           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+//             {unreadCount}
+//           </span>
+//         )}
+//       </button>
+
+//       {/* Dropdown Menu */}
+//       {isOpen && (
+//         <div className="absolute right-0 top-12 z-50 w-96 bg-white rounded-lg shadow-xl border border-gray-200">
+//           {/* Header */}
+//           <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+//             <h3 className="font-semibold text-gray-800">Notifications</h3>
+//             {unreadCount > 0 && (
+//               <button
+//                 onClick={handleMarkAllAsRead}
+//                 className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+//               >
+//                 Mark all read
+//               </button>
+//             )}
+//           </div>
+
+//           {/* Notifications List */}
+//           <div className="max-h-96 overflow-y-auto">
+//             {notifications.length > 0 ? (
+//               notifications.map((notification) => (
+//                 <div
+//                   key={notification.id}
+//                   className="border-b border-gray-100 last:border-b-0"
+//                 >
+//                   {notification.type === "formSuccess" ? (
+//                     // Special notification with actions
+//                     <div
+//                       className={`p-4 ${
+//                         !notification.read ? "bg-yellow-50" : ""
+//                       }`}
+//                     >
+//                       <div className="flex items-start gap-3 mb-3">
+//                         <div
+//                           className={`w-6 h-6 rounded-full flex items-center justify-center ${
+//                             !notification.read
+//                               ? "bg-yellow-100 text-yellow-600"
+//                               : "bg-gray-100 text-gray-400"
+//                           }`}
+//                         >
+//                           ⚠️
+//                         </div>
+//                         <div>
+//                           <h4 className="font-semibold text-gray-800">
+//                             Do you want to start the Quiz?
+//                           </h4>
+//                           <p className="text-sm text-gray-600 mt-1">
+//                             Choose your option!
+//                           </p>
+//                         </div>
+//                       </div>
+
+//                       <div className="flex gap-2 mt-4">
+//                         <button
+//                           onClick={() => handleAction(notification, "quiz")}
+//                           className="flex-1 py-2 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition-colors text-sm"
+//                         >
+//                           Yes, go to Quiz!
+//                         </button>
+//                         <button
+//                           onClick={() => handleAction(notification, "findPage")}
+//                           className="flex-1 py-2 bg-gray-500 text-white font-medium rounded-lg hover:bg-gray-600 transition-colors text-sm"
+//                         >
+//                           No, go to Find Page
+//                         </button>
+//                       </div>
+//                     </div>
+//                   ) : (
+//                     // Normal notification
+//                     <div
+//                       className={`p-3 hover:bg-gray-50 cursor-pointer ${
+//                         !notification.read ? "bg-blue-50" : ""
+//                       }`}
+//                       onClick={() => markAsRead(notification.id)}
+//                     >
+//                       <div className="flex items-start gap-3">
+//                         <div
+//                           className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+//                             !notification.read ? "bg-blue-500" : "bg-gray-300"
+//                           }`}
+//                         />
+//                         <div className="flex-1 min-w-0">
+//                           <h4
+//                             className={`font-medium text-sm ${
+//                               !notification.read
+//                                 ? "text-blue-800"
+//                                 : "text-gray-800"
+//                             }`}
+//                           >
+//                             {notification.title}
+//                           </h4>
+//                           <p className="text-xs text-gray-600 mt-1">
+//                             {notification.message}
+//                           </p>
+//                           <p className="text-xs text-gray-400 mt-1">
+//                             {notification.time}
+//                           </p>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   )}
+//                 </div>
+//               ))
+//             ) : (
+//               <div className="p-6 text-center text-gray-500">
+//                 No notifications yet
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default NotificationDropdown;
+
+
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { IoNotificationsOutline, IoNotifications } from "react-icons/io5";
+import { useNotification } from "@/context/NotificationContext";
+import { MdGames, MdWifiFind } from "react-icons/md";
+import { FaBroom } from "react-icons/fa";
+import { IoMdNotifications } from "react-icons/io";
 
 const NotificationDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [hasNotifications, setHasNotifications] = useState(true); // Mock data - replace with real notification state
+  const dropdownRef = useRef(null);
+  const {
+    notifications,
+    markAsRead,
+    markAllAsRead,
+    getUnreadCount,
+    handleNotificationAction,
+  } = useNotification();
 
-  // Mock notifications data - replace with real data from your API/context
-  const notifications = [
-    {
-      id: 1,
-      title: "New skill request",
-      message: "Someone requested your JavaScript skills",
-      time: "2 minutes ago",
-      read: false,
-    },
-    {
-      id: 2,
-      title: "Skill exchange approved",
-      message: "Your Python skill exchange has been approved",
-      time: "1 hour ago",
-      read: true,
-    },
-    {
-      id: 3,
-      title: "New message",
-      message: "You have a new message from John Doe",
-      time: "3 hours ago",
-      read: false,
-    },
-  ];
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const unreadCount = getUnreadCount();
+
+  const handleMarkAllAsRead = () => {
+    markAllAsRead();
+  };
+
+  const handleToggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleAction = (notification, userChoice) => {
+    handleNotificationAction(notification.id, userChoice);
+    setIsOpen(false);
+  };
 
   return (
-    <div className="relative">
-      {/* Notification Button */}
-      <div className="dropdown dropdown-end">
-        <div
-          tabIndex={0}
-          role="button"
-          className="btn btn-ghost btn-sm relative"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {hasNotifications && unreadCount > 0 ? (
-            <IoNotifications className="text-xl" />
-          ) : (
-            <IoNotificationsOutline className="text-xl" />
-          )}
-          {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-error text-error-content text-xs rounded-full h-5 w-5 flex items-center justify-center">
-              {unreadCount}
-            </span>
-          )}
-        </div>
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={handleToggleDropdown}
+        className="relative p-4 rounded-2xl bg-gradient-to-br from-white to-gray-50 hover:from-gray-50 hover:to-gray-100 border-2 border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+      >
+        {unreadCount > 0 ? (
+          <IoNotifications className="text-2xl text-blue-600" />
+        ) : (
+          <IoNotificationsOutline className="text-2xl text-gray-500" />
+        )}
+        {unreadCount > 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold animate-pulse">
+            {unreadCount}
+          </span>
+        )}
+      </button>
 
-        {/* Notification Dropdown */}
-        {isOpen && (
-          <div
-            tabIndex={0}
-            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-80 border border-base-300"
-          >
-            <div className="flex items-center justify-between p-2 border-b border-base-300">
-              <h3 className="font-semibold">Notifications</h3>
+      {isOpen && (
+        <div className="absolute right-0 top-16 z-50 w-96 bg-white rounded-3xl shadow-2xl border-2 border-gray-100 overflow-hidden">
+          <div className="flex1 flex  items-center justify-between p-6 bg-gradient-to-r from-gray-50 to-white border-b-2 border-gray-100">
+            <h3 className="font-bold flex items-center justify-center gap-2 text-gray-800 text-xl">
+              <IoMdNotifications size={28} />
+              Notifications
+            </h3>
+            {unreadCount > 0 && (
               <button
-                className="btn btn-ghost btn-xs"
-                onClick={() => setHasNotifications(false)}
+                onClick={handleMarkAllAsRead}
+                className="text-sm text-blue-600 hover:text-blue-800 font-semibold px-4 py-2 rounded-full hover:bg-blue-50 transition-all duration-200"
               >
                 Mark all read
               </button>
-            </div>
-            
-            <div className="max-h-80 overflow-y-auto">
-              {notifications.length > 0 ? (
-                notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className={`p-3 border-b border-base-200 hover:bg-base-200 cursor-pointer ${
-                      !notification.read ? "bg-base-200/50" : ""
-                    }`}
-                  >
-                    <div className="flex items-start gap-2">
-                      <div className={`w-2 h-2 rounded-full mt-2 ${
-                        !notification.read ? "bg-primary" : "bg-transparent"
-                      }`} />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm">{notification.title}</h4>
-                        <p className="text-xs text-base-content/70 mt-1">
-                          {notification.message}
-                        </p>
-                        <p className="text-xs text-base-content/50 mt-1">
-                          {notification.time}
-                        </p>
+            )}
+          </div>
+
+          <div className="max-h-96 overflow-y-auto">
+            {notifications.length > 0 ? (
+              notifications.map((notification) => (
+                <div
+                  key={notification.id}
+                  className="border-b border-gray-50 last:border-b-0"
+                >
+                  {notification.type === "formSuccess" ? (
+                    <div
+                      className={`p-6 ${
+                        !notification.read ? "bg-blue-50" : ""
+                      }`}
+                    >
+                      <div className="flex items-start gap-4 mb-5">
+                        <div
+                          className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-bold ${
+                            !notification.read
+                              ? "bg-blue-500 text-white"
+                              : "bg-gray-300 text-gray-600"
+                          }`}
+                        >
+                          <MdGames size={28} />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-gray-800 text-lg">
+                            Ready for the Quiz?
+                          </h4>
+                          <p className="text-gray-600 mt-1">
+                            Choose your next step!
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3 mt-5">
+                        <button
+                          onClick={() => handleAction(notification, "quiz")}
+                          className="flex-1 flex justify-center items-center gap-2 py-4 bg-gray-100 text-gray-700 font-semibold rounded-2xl hover:bg-gray-200 transition-all duration-200"
+                        >
+                          <FaBroom size={28} />
+                          Start Quiz!
+                        </button>
+                        <button
+                          onClick={() => handleAction(notification, "findPage")}
+                          className="flex-1 flex justify-center items-center gap-2 py-4 bg-gray-100 text-gray-700 font-semibold rounded-2xl hover:bg-gray-200 transition-all duration-200"
+                        >
+                          <MdWifiFind size={28} />
+                          <span>Find Page</span>
+                        </button>
                       </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <div className="p-4 text-center text-base-content/50">
-                  No notifications
+                  ) : (
+                    <div
+                      className={`p-5 hover:bg-gray-50 cursor-pointer transition-all duration-200 ${
+                        !notification.read
+                          ? "bg-blue-25 border-l-4 border-blue-400"
+                          : ""
+                      }`}
+                      onClick={() => markAsRead(notification.id)}
+                    >
+                      <div className="flex items-start gap-4">
+                        <div
+                          className={`w-3 h-3 rounded-full mt-3 flex-shrink-0 ${
+                            !notification.read
+                              ? "bg-blue-500 animate-pulse"
+                              : "bg-gray-300"
+                          }`}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h4
+                            className={`font-semibold ${
+                              !notification.read
+                                ? "text-gray-800"
+                                : "text-gray-600"
+                            }`}
+                          >
+                            {notification.title}
+                          </h4>
+                          <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                            {notification.message}
+                          </p>
+                          <p className="text-xs text-gray-400 mt-2">
+                            {notification.time}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-            
-            <div className="p-2 border-t border-base-300">
-              <button className="btn btn-ghost btn-sm w-full">
-                View all notifications
-              </button>
-            </div>
+              ))
+            ) : (
+              <div className="p-12 text-center text-gray-500">
+                <div className="text-6xl mb-4">📭</div>
+                <p className="font-semibold text-lg">No notifications yet</p>
+                <p className="text-sm mt-2">You're all caught up!</p>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import dbConnect, { collectionNamesObj } from "./db.connect";
+import GoogleProvider from "next-auth/providers/google";
+
 
 export const authOptions = {
   providers: [
@@ -9,6 +11,7 @@ export const authOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
+
       async authorize(credentials) {
         const { email, password } = credentials;
 
@@ -28,6 +31,10 @@ export const authOptions = {
           role: user.role || "user",
         };
       },
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
 

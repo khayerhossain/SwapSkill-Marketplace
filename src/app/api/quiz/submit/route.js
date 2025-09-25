@@ -12,7 +12,6 @@ export async function POST(request) {
     }
 
     const testQNACollection = await dbConnect(collectionNamesObj.testQNACollection);
-    const skillsDirectoryCollection = await dbConnect(collectionNamesObj.skillsDirectoryCollection);
 
     const session = await testQNACollection.findOne({
       sessionId: sessionId,
@@ -71,6 +70,7 @@ export async function POST(request) {
       else if (percentage >= 70) badgeType = 'Bronze';
     }
 
+    // Profile ObjectId
     let profileObjectId;
     try {
       profileObjectId = ObjectId.isValid(profileId) ? new ObjectId(profileId) : profileId;
@@ -78,23 +78,7 @@ export async function POST(request) {
       profileObjectId = profileId;
     }
 
-    const profileUpdate = {
-      $set: {
-        verification: passed,
-        verificationScore: score,
-        badgeType: passed ? badgeType : null,
-        lastQuizAt: new Date(),
-        verificationPercentage: percentage,
-        verificationCategory: session.category
-      },
-      $inc: { quizAttempts: 1 }
-    };
-
-    const updateResult = await skillsDirectoryCollection.updateOne(
-      { _id: profileObjectId },
-      profileUpdate
-    );
-
+    // ✅ Note: verification update removed
     const attemptLog = {
       type: 'quiz-attempt',
       profileId,
@@ -108,11 +92,13 @@ export async function POST(request) {
       badgeType,
       timeTakenSec: timeTakenSec || 0,
       answers: detailedAnswers,
+      status: 'pending', // admin approval needed
       createdAt: new Date()
     };
 
     await testQNACollection.insertOne(attemptLog);
 
+    // Remove session after attempt
     await testQNACollection.deleteOne({ 
       sessionId: sessionId, 
       type: 'quiz-session' 
@@ -131,9 +117,8 @@ export async function POST(request) {
         passed,
         badgeType,
         message,
-        verified: passed,
+        verified: false, // still false until admin approves
         passingScore,
-        profileUpdated: updateResult.modifiedCount > 0
       }
     });
 

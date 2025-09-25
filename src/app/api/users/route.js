@@ -7,7 +7,7 @@ export async function GET() {
     const usersCollection = await dbConnect(collectionNamesObj.usersCollection);
     const users = await usersCollection.find().toArray();
 
-    // ObjectId → string এ কনভার্ট
+    // ObjectId
     const formatted = users.map((u) => ({
       ...u,
       _id: u._id.toString(),

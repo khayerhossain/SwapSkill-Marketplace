@@ -22,6 +22,7 @@ export async function POST(req) {
       ? body.tags.split(",").map((s) => s.trim())
       : [];
 
+      
     // Create new profile document
     const newProfile = {
       userName: body.userName,

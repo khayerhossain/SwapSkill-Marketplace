@@ -77,7 +77,7 @@ export async function POST(req) {
       lastQuizAt: null,
       verificationPercentage: 0,
       verificationCategory: null,
-
+      visibility: showing,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

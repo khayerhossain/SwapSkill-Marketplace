@@ -4,6 +4,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { FaFacebook } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 
 function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -181,10 +182,10 @@ export default function SkillDetailsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       {/* Hero Section */}
-      <div className="relative pt-5  overflow-hidden bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+      <div className="relative pt-5  overflow-hidden bg-white ">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="flex flex-col lg:flex-row items-center gap-8">
+          <div className="flex flex-col lg:flex-col items-center gap-8">
             {/* Profile Image */}
             <div className="relative">
               <div className="w-40 h-40 rounded-full bg-white p-2 shadow-2xl">
@@ -201,20 +202,20 @@ export default function SkillDetailsPage() {
 
             {/* Profile Info */}
             <div className="text-center lg:text-left text-white">
-              <h1 className="text-4xl lg:text-5xl font-bold mb-2 text-balance">
+              <h1 className="text-4xl text-gray-900 lg:text-5xl font-bold mb-2 text-balance">
                 {skill.userName}
               </h1>
-              <p className="text-xl text-indigo-100 mb-4">
+              <p className="text-xl text-gray-900 mb-4">
                 {skill.studyOrWorking}
               </p>
               <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-6">
-                <span className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium">
+                <span className="bg-white backdrop-blur-sm text-gray-900 px-4 py-2 rounded-full text-sm font-medium">
                   {skill.skillName}
                 </span>
                 {(skill?.tags || []).map((tag) => (
                   <span
                     key={tag}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full font-medium transition-colors duration-200"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-full font-medium transition-colors duration-200"
                   >
                     {tag}
                   </span>
@@ -228,8 +229,12 @@ export default function SkillDetailsPage() {
                   >
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
-                  <span className="font-semibold">{skill.rating}</span>
-                  <span>({skill.reviewsCount} reviews)</span>
+                  <span className="font-semibold text-gray-900">
+                    {skill.rating}
+                  </span>
+                  <span className="text-gray-900">
+                    ({skill.reviewsCount} reviews)
+                  </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <svg
@@ -251,7 +256,7 @@ export default function SkillDetailsPage() {
                       d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                  <span>{skill.location}</span>
+                  <span className="text-gray-900">{skill.location}</span>
                 </div>
               </div>
             </div>
@@ -376,7 +381,7 @@ export default function SkillDetailsPage() {
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <svg
+                  {/* <svg
                     className="w-5 h-5 text-gray-500"
                     fill="none"
                     stroke="currentColor"
@@ -388,7 +393,8 @@ export default function SkillDetailsPage() {
                       strokeWidth={2}
                       d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                     />
-                  </svg>
+                  </svg> */}
+                  <MdEmail size={24} />
                   <span className="text-gray-700 text-sm">
                     {skill.contactInfo.email}
                   </span>

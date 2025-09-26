@@ -63,8 +63,8 @@ export async function POST(req) {
 
       // Collaboration Price (defaults for perHour + negotiable)
       collaborationPrice: {
-        currency: body.priceCurrency || "USD",
-        perHour: 0,
+        // currency: body.priceCurrency || "USD",
+        // perHour: 0,
         negotiable: true,
       },
 
@@ -78,7 +78,7 @@ export async function POST(req) {
       lastQuizAt: null,
       verificationPercentage: 0,
       verificationCategory: null,
-      visibility: showing,
+      // visibility: showing,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

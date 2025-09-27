@@ -8,6 +8,7 @@ export default function CurrentSkills() {
   const [skills, setSkills] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+  const [selectedSkill, setSelectedSkill] = useState(null); // for modal
 
   useEffect(() => {
     fetchSkills();
@@ -28,9 +29,7 @@ export default function CurrentSkills() {
       await axiosInstance.patch("/current-skills", { id, visibility: newVisibility });
       setSkills((prev) =>
         prev.map((s) =>
-          String(s._id) === String(id)
-            ? { ...s, visibility: newVisibility }
-            : s
+          String(s._id) === String(id) ? { ...s, visibility: newVisibility } : s
         )
       );
     } catch {
@@ -71,30 +70,6 @@ export default function CurrentSkills() {
       <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
         All Current Skills
       </h2>
-
-      {/* Search + Filter */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-        <div className="relative w-full sm:w-1/2">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Search by user name..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-        </div>
-
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer"
-        >
-          <option value="all">All</option>
-          <option value="showing">Showing</option>
-          <option value="hide">Hidden</option>
-        </select>
-      </div>
 
       {/* desktop screens */}
       <div className="hidden lg:block overflow-hidden rounded-xl border border-gray-200 shadow-sm">
@@ -143,10 +118,16 @@ export default function CurrentSkills() {
                     )}
                   </button>
                 </td>
-                <td className="px-6 py-4 text-center">
+                <td className="px-6 py-4 text-center flex gap-2 justify-center">
+                  <button
+                    onClick={() => setSelectedSkill(skill)}
+                    className="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition text-sm"
+                  >
+                    Details
+                  </button>
                   <button
                     onClick={() => handleRemove(skill._id)}
-                    className="bg-red-500 cursor-pointer text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition text-sm flex items-center gap-2 mx-auto"
+                    className="bg-red-500 cursor-pointer text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition text-sm flex items-center gap-2"
                   >
                     <Trash2 className="w-4 h-4" /> Remove
                   </button>
@@ -199,12 +180,20 @@ export default function CurrentSkills() {
                   </>
                 )}
               </button>
-              <button
-                onClick={() => handleRemove(skill._id)}
-                className="bg-red-500 text-white px-4 py-1 rounded-lg shadow hover:bg-red-600 transition text-sm flex items-center gap-2"
-              >
-                <Trash2 className="w-4 h-4" /> Remove
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setSelectedSkill(skill)}
+                  className="bg-blue-500 text-white px-4 py-1 rounded-lg shadow hover:bg-blue-600 transition text-sm"
+                >
+                  Details
+                </button>
+                <button
+                  onClick={() => handleRemove(skill._id)}
+                  className="bg-red-500 text-white px-4 py-1 rounded-lg shadow hover:bg-red-600 transition text-sm flex items-center gap-2"
+                >
+                  <Trash2 className="w-4 h-4" /> Remove
+                </button>
+              </div>
             </div>
           </div>
         ))}
@@ -212,6 +201,44 @@ export default function CurrentSkills() {
           <p className="text-center text-gray-500 italic py-6">No skills found...</p>
         )}
       </div>
+
+      {/* Modal for Details */}
+      {selectedSkill && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white w-full max-w-lg p-6 rounded-xl shadow-lg relative">
+            <button
+              onClick={() => setSelectedSkill(null)}
+              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 cursor-pointer "
+            >
+              ✕
+            </button>
+            <h3 className="text-2xl font-semibold mb-4 text-gray-800">Skill Details</h3>
+            <div className="flex items-center gap-4 mb-4">
+              <img
+                src={selectedSkill.userImage || "/default-avatar.png"}
+                alt={selectedSkill.userName}
+                className="w-20 h-20 rounded-full border object-cover"
+              />
+              <div>
+                <p className="text-lg font-medium text-gray-800">{selectedSkill.userName}</p>
+                <p className="text-sm text-gray-500">{selectedSkill.contactInfo?.email || "No Email"}</p>
+              </div>
+            </div>
+            <p><span className="font-semibold">Category:</span> {selectedSkill.category || "N/A"}</p>
+            <p><span className="font-semibold">Phone:</span> {selectedSkill.contactInfo?.phone || "N/A"}</p>
+            <p><span className="font-semibold">Address:</span> {selectedSkill.contactInfo?.address || "N/A"}</p>
+
+            <p>
+            <span className="font-semibold">Visibility:</span>{" "}
+            {selectedSkill.visibility
+            ? selectedSkill.visibility.charAt(0).toUpperCase() + selectedSkill.visibility.slice(1)
+            : "N/A"}
+            </p>
+
+
+          </div>
+        </div>
+      )}
     </section>
   );
 }

@@ -4,6 +4,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { FaFacebook } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 
 function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -60,7 +61,7 @@ function Calendar() {
 
     // Empty cells for days before the first day of the month
     for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push(<div key={`empty-${i}`} className="h-10"></div>);
+      days.push(<div key={`empty-${i}`} className="h-12"></div>);
     }
 
     // Days of the month
@@ -68,10 +69,10 @@ function Calendar() {
       days.push(
         <div
           key={day}
-          className={`h-10 flex items-center justify-center rounded-lg cursor-pointer transition-colors duration-200 ${
+          className={`h-12 flex items-center justify-center rounded-lg cursor-pointer transition-all duration-300 border ${
             isToday(day)
-              ? "bg-indigo-600 text-white font-bold shadow-lg"
-              : "hover:bg-gray-100 text-gray-700"
+              ? "bg-primary text-primary-content font-bold border-primary shadow-lg shadow-primary/20"
+              : "hover:bg-primary/10 border-transparent hover:border-primary/30 text-base-content"
           }`}
         >
           {day}
@@ -83,18 +84,18 @@ function Calendar() {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-bold text-gray-900">
+    <div className="bg-base-100 border border-base-300 rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300">
+      <div className="flex items-center justify-between mb-8">
+        <h3 className="text-2xl font-bold text-base-content">
           {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
         </h3>
         <div className="flex gap-2">
           <button
             onClick={prevMonth}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+            className="p-3 border border-base-300 hover:border-primary rounded-xl transition-all duration-300 hover:bg-primary/10 group"
           >
             <svg
-              className="w-4 h-4 text-gray-600"
+              className="w-5 h-5 text-base-content/70 group-hover:text-primary transition-colors duration-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -109,10 +110,10 @@ function Calendar() {
           </button>
           <button
             onClick={nextMonth}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+            className="p-3 border border-base-300 hover:border-primary rounded-xl transition-all duration-300 hover:bg-primary/10 group"
           >
             <svg
-              className="w-4 h-4 text-gray-600"
+              className="w-5 h-5 text-base-content/70 group-hover:text-primary transition-colors duration-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -128,18 +129,18 @@ function Calendar() {
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 mb-2">
+      <div className="grid grid-cols-7 gap-2 mb-4">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
           <div
             key={day}
-            className="h-8 flex items-center justify-center text-sm font-medium text-gray-500"
+            className="h-10 flex items-center justify-center text-sm font-semibold text-base-content/60 uppercase tracking-wider"
           >
             {day}
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-1">{renderCalendarDays()}</div>
+      <div className="grid grid-cols-7 gap-2">{renderCalendarDays()}</div>
     </div>
   );
 }
@@ -168,72 +169,87 @@ export default function SkillDetailsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-          <p className="text-gray-600 font-medium">Loading profile...</p>
+      <div className="min-h-screen bg-base-100 flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-6">
+          <div className="relative">
+            <div className="w-20 h-20 border-4 border-gray-200 dark:border-gray-700 border-t-red-600 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-red-400 rounded-full animate-spin animate-reverse"></div>
+          </div>
+          <p className="text-gray-700 dark:text-gray-300 font-semibold text-lg">
+            Loading profile...
+          </p>
         </div>
       </div>
     );
   }
-  if (!skill) return <div className="text-center mt-20">Skill not found</div>;
+
+  if (!skill)
+    return (
+      <div className="min-h-screen bg-base-100 flex items-center justify-center">
+        <div className="text-center bg-base-100 p-12 rounded-2xl border border-base-300 shadow-xl">
+          <div className="text-6xl mb-4">🔍</div>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            Profile Not Found
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
+            The profile you're looking for doesn't exist.
+          </p>
+        </div>
+      </div>
+    );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div className="min-h-screen bg-base-100">
       {/* Hero Section */}
-      <div className="relative pt-5  overflow-hidden bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="flex flex-col lg:flex-row items-center gap-8">
-            {/* Profile Image */}
-            <div className="relative">
-              <div className="w-40 h-40 rounded-full bg-white p-2 shadow-2xl">
-                <img
-                  src={skill.userImage || "https://via.placeholder.com/150"}
-                  alt={skill.userName}
-                  className="w-full h-full rounded-full object-cover"
-                />
+      <div className="relative bg-base-100 border-b border-base-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            {/* Profile Image and Status */}
+            <div className="lg:col-span-4 flex flex-col items-center lg:items-start space-y-6">
+              <div className="relative">
+                <div className="w-64 h-64 rounded-2xl overflow-hidden shadow-2xl border-4 border-base-100">
+                  <img
+                    src={skill.userImage || "https://via.placeholder.com/300"}
+                    alt={skill.userName}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+               
               </div>
-              <div className="absolute -bottom-2 -right-2 bg-green-500 w-8 h-8 rounded-full border-4 border-white flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rounded-full"></div>
+
+              {/* Rating Card */}
+              <div className="bg-base-100 text-base-content p-6 rounded-xl shadow-xl w-full max-w-sm border border-base-300">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <svg
+                      className="w-6 h-6 text-yellow-400 fill-current"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span className="text-2xl font-bold">{skill.rating}</span>
+                  </div>
+                  <span className="text-sm opacity-80">
+                    ({skill.reviewsCount} reviews)
+                  </span>
+                </div>
               </div>
             </div>
 
             {/* Profile Info */}
-            <div className="text-center lg:text-left text-white">
-              <h1 className="text-4xl lg:text-5xl font-bold mb-2 text-balance">
-                {skill.userName}
-              </h1>
-              <p className="text-xl text-indigo-100 mb-4">
-                {skill.studyOrWorking}
-              </p>
-              <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-6">
-                <span className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium">
-                  {skill.skillName}
-                </span>
-                {(skill?.tags || []).map((tag) => (
-                  <span
-                    key={tag}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full font-medium transition-colors duration-200"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <div className="flex items-center justify-center lg:justify-start gap-4 text-indigo-100">
-                <div className="flex items-center gap-1">
+            <div className="lg:col-span-8 space-y-8">
+              <div>
+                <h1 className="text-5xl lg:text-6xl font-black text-base-content mb-4 leading-tight">
+                  {skill.userName}
+                </h1>
+                <p className="text-2xl text-base-content/70 font-medium mb-6">
+                  {skill.studyOrWorking}
+                </p>
+
+                {/* Location */}
+                <div className="flex items-center space-x-3 text-base-content/70 mb-8">
                   <svg
-                    className="w-5 h-5 text-yellow-400 fill-current"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                  <span className="font-semibold">{skill.rating}</span>
-                  <span>({skill.reviewsCount} reviews)</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <svg
-                    className="w-5 h-5"
+                    className="w-6 h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -251,25 +267,57 @@ export default function SkillDetailsPage() {
                       d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                  <span>{skill.location}</span>
+                  <span className="text-xl font-medium">{skill.location}</span>
                 </div>
               </div>
+
+              {/* Skills Tags */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-base-content uppercase tracking-wider">
+                  Primary Skill
+                </h3>
+                <div className="inline-block">
+                  <span className="bg-primary text-primary-content px-8 py-4 rounded-xl text-xl font-bold shadow-lg hover:opacity-90 transition-colors duration-300">
+                    {skill.skillName}
+                  </span>
+                </div>
+              </div>
+
+              {/* Additional Tags */}
+              {skill.tags && skill.tags.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-bold text-base-content uppercase tracking-wider">
+                    Expertise Areas
+                  </h3>
+                  <div className="flex flex-wrap gap-3">
+                    {skill.tags.map((tag, index) => (
+                      <span
+                        key={tag}
+                        className="border border-base-300 text-base-content px-4 py-2 rounded-lg font-medium hover:bg-base-200/60 transition-all duration-300"
+                        style={{ animationDelay: `${index * 0.1}s` }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Main Info */}
-          <div className="lg:col-span-2 space-y-8">
+      {/* Main Content Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column - Main Content */}
+          <div className="lg:col-span-8 space-y-8">
             {/* About Section */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+            <div className="bg-base-100 border border-base-300 rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center shadow-lg">
                   <svg
-                    className="w-5 h-5 text-indigo-600"
+                    className="w-6 h-6 text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -282,102 +330,56 @@ export default function SkillDetailsPage() {
                     />
                   </svg>
                 </div>
-                About Me
-              </h2>
-              <p className="text-gray-700 leading-relaxed text-lg">
+                <h2 className="text-3xl font-black text-base-content uppercase tracking-wide">
+                  About Me
+                </h2>
+              </div>
+              <p className="text-lg text-base-content/80 leading-relaxed font-medium">
                 {skill.description}
               </p>
             </div>
 
-            {/* Skills & Tags */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <svg
-                    className="w-5 h-5 text-purple-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                    />
-                  </svg>
+            {/* Calendar Section */}
+            <Calendar />
+
+            {/* Stats Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-red-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                <div className="text-3xl font-black mb-2">
+                  {skill.experience}
                 </div>
-                Skills & Expertise
-              </h2>
-              <div className="flex flex-wrap gap-3">
-                <span className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-full font-semibold text-lg shadow-lg">
-                  {skill.skillName}
-                </span>
-                {skill.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full font-medium transition-colors duration-200"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                <div className="text-red-100 font-medium uppercase tracking-wide">
+                  Experience
+                </div>
+              </div>
+              {/* Availability Card */}
+              <div className="bg-base-100 text-base-content p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-base-300">
+                <div className="text-3xl font-black mb-2">
+                  {skill.availability}
+                </div>
+                <div className="text-gray-300 dark:text-gray-700 font-medium uppercase tracking-wide">
+                  Availability
+                </div>
+              </div>
+              <div className="bg-base-100 border border-base-300 text-base-content p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                <div className="text-3xl font-black mb-2">
+                  {skill.availabilityType}
+                </div>
+                <div className="text-gray-600 dark:text-gray-300 font-medium uppercase tracking-wide">
+                  Type
+                </div>
               </div>
             </div>
-
-            <Calendar />
           </div>
 
-          {/* Right Column - Contact & Details */}
-          <div className="space-y-6">
-            {/* Quick Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">
-                Quick Stats
-              </h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Experience</span>
-                  <span className="font-semibold text-gray-900">
-                    {skill.experience}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Availability</span>
-                  <span className="font-semibold text-gray-900">
-                    {skill.availability}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Type</span>
-                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                    {skill.availabilityType}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Contact Information */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <svg
-                  className="w-5 h-5 text-indigo-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-                Contact Info
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+          {/* Right Column - Contact & Social */}
+          <div className="lg:col-span-4 space-y-8">
+            {/* Contact Card */}
+            <div className="bg-base-100 border border-base-300 rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="w-10 h-10 bg-gray-900 dark:bg-white rounded-lg flex items-center justify-center">
                   <svg
-                    className="w-5 h-5 text-gray-500"
+                    className="w-5 h-5 text-white dark:text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -386,113 +388,134 @@ export default function SkillDetailsPage() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                      d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
                   </svg>
-                  <span className="text-gray-700 text-sm">
+                </div>
+                <h3 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-wide">
+                  Contact
+                </h3>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4 p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-red-300 dark:hover:border-red-600 transition-colors duration-300 group">
+                  <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <MdEmail size={20} className="text-white" />
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium flex-1 truncate">
                     {skill.contactInfo.email}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <svg
-                    className="w-5 h-5 text-gray-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                    />
-                  </svg>
-                  <span className="text-gray-700 text-sm">
+
+                <div className="flex items-center space-x-4 p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-red-300 dark:hover:border-red-600 transition-colors duration-300 group">
+                  <div className="w-10 h-10 bg-black dark:bg-white rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <svg
+                      className="w-5 h-5 text-white dark:text-black"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium">
                     {skill.contactInfo.phone}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Social Media */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <svg
-                  className="w-5 h-5 text-indigo-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                </svg>
-                Social Links
-              </h3>
-              <div className="space-y-3">
+            {/* Social Media Card */}
+            <div className="bg-base-100 border border-base-300 rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center">
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-wide">
+                  Social
+                </h3>
+              </div>
+
+              <div className="space-y-4">
                 {skill.socialMedia.facebook && (
                   <a
                     href={skill.socialMedia.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200 group"
+                    className="flex items-center space-x-4 p-4 border border-base-300 rounded-xl hover:bg-base-200/50 transition-all duration-300 group"
                   >
-                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                      {/* <svg
-                        className="w-4 h-4 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.367-12 12c0 6.62 5.367 11.987 11.988 11.987c6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.323-1.297C4.198 14.895 3.708 13.744 3.708 12.447c0-1.297.49-2.448 1.297-3.323.875-.807 2.026-1.297 3.323-1.297s2.448.49 3.323 1.297c.807.875 1.297 2.026 1.297 3.323c0 1.297-.49 2.448-1.297 3.323-.875.807-2.026 1.297-3.323 1.297z" />
-                      </svg> */}
-                      <FaFacebook size={24} />
+                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <FaFacebook size={20} className="text-white" />
                     </div>
-                    <span className="text-blue-700 font-medium group-hover:text-blue-800">
-                      Facebook
-                    </span>
+                    <span className="font-bold text-lg">Facebook</span>
                   </a>
                 )}
+
                 {skill.socialMedia.instagram && (
                   <a
                     href={skill.socialMedia.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors duration-200 group"
+                    className="flex items-center space-x-4 p-4 border border-base-300 rounded-xl hover:bg-base-200/50 transition-all duration-300 group"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <div className="w-10 h-10 bg-pink-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                       <svg
-                        className="w-4 h-4 text-white"
+                        className="w-5 h-5 text-white"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                       >
                         <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987c6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.323-1.297C4.198 14.895 3.708 13.744 3.708 12.447c0-1.297.49-2.448 1.297-3.323a4.92 4.92 0 00-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
                       </svg>
                     </div>
-                    <span className="text-pink-700 font-medium group-hover:text-pink-800">
-                      Instagram
-                    </span>
+                    <span className="font-bold text-lg">Instagram</span>
                   </a>
                 )}
+
                 {skill.socialMedia.twitter && (
                   <a
                     href={skill.socialMedia.twitter}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 bg-sky-50 hover:bg-sky-100 rounded-lg transition-colors duration-200 group"
+                    className="flex items-center space-x-4 p-4 border border-base-300 rounded-xl hover:bg-base-200/50 transition-all duration-300 group"
                   >
-                    <div className="w-8 h-8 bg-sky-500 rounded-lg flex items-center justify-center">
+                    <div className="w-10 h-10 bg-blue-400 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                       <svg
-                        className="w-4 h-4 text-white"
+                        className="w-5 h-5 text-white"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                       >
                         <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
                       </svg>
                     </div>
-                    <span className="text-sky-700 font-medium group-hover:text-sky-800">
-                      Twitter
-                    </span>
+                    <span className="font-bold text-lg">Twitter</span>
                   </a>
                 )}
               </div>
+            </div>
+
+            {/* Action Button */}
+            <div className="bg-red-600 text-white p-8 rounded-2xl shadow-xl text-center hover:bg-red-700 transition-colors duration-300">
+              <h3 className="text-2xl font-black mb-4 uppercase tracking-wide">
+                Ready to Connect?
+              </h3>
+              <p className="text-red-100 mb-6">
+                Let's discuss your project and bring your ideas to life.
+              </p>
+              <button className="bg-black text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-800 transition-colors duration-300 w-full">
+                Get In Touch
+              </button>
             </div>
           </div>
         </div>

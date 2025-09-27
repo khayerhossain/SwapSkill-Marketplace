@@ -11,6 +11,7 @@
   "dependencies": {
     "aos": "^2.3.4",
     "axios": "^1.12.2",
+    "axis": "^1.0.0",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "framer-motion": "^12.23.12",
@@ -19,7 +20,7 @@
     "mongodb": "^6.19.0",
     "next": "15.5.2",
     "next-auth": "^4.24.11",
-    "react": "^19.1.0",
+    "react": "^19.1.1",
     "react-calendar": "^6.0.0",
     "react-dom": "19.1.0",
     "react-fast-marquee": "^1.6.5",

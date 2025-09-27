@@ -156,7 +156,7 @@ export default function SkillsPage() {
                 </div>
 
                 <p className="text-gray-600 flex-1">
-                  {skill.description.length > 120
+                  {skill.description?.length > 120
                     ? skill.description.slice(0, 120) + "..."
                     : skill.description}
                 </p>

@@ -6,17 +6,17 @@ export async function GET() {
     const testQNACollection = await dbConnect(collectionNamesObj.testQNACollection);
     const skillsDirectoryCollection = await dbConnect(collectionNamesObj.skillsDirectoryCollection);
 
-    // শুধুমাত্র Pending বা Approved AND passed attempts fetch
+    // Fetch only pending or approved AND passed attempts
     const attempts = await testQNACollection
       .find({ 
         type: 'quiz-attempt', 
         status: { $in: ['pending', 'approved'] },
-        passed: true   // ✅ added to exclude failed attempts
+        passed: true
       })
       .sort({ createdAt: -1 })
       .toArray();
 
-    // Populate user email/name
+    // Attach user profile info to each attempt
     const results = await Promise.all(attempts.map(async (attempt) => {
       let userProfile = null;
       try {
@@ -28,6 +28,8 @@ export async function GET() {
         ...attempt,
         userEmail: userProfile?.email || 'N/A',
         userName: userProfile?.name || 'N/A',
+        verificationStatus: userProfile?.verification || false,
+        lastAttemptStatus: userProfile?.lastAttemptStatus || 'N/A'
       };
     }));
 

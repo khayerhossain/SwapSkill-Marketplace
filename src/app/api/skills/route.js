@@ -22,7 +22,6 @@ export async function POST(req) {
       ? body.tags.split(",").map((s) => s.trim())
       : [];
 
-      
     // Create new profile document
     const newProfile = {
       userName: body.userName,
@@ -78,7 +77,7 @@ export async function POST(req) {
       lastQuizAt: null,
       verificationPercentage: 0,
       verificationCategory: null,
-      // visibility: showing,
+      status: "pending",
       createdAt: new Date(),
       updatedAt: new Date(),
     };

@@ -30,7 +30,7 @@ export default function NavbarPage() {
     { name: "Pricing", path: "/pricing" },
     // { name: "Quiz", path: "/quiz" },
     // { name: "Test", path: "/test-categories" },
-    { name: "Skills", path: "/appBar/find-skills" },
+    // { name: "Skills", path: "/appBar/find-skills" },
    
   ];
 
@@ -136,7 +136,7 @@ export default function NavbarPage() {
             ) : (
               <>
                 <Link href="/login" className="btn bg-gray-800 rounded-lg text-white">
-                  Login
+                  Sign In
                 </Link>
                 <Link href="/register" className="btn bg-red-500 text-white rounded-lg">
                   Sign Up

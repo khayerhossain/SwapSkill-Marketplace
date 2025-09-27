@@ -84,10 +84,10 @@ export default function CurrentSkillsPage() {
       <div className="py-14">
         {/* Title */}
         <div className="max-w-6xl mx-auto text-center space-y-3">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-            Explore <span className="text-red-500">Skill Categories</span>
+          <h1 className="text-4xl font-bold text-base-content">
+            Explore <span className="text-primary">Skill Categories</span>
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-base-content/70">
             Browse through a variety of popular skill categories and connect with
             expert tutors ready to help you grow.
           </p>
@@ -98,7 +98,7 @@ export default function CurrentSkillsPage() {
           {skillsData.map((skill, index) => (
             <div
               key={index}
-              className="relative bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-6 shadow-md hover:shadow-lg transition"
+              className="relative bg-base-100 border border-base-300 rounded-2xl p-6 shadow-md hover:shadow-lg transition"
             >
               {/* Top row */}
               <div className="flex justify-between items-center mb-4">
@@ -107,13 +107,13 @@ export default function CurrentSkillsPage() {
                   alt={skill.name}
                   className="w-12 h-12 object-contain"
                 />
-                <span className="bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-200 text-xs px-3 py-1 rounded-full">
+                <span className="bg-base-200 text-base-content text-xs px-3 py-1 rounded-full">
                   {skill.students} students
                 </span>
               </div>
 
               {/* Title */}
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+              <h2 className="text-lg font-semibold text-base-content mb-3">
                 {skill.name}
               </h2>
 
@@ -123,21 +123,21 @@ export default function CurrentSkillsPage() {
                   <Badge
                     key={i}
                     variant="outline"
-                    className="text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-700"
+                    className="text-base-content border-base-300"
                   >
                     {s}
                   </Badge>
                 ))}
                 <Badge
                   variant="outline"
-                  className="text-gray-500 dark:text-gray-400 border-gray-300 dark:border-gray-700"
+                  className="text-base-content/60 border-base-300"
                 >
                   +2
                 </Badge>
               </div>
 
               {/* Footer */}
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-base-content/70">
                 5 skills available
               </p>
             </div>

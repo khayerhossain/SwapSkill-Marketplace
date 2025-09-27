@@ -71,6 +71,7 @@ export async function POST(request) {
       collectionNamesObj.skillsDirectoryCollection
     );
 
+    // createdAt auto add 
     const newSkill = {
       ...body,
       verification: false, // unverified

@@ -30,7 +30,7 @@ export default function NavbarPage() {
     { name: "Pricing", path: "/pricing" },
     // { name: "Quiz", path: "/quiz" },
     // { name: "Test", path: "/test-categories" },
-    { name: "Skills", path: "/appBar/find-skills" },
+    // { name: "Skills", path: "/appBar/find-skills" },
    
   ];
 

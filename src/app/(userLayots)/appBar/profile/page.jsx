@@ -438,23 +438,6 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
-
-        {/* Additional Profile Sections */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-base-200 rounded-lg p-6">
-            <h3 className="text-xl font-semibold mb-4">Skills Shared</h3>
-            <p className="text-base-content/70">You have shared 0 skills</p>
-            <button className="btn btn-outline btn-sm mt-2">View Skills</button>
-          </div>
-
-          <div className="bg-base-200 rounded-lg p-6">
-            <h3 className="text-xl font-semibold mb-4">Skills Learned</h3>
-            <p className="text-base-content/70">You have learned 0 skills</p>
-            <button className="btn btn-outline btn-sm mt-2">
-              View Progress
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

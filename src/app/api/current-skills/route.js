@@ -5,7 +5,8 @@ import { ObjectId } from "mongodb";
 export async function GET() {
   try {
     const skillsCollection = await dbConnect(collectionNamesObj.skillsDirectoryCollection);
-    const skills = await skillsCollection.find().toArray();
+
+    const skills = await skillsCollection.find({ status: "approved" }).toArray();
 
     const formatted = skills.map((s) => ({
       ...s,
@@ -17,6 +18,7 @@ export async function GET() {
     return Response.json({ error: error.message }, { status: 500 });
   }
 }
+
 
 //  PATCH (toggle visibility)
 export async function PATCH(req) {

@@ -64,12 +64,12 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
-    const body = await request.json(); // form থেকে আসা data
+    const body = await request.json();
     const collection = await dbConnect(
       collectionNamesObj.skillsDirectoryCollection
     );
 
-    // createdAt auto add হবে
+    // createdAt auto add 
     const newSkill = {
       ...body,
       createdAt: new Date(),

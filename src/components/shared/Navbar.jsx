@@ -136,7 +136,7 @@ export default function NavbarPage() {
             ) : (
               <>
                 <Link href="/login" className="btn bg-gray-800 rounded-lg text-white">
-                  Login
+                  Sign In
                 </Link>
                 <Link href="/register" className="btn bg-red-500 text-white rounded-lg">
                   Sign Up

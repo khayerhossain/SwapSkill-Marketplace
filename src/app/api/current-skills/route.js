@@ -1,7 +1,7 @@
 import dbConnect, { collectionNamesObj } from "@/lib/db.connect";
 import { ObjectId } from "mongodb";
 
-//  GET all skills
+//  GET all status: approved skills 
 export async function GET() {
   try {
     const skillsCollection = await dbConnect(collectionNamesObj.skillsDirectoryCollection);

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { FiCheckCircle, FiXCircle, FiEye, FiSearch, FiFilter } from "react-icons/fi";
 import { MdOutlinePendingActions } from "react-icons/md";
+import Swal from "sweetalert2";
 
 export default function ManageSkills() {
   const [attempts, setAttempts] = useState([]);
@@ -32,8 +33,18 @@ export default function ManageSkills() {
     setLoading(false);
   };
 
- const handleAction = async (profileId, attemptId, action) => {
-  if (!confirm(`Are you sure you want to ${action} this attempt?`)) return;
+const handleAction = async (profileId, attemptId, action) => {
+  const result = await Swal.fire({
+    title: `Are you sure?`,
+    text: `You want to ${action} this attempt?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: `Yes, ${action} it!`,
+  });
+
+  if (!result.isConfirmed) return;
 
   setActionLoading(true);
   try {
@@ -51,18 +62,24 @@ export default function ManageSkills() {
             ? {
                 ...a,
                 status: action === "approve" ? "approved" : "pending",
-                verification: action === "approve"
+                verification: action === "approve",
               }
             : a
         )
       );
       setSelectedAttempt(null);
+
+      Swal.fire(
+        "Done!",
+        `Attempt ${action}d successfully.`,
+        "success"
+      );
     } else {
-      alert(data.message);
+      Swal.fire("Error!", data.message, "error");
     }
   } catch (err) {
     console.error(err);
-    alert("Server error occurred");
+    Swal.fire("Error!", "Server error occurred", "error");
   }
   setActionLoading(false);
 };

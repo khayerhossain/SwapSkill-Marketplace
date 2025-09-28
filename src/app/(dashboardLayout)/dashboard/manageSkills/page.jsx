@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { FiCheckCircle, FiXCircle, FiEye, FiSearch, FiFilter } from "react-icons/fi";
 import { MdOutlinePendingActions } from "react-icons/md";
+import Swal from "sweetalert2";
 
 export default function ManageSkills() {
   const [attempts, setAttempts] = useState([]);
@@ -32,40 +33,56 @@ export default function ManageSkills() {
     setLoading(false);
   };
 
-  const handleAction = async (profileId, attemptId, action) => {
-    if (!confirm(`Are you sure you want to ${action} this attempt?`)) return;
+const handleAction = async (profileId, attemptId, action) => {
+  const result = await Swal.fire({
+    title: `Are you sure?`,
+    text: `You want to ${action} this attempt?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: `Yes, ${action} it!`,
+  });
 
-    setActionLoading(true);
-    try {
-      const res = await fetch("/api/admin/update-verification", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ profileId, attemptId, action }),
-      });
-      const data = await res.json();
+  if (!result.isConfirmed) return;
 
-      if (data.success) {
-        if (action === "reject") {
-          setAttempts((prev) => prev.filter((a) => a._id !== attemptId));
-        } else if (action === "approve") {
-          setAttempts((prev) =>
-            prev.map((a) =>
-              a._id === attemptId
-                ? { ...a, status: "approved", verification: true }
-                : a
-            )
-          );
-        }
-        setSelectedAttempt(null);
-      } else {
-        alert(data.message);
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Server error occurred");
+  setActionLoading(true);
+  try {
+    const res = await fetch("/api/admin/update-verification", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profileId, attemptId, action }),
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      setAttempts((prev) =>
+        prev.map((a) =>
+          a._id === attemptId
+            ? {
+                ...a,
+                status: action === "approve" ? "approved" : "pending",
+                verification: action === "approve",
+              }
+            : a
+        )
+      );
+      setSelectedAttempt(null);
+
+      Swal.fire(
+        "Done!",
+        `Attempt ${action}d successfully.`,
+        "success"
+      );
+    } else {
+      Swal.fire("Error!", data.message, "error");
     }
-    setActionLoading(false);
-  };
+  } catch (err) {
+    console.error(err);
+    Swal.fire("Error!", "Server error occurred", "error");
+  }
+  setActionLoading(false);
+};
 
   // Filtered attempts based on search and filters
   const filteredAttempts = attempts.filter((attempt) => {

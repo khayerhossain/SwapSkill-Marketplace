@@ -1,4 +1,5 @@
 import dbConnect, { collectionNamesObj } from "@/lib/db.connect";
+import { ObjectId } from "mongodb";
 
 // GET /api/find-skills?search=react&page=1&limit=10&sort=newest
 export async function GET(request) {
@@ -13,14 +14,14 @@ export async function GET(request) {
       collectionNamesObj.skillsDirectoryCollection
     );
 
-    // Base query: must be verified
-    let query = { verification: true };
+    // Base query: must be verified & approved
+    let query = { verification: true, status: "approved" };
 
-    // If search query exists, merge it with verification condition
+    // If search query exists, merge it with verification & status
     if (search) {
       query = {
         $and: [
-          { verification: true },
+          { verification: true, status: "approved" },
           {
             $or: [
               { skillName: { $regex: search, $options: "i" } },
@@ -62,6 +63,7 @@ export async function GET(request) {
   }
 }
 
+// POST - Add new skill
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -72,6 +74,8 @@ export async function POST(request) {
     // createdAt auto add 
     const newSkill = {
       ...body,
+      verification: false, // unverified
+      status: "pending",   // pending
       createdAt: new Date(),
     };
 
@@ -89,5 +93,29 @@ export async function POST(request) {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
+  }
+}
+
+// PUT - Admin approve skill
+export async function PUT(request) {
+  try {
+    const { id, approve } = await request.json(); // approve = true/false
+    const collection = await dbConnect(
+      collectionNamesObj.skillsDirectoryCollection
+    );
+
+    const result = await collection.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          verification: approve,
+          status: approve ? "approved" : "pending",
+        },
+      }
+    );
+
+    return new Response(JSON.stringify({ success: true, result }), { status: 200 });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 }

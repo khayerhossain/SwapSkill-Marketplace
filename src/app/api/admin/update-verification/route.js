@@ -22,35 +22,36 @@ export async function POST(request) {
       profileObjectId = profileId;
     }
 
-    // Approve / Reject logic
+    // Approve / Reject / View logic
     if (action === 'approve') {
-      // Approve => set verification true
+      // ✅ Update verification in skillsDirectoryCollection
       await skillsDirectoryCollection.updateOne(
         { _id: profileObjectId },
-        { $set: { verification: true, verifiedAt: new Date() } }
+        { $set: { verification: true, verifiedAt: new Date(), status: 'approved' } }
       );
 
+      // ✅ Update attempt status in testQNACollection (main content unchanged)
       await testQNACollection.updateOne(
         { _id: new ObjectId(attemptId) },
         { $set: { status: 'approved', approvedAt: new Date() } }
       );
 
       return Response.json({ success: true, message: 'User verification approved' });
+
     } else if (action === 'reject') {
-      // Reject => set verification false
       await skillsDirectoryCollection.updateOne(
         { _id: profileObjectId },
-        { $set: { verification: false } }
+        { $set: { verification: false, status: 'pending' } }
       );
 
       await testQNACollection.updateOne(
         { _id: new ObjectId(attemptId) },
-        { $set: { status: 'rejected', rejectedAt: new Date() } }
+        { $set: { status: 'pending', rejectedAt: new Date() } }
       );
 
       return Response.json({ success: true, message: 'User verification rejected' });
+
     } else if (action === 'view') {
-      // View => return attempt details
       const attemptData = await testQNACollection.findOne({ _id: new ObjectId(attemptId) });
 
       if (!attemptData) {
@@ -58,6 +59,7 @@ export async function POST(request) {
       }
 
       return Response.json({ success: true, data: attemptData });
+
     } else {
       return Response.json({ success: false, message: 'Invalid action' }, { status: 400 });
     }

@@ -85,10 +85,10 @@ export default function Pricing() {
   };
 
   return (
-    <div className="bg-black h-auto py-16 text-white mt-5">
+    <div className="bg-base-100 min-h-screen py-16 text-base-content">
       <div className="text-center mb-12">
         <h2 className="text-4xl font-bold">Pricing</h2>
-        <p className="text-gray-400 mt-2">
+        <p className="text-base-content/70 mt-2">
           Simple, transparent pricing. No hidden fees.
         </p>
 
@@ -96,20 +96,20 @@ export default function Pricing() {
         <div className="flex items-center justify-center gap-4 mt-6">
           <span
             className={`cursor-pointer ${
-              billing === "monthly" ? "text-red-500 font-bold" : ""
+              billing === "monthly" ? "text-red-500 font-bold" : "text-base-content/70"
             }`}
             onClick={() => setBilling("monthly")}
           >
             Monthly
           </span>
-          <span>/</span>
+          <span className="text-base-content/50">/</span>
           <span
             className={`cursor-pointer ${
-              billing === "yearly" ? "text-red-500 font-bold" : ""
+              billing === "yearly" ? "text-red-500 font-bold" : "text-base-content/70"
             }`}
             onClick={() => setBilling("yearly")}
           >
-            Yearly <span className="text-green-400">(Save 20%)</span>
+            Yearly <span className="text-green-500">(Save 20%)</span>
           </span>
         </div>
       </div>
@@ -120,21 +120,21 @@ export default function Pricing() {
           {plans.map((plan, idx) => (
             <div
               key={idx}
-              className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 flex flex-col hover:border-red-500 transition"
+              className="bg-base-200 border border-base-300 rounded-lg p-4 flex flex-col hover:border-red-500 transition-colors"
             >
               <div>
                 <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-                <p className="text-gray-400 mb-3 text-sm">{plan.description}</p>
+                <p className="text-base-content/70 mb-3 text-sm">{plan.description}</p>
                 <div className="text-2xl font-bold mb-3">
                   {plan.monthly !== "—" ? (
                     <>
                       ${billing === "monthly" ? plan.monthly : plan.yearly}
-                      <span className="text-sm font-medium text-gray-400">
+                      <span className="text-sm font-medium text-base-content/70">
                         /mo
                       </span>
                     </>
                   ) : (
-                    <span className="text-base text-gray-400">
+                    <span className="text-base text-base-content/70">
                       Custom Pricing
                     </span>
                   )}
@@ -153,8 +153,8 @@ export default function Pricing() {
                 className={`mt-auto py-2 px-4 rounded-md font-semibold text-center text-sm ${
                   plan.button === "Contact Us" ||
                   plan.button === "Request Quote"
-                    ? "bg-red-700 hover:bg-red-800"
-                    : "bg-red-600 hover:bg-red-700"
+                    ? "bg-red-700 hover:bg-red-800 text-white"
+                    : "bg-red-600 hover:bg-red-700 text-white"
                 }`}
               >
                 {plan.button}

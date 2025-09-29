@@ -5,33 +5,9 @@ import { useRouter } from "next/navigation";
 import { useNotification } from "@/context/NotificationContext";
 
 export default function SkillForm() {
-  const [formData, setFormData] = useState({
-    userName: "",
-    age: "",
-    gender: "",
-    homeTown: "",
-    studyOrWorking: "",
-    userImage: "",
-    category: "",
-    description: "",
-    experience: "",
-    availability: "",
-    availabilityType: "",
-    location: "",
-    timeZone: "",
-    skillsToTeach: "",
-    skillsToLearn: "",
-    swapPreference: "",
-    portfolioLink: "",
-    languages: "",
-    tags: "",
-    responseTime: "",
-    email: "",
-    phone: "",
-    facebook: "",
-    instagram: "",
-    twitter: "",
-  });
+  // Use uncontrolled inputs for better compatibility with autofill extensions
+  // Track only non-text UI state
+  const [userImageData, setUserImageData] = useState("");
 
   const [audio, setAudio] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -44,9 +20,7 @@ export default function SkillForm() {
     }
   }, []);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  // Uncontrolled inputs: no per-field onChange required
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -54,7 +28,7 @@ export default function SkillForm() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
-        setFormData({ ...formData, userImage: reader.result });
+        setUserImageData(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -64,10 +38,44 @@ export default function SkillForm() {
     e.preventDefault();
 
     try {
+      // Collect values from the uncontrolled form
+      const formEl = e.currentTarget;
+      const fd = new FormData(formEl);
+      const get = (name) => (fd.get(name) || "").toString();
+
+      // Map form names to backend keys
+      const payload = {
+        userName: get("name"),
+        age: get("age"),
+        gender: get("gender") || get("sex"),
+        homeTown: get("city"),
+        studyOrWorking: get("study_or_work"),
+        userImage: userImageData,
+        category: get("category"),
+        description: get("description"),
+        experience: get("experience"),
+        availability: get("availability"),
+        availabilityType: get("availability_type"),
+        location: get("address"),
+        timeZone: get("timezone"),
+        skillsToTeach: get("skills_teach"),
+        skillsToLearn: get("skills_learn"),
+        swapPreference: get("preference"),
+        portfolioLink: get("website"),
+        languages: get("languages"),
+        tags: get("tags"),
+        responseTime: get("response_time"),
+        email: get("email"),
+        phone: get("tel"),
+        facebook: get("facebook_url"),
+        instagram: get("instagram_url"),
+        twitter: get("twitter_url"),
+      };
+
       const res = await fetch("/api/skills", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -81,37 +89,12 @@ export default function SkillForm() {
           type: "formSuccess",
           profileId: data.insertedId,
           userId: "current-user-id",
-          category: formData.category || "General",
+          category: payload.category || "General",
         });
 
-        setFormData({
-          userName: "",
-          age: "",
-          gender: "",
-          homeTown: "",
-          studyOrWorking: "",
-          userImage: "",
-          category: "",
-          description: "",
-          experience: "",
-          availability: "",
-          availabilityType: "",
-          location: "",
-          timeZone: "",
-          skillsToTeach: "",
-          skillsToLearn: "",
-          swapPreference: "",
-          portfolioLink: "",
-          languages: "",
-          tags: "",
-          responseTime: "",
-          email: "",
-          phone: "",
-          facebook: "",
-          instagram: "",
-          twitter: "",
-        });
+        formEl.reset();
         setImagePreview(null);
+        setUserImageData("");
       } else {
         addNotification({
           title: "Error!",
@@ -129,22 +112,23 @@ export default function SkillForm() {
     }
   };
 
-  // 🔹 Reusable Floating Input
+  // 🔹 Reusable Floating Input (uncontrolled)
   const FloatingInput = ({
     label,
     type = "text",
     name,
-    value,
-    onChange,
+    defaultValue,
     className = "",
+    autoComplete,
     ...props
   }) => (
     <div className={`relative ${className}`}>
       <input
+        id={name}
         type={type}
         name={name}
-        value={value}
-        onChange={onChange}
+        defaultValue={defaultValue}
+        autoComplete={autoComplete}
         className="peer w-full p-3 border border-gray-400 rounded-lg bg-transparent placeholder-transparent focus:outline-none focus:ring-2 focus:ring-black"
         placeholder={label}
         {...props}
@@ -161,19 +145,18 @@ export default function SkillForm() {
     </div>
   );
 
-  // 🔹 Reusable Floating Textarea
+  // 🔹 Reusable Floating Textarea (uncontrolled)
   const FloatingTextarea = ({
     label,
     name,
-    value,
-    onChange,
+    defaultValue,
     className = "",
   }) => (
     <div className={`relative ${className}`}>
       <textarea
+        id={name}
         name={name}
-        value={value}
-        onChange={onChange}
+        defaultValue={defaultValue}
         className="peer w-full p-3 border border-gray-400 rounded-lg bg-transparent placeholder-transparent focus:outline-none focus:ring-2 focus:ring-black resize-none h-32 lg:h-[200px]"
         placeholder={label}
       />
@@ -189,25 +172,24 @@ export default function SkillForm() {
     </div>
   );
 
-  // 🔹 Reusable Floating Select
+  // 🔹 Reusable Floating Select (uncontrolled)
   const FloatingSelect = ({
     label,
     name,
-    value,
-    onChange,
+    defaultValue,
     options,
     className = "",
   }) => (
     <div className={`relative ${className}`}>
       <select
+        id={name}
         name={name}
-        value={value}
-        onChange={onChange}
+        defaultValue={defaultValue}
         className="peer w-full p-3 border border-gray-400 rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-black"
       >
         <option value="" disabled hidden></option>
         {options.map((opt, i) => (
-          <option key={i}>{opt}</option>
+          <option key={i} value={opt}>{opt}</option>
         ))}
       </select>
       <label
@@ -228,38 +210,36 @@ export default function SkillForm() {
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
         <FloatingInput
           label="Full Name"
-          name="userName"
-          value={formData.userName}
-          onChange={handleChange}
+          name="name"
+          defaultValue=""
+          autoComplete="name"
           required
         />
         <FloatingInput
           label="Age"
           type="number"
           name="age"
-          value={formData.age}
-          onChange={handleChange}
+          defaultValue=""
+          autoComplete="bday-year"
         />
 
         <FloatingSelect
           label="Gender"
           name="gender"
-          value={formData.gender}
-          onChange={handleChange}
+          defaultValue=""
           options={["Male", "Female", "Other"]}
         />
 
         <FloatingInput
           label="Home Town"
-          name="homeTown"
-          value={formData.homeTown}
-          onChange={handleChange}
+          name="city"
+          defaultValue=""
+          autoComplete="address-level2"
         />
         <FloatingInput
           label="Study or Working"
-          name="studyOrWorking"
-          value={formData.studyOrWorking}
-          onChange={handleChange}
+          name="study_or_work"
+          defaultValue=""
           className="col-span-2"
         />
 
@@ -299,8 +279,7 @@ export default function SkillForm() {
           <FloatingTextarea
             label="Description"
             name="description"
-            value={formData.description}
-            onChange={handleChange}
+            defaultValue=""
             className="md:col-span-4"
           />
         </div>
@@ -308,8 +287,7 @@ export default function SkillForm() {
         <FloatingSelect
           label="Skill Category"
           name="category"
-          value={formData.category}
-          onChange={handleChange}
+          defaultValue=""
           options={[
             "Programming",
             "Design",
@@ -332,85 +310,75 @@ export default function SkillForm() {
 
         <FloatingInput
           label="Skills to Teach (comma separated)"
-          name="skillsToTeach"
-          value={formData.skillsToTeach}
-          onChange={handleChange}
+          name="skills_teach"
+          defaultValue=""
           className="col-span-2"
         />
         <FloatingInput
           label="Skills to Learn (comma separated)"
-          name="skillsToLearn"
-          value={formData.skillsToLearn}
-          onChange={handleChange}
+          name="skills_learn"
+          defaultValue=""
           className="col-span-2"
         />
         <FloatingInput
           label="Experience (e.g. 2 years)"
           name="experience"
-          value={formData.experience}
-          onChange={handleChange}
+          defaultValue=""
         />
         <FloatingInput
           label="Availability (e.g. Weekends)"
           name="availability"
-          value={formData.availability}
-          onChange={handleChange}
+          defaultValue=""
         />
 
         <FloatingSelect
           label="Availability Type"
-          name="availabilityType"
-          value={formData.availabilityType}
-          onChange={handleChange}
+          name="availability_type"
+          defaultValue=""
           options={["Online", "Offline", "Hybrid"]}
         />
 
         <FloatingInput
           label="Location"
-          name="location"
-          value={formData.location}
-          onChange={handleChange}
+          name="address"
+          defaultValue=""
+          autoComplete="address-level1"
         />
         <FloatingInput
           label="Time Zone (e.g. Asia/Dhaka)"
-          name="timeZone"
-          value={formData.timeZone}
-          onChange={handleChange}
+          name="timezone"
+          defaultValue=""
           className="col-span-2"
         />
         <FloatingInput
           label="Swap Preference"
-          name="swapPreference"
-          value={formData.swapPreference}
-          onChange={handleChange}
+          name="preference"
+          defaultValue=""
           className="col-span-2"
         />
         <FloatingInput
           label="Portfolio Link"
-          name="portfolioLink"
-          value={formData.portfolioLink}
-          onChange={handleChange}
+          name="website"
+          defaultValue=""
+          autoComplete="url"
           className="col-span-2"
         />
         <FloatingInput
           label="Languages (comma separated)"
           name="languages"
-          value={formData.languages}
-          onChange={handleChange}
+          defaultValue=""
           className="col-span-2"
         />
         <FloatingInput
           label="Tags (comma separated)"
           name="tags"
-          value={formData.tags}
-          onChange={handleChange}
+          defaultValue=""
           className="col-span-2"
         />
         <FloatingInput
           label="Response Time (e.g. Within 24 hours)"
-          name="responseTime"
-          value={formData.responseTime}
-          onChange={handleChange}
+          name="response_time"
+          defaultValue=""
           className="col-span-2"
         />
 
@@ -418,33 +386,33 @@ export default function SkillForm() {
           label="Email Address"
           type="email"
           name="email"
-          value={formData.email}
-          onChange={handleChange}
+          defaultValue=""
+          autoComplete="email"
         />
         <FloatingInput
           label="Phone Number"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
+          name="tel"
+          defaultValue=""
+          autoComplete="tel"
         />
         <FloatingInput
           label="Facebook Link"
-          name="facebook"
-          value={formData.facebook}
-          onChange={handleChange}
+          name="facebook_url"
+          defaultValue=""
+          autoComplete="url"
           className="col-span-2"
         />
         <FloatingInput
           label="Instagram Link"
-          name="instagram"
-          value={formData.instagram}
-          onChange={handleChange}
+          name="instagram_url"
+          defaultValue=""
+          autoComplete="url"
         />
         <FloatingInput
           label="Twitter Link"
-          name="twitter"
-          value={formData.twitter}
-          onChange={handleChange}
+          name="twitter_url"
+          defaultValue=""
+          autoComplete="url"
         />
 
         {/* Submit */}

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ThemeContext } from "@/context/ThemeProvider";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 // React Icons Imports
@@ -17,6 +18,8 @@ import {
 // A separate component to render the redesigned card and chart for each payment
 export function SinglePaymentCard({ payment }) {
   const [timeLeft, setTimeLeft] = useState(null);
+  const { appliedTheme } = useContext(ThemeContext);
+  const isDark = appliedTheme === "dark";
 
   useEffect(() => {
     // Assuming a 30-day subscription for simplicity
@@ -57,7 +60,7 @@ export function SinglePaymentCard({ payment }) {
   ];
 
   // Colors for the pie chart
-  const COLORS = ["#ef4444", "#27272a"]; // Red for remaining, dark gray for used
+  const COLORS = isDark ? ["#ef4444", "#1f2937"] : ["#ef4444", "#e5e7eb"]; // adjust ring color for theme
 
   // Glow effect class based on percentage remaining
   const getGlowClass = (percentage) => {
@@ -70,16 +73,16 @@ export function SinglePaymentCard({ payment }) {
 
   return (
    <motion.div
-  className={`border rounded-xl p-4 md:p-6 hover:shadow-lg flex flex-col md:flex-row items-center justify-between transition-all duration-300 hover:border-red-500 ${getGlowClass(
-    percentageRemaining
-  )}`}
+  className={`rounded-xl p-4 md:p-6 hover:shadow-lg flex flex-col md:flex-row items-center justify-between transition-all duration-300 hover:border-red-500 ${
+    isDark ? "bg-gray-800 text-white border border-gray-700" : "bg-white text-gray-900 border"
+  } ${getGlowClass(percentageRemaining)}`}
   whileHover={{ scale: 1.01 }}
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.4, ease: "easeOut" }}
 >
   {/* Left Column */}
-  <div className="w-full md:w-1/2 flex flex-col items-center justify-center relative md:border-r md:border-zinc-800 md:pr-6">
+  <div className={`w-full md:w-1/2 flex flex-col items-center justify-center relative md:border-r md:pr-6 ${isDark ? "md:border-zinc-700" : "md:border-zinc-200"}`}>
     <h3 className="text-lg font-semibold mb-2 pb-1 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-0.5 after:bg-red-500">
       Time Left
     </h3>
@@ -128,10 +131,10 @@ export function SinglePaymentCard({ payment }) {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.4 }}
       >
-        <p className="text-2xl text-black font-bold">
+        <p className={`text-2xl font-bold ${isDark ? "text-white" : "text-black"}`}>
           {percentageRemaining.toFixed(0)}%
         </p>
-        <p className="text-xs text-gray-400 font-light mt-1">remaining</p>
+        <p className={`text-xs font-light mt-1 ${isDark ? "text-gray-400" : "text-gray-500"}`}>remaining</p>
       </motion.div>
     </div>
   </div>

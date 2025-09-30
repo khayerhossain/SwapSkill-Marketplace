@@ -25,6 +25,8 @@ export default function NavbarPage() {
     // { name: "Reviews", path: "/#reviews" },
     // { name: "FAQ", path: "/#faq" },
     // { name: "Newsletter", path: "/#newsletter" },
+   
+    { name: "Features", path: "/features" },
     { name: "Dashboard", path: "/dashboard" },
     { name: "AppBar", path: "/appBar" },
     { name: "Pricing", path: "/pricing" },

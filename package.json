@@ -17,8 +17,12 @@
     "axis": "^1.0.0",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
+<<<<<<< HEAD
     "dotenv": "^17.2.3",
     "framer-motion": "^12.23.12",
+=======
+    "framer-motion": "^12.23.22",
+>>>>>>> 7e7fc3a4e7acb3bf6f0e10e2295ba611530fa0b5
     "lucide-react": "^0.544.0",
     "mongodb": "^6.19.0",
     "next": "15.5.2",

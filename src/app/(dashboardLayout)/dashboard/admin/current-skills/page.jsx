@@ -206,7 +206,7 @@ export default function CurrentSkills() {
       {/* Modal for Details */}
       {selectedSkill && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-          <div className="bg-white dark:bg-red-900 w-full max-w-lg p-6 rounded-xl shadow-2xl relative animate-fadeIn">
+          <div className="bg-white dark:bg-gray-900 w-full max-w-lg p-6 rounded-xl shadow-2xl relative animate-fadeIn">
             <button
               onClick={() => setSelectedSkill(null)}
               className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white cursor-pointer"

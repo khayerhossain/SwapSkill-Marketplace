@@ -69,11 +69,11 @@ export default function MessagePage() {
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <h1 className="text-3xl font-bold mb-6">Connect with {skill?.userName}</h1>
           
-          <div className="mb-6 p-4 bg-green-50 rounded-lg">
-            <p className="text-green-800">
+          <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+            <p className="text-blue-800">
               <strong>Selected Date:</strong> {new Date(selectedDate).toDateString()}
             </p>
-            <p className="text-green-600 text-sm mt-1">
+            <p className="text-blue-600 text-sm mt-1">
               Your mock interview is scheduled for this date
             </p>
           </div>
@@ -86,7 +86,7 @@ export default function MessagePage() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder={`Hi ${skill?.userName}, I would like to schedule a mock interview on ${new Date(selectedDate).toDateString()}. Please let me know if this works for you.`}
-              className="w-full h-40 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full h-40 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
@@ -94,7 +94,7 @@ export default function MessagePage() {
             <button
               onClick={handleSendMessage}
               disabled={sending}
-              className="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:bg-gray-400"
+              className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400"
             >
               {sending ? 'Sending...' : 'Send Message'}
             </button>

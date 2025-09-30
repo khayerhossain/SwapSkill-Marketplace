@@ -99,9 +99,9 @@ function Calendar({ onDateSelect, availableDates }) {
           onClick={() => available && handleDateClick(day)}
           className={`h-12 flex items-center justify-center rounded-lg transition-all duration-300 border relative ${
             selected
-              ? "bg-green-500 text-white font-bold border-green-600 shadow-lg"
+              ? "bg-blue-500 text-white font-bold border-blue-600 shadow-lg"
               : available
-              ? "bg-green-100 text-green-800 border-green-300 hover:bg-green-200 cursor-pointer"
+              ? "bg-blue-100 text-blue-800 border-blue-300 hover:bg-blue-200 cursor-pointer"
               : isToday(day)
               ? "bg-gray-100 text-gray-400 border-gray-300"
               : "bg-gray-50 text-gray-400 border-transparent"
@@ -109,7 +109,7 @@ function Calendar({ onDateSelect, availableDates }) {
         >
           {day}
           {available && !selected && (
-            <div className="absolute bottom-1 w-1 h-1 bg-green-500 rounded-full"></div>
+            <div className="absolute bottom-1 w-1 h-1 bg-blue-500 rounded-full"></div>
           )}
         </div>
       );
@@ -167,11 +167,11 @@ function Calendar({ onDateSelect, availableDates }) {
       {/* Legend */}
       <div className="flex items-center justify-center gap-4 mb-4 text-sm">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-green-100 border border-green-300 rounded"></div>
+          <div className="w-3 h-3 bg-blue-100 border border-blue-300 rounded"></div>
           <span>Available</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-green-500 rounded"></div>
+          <div className="w-3 h-3 bg-blue-500 rounded"></div>
           <span>Selected</span>
         </div>
       </div>
@@ -357,7 +357,7 @@ export default function SkillDetailsPage() {
                 </h3>
                 <div className="inline-block">
                   <span className="bg-primary text-primary-content px-8 py-4 rounded-xl text-xl font-bold shadow-lg hover:opacity-90 transition-colors duration-300">
-                    {skill.skillName}
+                    {skill.category}
                   </span>
                 </div>
               </div>
@@ -602,7 +602,7 @@ export default function SkillDetailsPage() {
           onClick={handleConnectClick}
           className={`px-8 py-4 rounded-xl font-bold text-lg transition-colors duration-300 w-full ${
             selectedDate 
-              ? "bg-green-600 text-white hover:bg-green-700" 
+              ? "bg-blue-600 text-white hover:bg-blue-700" 
               : "bg-gray-400 text-gray-200 cursor-not-allowed"
           }`}
           disabled={!selectedDate}

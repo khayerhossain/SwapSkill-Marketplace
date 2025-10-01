@@ -34,6 +34,7 @@ const Sidebar = ({
     ? "/appBar/overview"
     : "/overview";
   const dashboardPath = useAppBarPaths ? "/dashboard" : "/dashboard";
+  const resourcesPath = useAppBarPaths ? "/appBar/resources" : "/resources";
 
   const appBarItems = [
     { name: "Home", icon: <FaHome />, path: "/" },
@@ -42,6 +43,7 @@ const Sidebar = ({
     { name: "Profile", icon: <FaBox />, path: profilePath },
     { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath }, 
     { name: "Overview", icon: <FaBox />, path: userPayment,  },
+    { name: "Resources", icon: <FaBox />, path: resourcesPath  },
   ];
 
   const dashboardItems = [

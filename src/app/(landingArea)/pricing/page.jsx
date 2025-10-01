@@ -1,11 +1,23 @@
 "use client";
 import Container from "@/components/shared/Container";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { BsCreditCard2Back } from "react-icons/bs";
+import { FaStripe } from "react-icons/fa";
+
 export default function Pricing() {
   const [billing, setBilling] = useState("monthly");
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  AOS.init({
+    duration: 800, // animation duration
+    easing: "ease-in-out",
+    once: true, // run only once
+  });
   const plans = [
     {
       name: "Learner",
@@ -66,22 +78,32 @@ export default function Pricing() {
     },
   ];
 
+  // Modal open করার জন্য
   const handlePrice = (name) => {
-      const plan = plans.find(p => p.name === name);
-  if (!plan) {
-    console.error("Plan not found:", name);
-    return;
-  }
+    const plan = plans.find((p) => p.name === name);
+    if (!plan) return;
+    setSelectedPlan(plan);
+    setIsModalOpen(true);
+  };
 
-  // build query safely
-  const params = new URLSearchParams({
-    name: plan.name ?? "",
-    price: String(plan.monthly ?? ""),
-  });
+  // Payment selection
+  const handlePayment = (method) => {
+    if (!selectedPlan) return;
 
-  const path = `/checkout?${params.toString()}`;
-  console.log("router.push argument:", path, typeof path); 
-  router.push(path); 
+    const params = new URLSearchParams({
+      name: selectedPlan.name ?? "",
+      price: String(selectedPlan.monthly ?? ""),
+    });
+
+    let path = "";
+    if (method === "sslcommerz") {
+      path = `/checkout?${params.toString()}`;
+    } else if (method === "stripe") {
+      path = `/checkoutStripe?${params.toString()}`;
+    }
+
+    setIsModalOpen(false);
+    router.push(path);
   };
 
   return (
@@ -96,7 +118,9 @@ export default function Pricing() {
         <div className="flex items-center justify-center gap-4 mt-6">
           <span
             className={`cursor-pointer ${
-              billing === "monthly" ? "text-red-500 font-bold" : "text-base-content/70"
+              billing === "monthly"
+                ? "text-red-500 font-bold"
+                : "text-base-content/70"
             }`}
             onClick={() => setBilling("monthly")}
           >
@@ -105,7 +129,9 @@ export default function Pricing() {
           <span className="text-base-content/50">/</span>
           <span
             className={`cursor-pointer ${
-              billing === "yearly" ? "text-red-500 font-bold" : "text-base-content/70"
+              billing === "yearly"
+                ? "text-red-500 font-bold"
+                : "text-base-content/70"
             }`}
             onClick={() => setBilling("yearly")}
           >
@@ -124,7 +150,9 @@ export default function Pricing() {
             >
               <div>
                 <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-                <p className="text-base-content/70 mb-3 text-sm">{plan.description}</p>
+                <p className="text-base-content/70 mb-3 text-sm">
+                  {plan.description}
+                </p>
                 <div className="text-2xl font-bold mb-3">
                   {plan.monthly !== "—" ? (
                     <>
@@ -163,6 +191,55 @@ export default function Pricing() {
           ))}
         </div>
       </Container>
+
+      {/* daisyUI Modal */}
+      {isModalOpen && selectedPlan && (
+        <dialog open className="modal">
+          <div data-aos="fade-up" className="modal-box border">
+            <h3 className="font-bold text-lg mb-3">Choose Payment Method</h3>
+            <p className="mb-4 text-sm">
+              Selected Plan:{" "}
+              <span className="font-semibold">{selectedPlan.name}</span>
+            </p>
+
+            <div className="flex gap-4">
+              <div
+                onClick={() => handlePayment("sslcommerz")}
+                className="
+      flex flex-col items-center justify-center p-6 w-40 h-32
+      bg-white border-2 border-green-500 rounded-lg shadow-lg
+      hover:shadow-xl transition duration-300 ease-in-out cursor-pointer
+      btn btn-card-sslcommerz hover:border-red-500"
+              >
+                <BsCreditCard2Back className="text-4xl text-green-600 mb-2" />
+                <span className="font-semibold text-gray-800 text-center">
+                  Pay with SSLCommerz
+                </span>
+              </div>
+
+              <div
+                onClick={() => handlePayment("stripe")}
+                className="
+      flex flex-col items-center justify-center p-6 w-40 h-32
+      bg-white border-2 border-indigo-600 rounded-lg shadow-lg
+      hover:shadow-xl transition duration-300 ease-in-out cursor-pointer
+      btn btn-card-stripe hover:border-red-500"
+              >
+                <FaStripe className="text-4xl text-indigo-700 mb-2" />
+                <span className="font-semibold text-gray-800 text-center">
+                  Pay with Stripe
+                </span>
+              </div>
+            </div>
+
+            <div className="modal-action">
+              <button onClick={() => setIsModalOpen(false)} className="btn">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
     </div>
   );
 }

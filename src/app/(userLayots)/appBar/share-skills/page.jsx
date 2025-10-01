@@ -3,14 +3,19 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useNotification } from "@/context/NotificationContext";
+import { useSession } from "next-auth/react"; // 🔹 UPDATED
 
 export default function SkillForm() {
-  // Use uncontrolled inputs for better compatibility with autofill extensions
-  // Track only non-text UI state
-  const [userImageData, setUserImageData] = useState("");
+  const { data: session } = useSession(); // 🔹 NEW: logged-in email
 
+  const [userImageData, setUserImageData] = useState("");
   const [audio, setAudio] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [availabilityDates, setAvailabilityDates] = useState([]); // 🔹 NEW
+  const [dateInput, setDateInput] = useState(""); // 🔹 NEW
+  const [tags, setTags] = useState([]); // 🔹 NEW
+  const [tagInput, setTagInput] = useState(""); // 🔹 NEW
+
   const router = useRouter();
   const { addNotification } = useNotification();
 
@@ -19,8 +24,6 @@ export default function SkillForm() {
       setAudio(new Audio("/sounds/notification.mp3"));
     }
   }, []);
-
-  // Uncontrolled inputs: no per-field onChange required
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -34,16 +37,29 @@ export default function SkillForm() {
     }
   };
 
+  // 🔹 NEW: Add Date
+  const addDate = () => {
+    if (dateInput && !availabilityDates.includes(dateInput)) {
+      setAvailabilityDates([...availabilityDates, dateInput]);
+      setDateInput("");
+    }
+  };
+
+  // 🔹 NEW: Add Tag
+  const addTag = () => {
+    if (tagInput && !tags.includes(tagInput)) {
+      setTags([...tags, tagInput]);
+      setTagInput("");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      // Collect values from the uncontrolled form
       const formEl = e.currentTarget;
       const fd = new FormData(formEl);
       const get = (name) => (fd.get(name) || "").toString();
 
-      // Map form names to backend keys
       const payload = {
         userName: get("name"),
         age: get("age"),
@@ -54,7 +70,6 @@ export default function SkillForm() {
         category: get("category"),
         description: get("description"),
         experience: get("experience"),
-        availability: get("availability"),
         availabilityType: get("availability_type"),
         location: get("address"),
         timeZone: get("timezone"),
@@ -63,13 +78,16 @@ export default function SkillForm() {
         swapPreference: get("preference"),
         portfolioLink: get("website"),
         languages: get("languages"),
-        tags: get("tags"),
         responseTime: get("response_time"),
-        email: get("email"),
         phone: get("tel"),
         facebook: get("facebook_url"),
         instagram: get("instagram_url"),
         twitter: get("twitter_url"),
+
+        // 🔹 UPDATED / NEW
+        availabilityDates,
+        tags,
+        email: session?.user?.email || null, // 🔹 UPDATED: logged-in email
       };
 
       const res = await fetch("/api/skills", {
@@ -82,7 +100,6 @@ export default function SkillForm() {
 
       if (res.ok && data.success) {
         if (audio) audio.play();
-
         addNotification({
           title: "Do you want to start the Quiz?",
           message: "Choose your option!",
@@ -95,6 +112,8 @@ export default function SkillForm() {
         formEl.reset();
         setImagePreview(null);
         setUserImageData("");
+        setAvailabilityDates([]);
+        setTags([]);
       } else {
         addNotification({
           title: "Error!",
@@ -112,16 +131,8 @@ export default function SkillForm() {
     }
   };
 
-  // 🔹 Reusable Floating Input (uncontrolled)
-  const FloatingInput = ({
-    label,
-    type = "text",
-    name,
-    defaultValue,
-    className = "",
-    autoComplete,
-    ...props
-  }) => (
+  // 🔹 Floating Input, Textarea, Select remain same
+  const FloatingInput = ({ label, type = "text", name, defaultValue, className = "", autoComplete, ...props }) => (
     <div className={`relative ${className}`}>
       <input
         id={name}
@@ -145,13 +156,7 @@ export default function SkillForm() {
     </div>
   );
 
-  // 🔹 Reusable Floating Textarea (uncontrolled)
-  const FloatingTextarea = ({
-    label,
-    name,
-    defaultValue,
-    className = "",
-  }) => (
+  const FloatingTextarea = ({ label, name, defaultValue, className = "" }) => (
     <div className={`relative ${className}`}>
       <textarea
         id={name}
@@ -172,14 +177,7 @@ export default function SkillForm() {
     </div>
   );
 
-  // 🔹 Reusable Floating Select (uncontrolled)
-  const FloatingSelect = ({
-    label,
-    name,
-    defaultValue,
-    options,
-    className = "",
-  }) => (
+  const FloatingSelect = ({ label, name, defaultValue, options, className = "" }) => (
     <div className={`relative ${className}`}>
       <select
         id={name}
@@ -369,32 +367,48 @@ export default function SkillForm() {
           defaultValue=""
           className="col-span-2"
         />
-        <FloatingInput
-          label="Tags (comma separated)"
-          name="tags"
-          defaultValue=""
-          className="col-span-2"
-        />
+
+
+       {/* 🔹 UPDATED / NEW: Tags */}
+        <div className="col-span-2">
+          <label className="block mb-2 text-sm font-medium">Tags</label>
+          <div className="flex gap-2">
+            <FloatingInput
+              type="text"
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              placeholder="Enter tag"
+              className=" flex-1"
+            />
+            <button type="button" onClick={addTag} className="px-4 py-2 bg-blue-600 text-white rounded">
+              Add
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {tags.map((tag, i) => (
+              <span key={i} className=" px-2 py-1 rounded">{tag}</span>
+            ))}
+          </div>
+        </div>
+
+
+
         <FloatingInput
           label="Response Time (e.g. Within 24 hours)"
           name="response_time"
           defaultValue=""
           className="col-span-2"
         />
-
-        <FloatingInput
-          label="Email Address"
-          type="email"
-          name="email"
-          defaultValue=""
-          autoComplete="email"
-        />
+       
         <FloatingInput
           label="Phone Number"
           name="tel"
           defaultValue=""
           autoComplete="tel"
-        />
+        />        
+        
+        
+
         <FloatingInput
           label="Facebook Link"
           name="facebook_url"
@@ -414,6 +428,29 @@ export default function SkillForm() {
           defaultValue=""
           autoComplete="url"
         />
+
+               {/* 🔹 UPDATED / NEW: Availability Dates */}
+        <div className="col-span-2">
+          <label className="block mb-2 text-sm font-medium">Availability Dates</label>
+          <div className="flex gap-2">
+            <FloatingInput
+            label="Availability Dates"
+              type="date"
+              value={dateInput}
+              onChange={(e) => setDateInput(e.target.value)}
+              className=""
+            />
+            <button type="button" onClick={addDate} className="px-4 py-2 bg-blue-600 text-white rounded">
+              Add
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {availabilityDates.map((d, i) => (
+              <span key={i} className=" px-2 py-1 rounded">{d}</span>
+            ))}
+          </div>
+        </div>
+        
 
         {/* Submit */}
         <button

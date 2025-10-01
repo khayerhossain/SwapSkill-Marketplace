@@ -5,6 +5,9 @@ import "aos/dist/aos.css";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { BsCreditCard2Back } from "react-icons/bs";
+import { FaStripe } from "react-icons/fa";
+
 export default function Pricing() {
   const [billing, setBilling] = useState("monthly");
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -199,19 +202,34 @@ export default function Pricing() {
               <span className="font-semibold">{selectedPlan.name}</span>
             </p>
 
-            <div className="flex flex-col gap-3">
-              <button
+            <div className="flex gap-4">
+              <div
                 onClick={() => handlePayment("sslcommerz")}
-                className="btn btn-primary"
+                className="
+      flex flex-col items-center justify-center p-6 w-40 h-32
+      bg-white border-2 border-green-500 rounded-lg shadow-lg
+      hover:shadow-xl transition duration-300 ease-in-out cursor-pointer
+      btn btn-card-sslcommerz hover:border-red-500"
               >
-                Pay with SSLCommerz
-              </button>
-              <button
+                <BsCreditCard2Back className="text-4xl text-green-600 mb-2" />
+                <span className="font-semibold text-gray-800 text-center">
+                  Pay with SSLCommerz
+                </span>
+              </div>
+
+              <div
                 onClick={() => handlePayment("stripe")}
-                className="btn btn-secondary"
+                className="
+      flex flex-col items-center justify-center p-6 w-40 h-32
+      bg-white border-2 border-indigo-600 rounded-lg shadow-lg
+      hover:shadow-xl transition duration-300 ease-in-out cursor-pointer
+      btn btn-card-stripe hover:border-red-500"
               >
-                Pay with Stripe
-              </button>
+                <FaStripe className="text-4xl text-indigo-700 mb-2" />
+                <span className="font-semibold text-gray-800 text-center">
+                  Pay with Stripe
+                </span>
+              </div>
             </div>
 
             <div className="modal-action">

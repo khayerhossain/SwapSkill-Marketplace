@@ -6,6 +6,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { use, useState } from "react";
+import Swal from "sweetalert2";
 function CheckoutForm(props) {
   const stripe = useStripe();
   const elements = useElements();
@@ -37,7 +38,7 @@ function CheckoutForm(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payment = {
+    const paymentHistroy = {
       planName: planName,
       price: price,
       email: session?.user?.email,
@@ -67,7 +68,7 @@ function CheckoutForm(props) {
     } else {
       setError("");
       console.log("payment method", paymentMethod);
-      console.log("payment", payment);
+     
     }
 
       const { data } = await axios.post(
@@ -76,7 +77,51 @@ function CheckoutForm(props) {
         { headers: { "Content-Type": "application/json" } }) 
 
 
-    console.log("res form intent", data);
+    console.log("res form intent", data.clientSecret);  
+
+    const result = await stripe.confirmCardPayment(data.clientSecret,{
+      payment_method:{
+        card:elements.getElement(CardElement),
+        billing_details:{
+          name:session?.user?.name
+        }
+      }
+    })
+
+    if(result.error){
+   
+       Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `${result.error.message}`,
+       
+      });
+      console.log(result.error.message);
+      
+    }else{
+      if(result.paymentIntent.status === 'succeeded'){
+
+         paymentHistroy.transactionId = result.paymentIntent.id;
+         paymentHistroy.status = "success";
+
+  
+    await axios.post(
+        "/api/payment-history",
+        paymentHistroy,
+        { headers: { "Content-Type": "application/json" } }) 
+
+  Swal.fire({
+    icon: "success",
+    title: "Success",
+    text: "Payment completed successfully!",
+  });
+
+  window.location.href = "/";
+      }
+    }
+
+
+
   };
   return (
     <div data-aos="fade-down">

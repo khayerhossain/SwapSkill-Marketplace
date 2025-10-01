@@ -2,27 +2,21 @@
 
 import axiosInstance from "@/lib/axiosInstance";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { FaFacebook } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
-function Calendar() {
+
+// find-skills/[id]/page.jsx - Calendar কম্পোনেন্ট
+function Calendar({ onDateSelect, availableDates }) {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
   const today = new Date();
 
+  // monthNames কে Calendar কম্পোনেন্টের ভিতরে নিয়ে আসুন
   const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
   ];
 
   const daysInMonth = new Date(
@@ -30,22 +24,20 @@ function Calendar() {
     currentDate.getMonth() + 1,
     0
   ).getDate();
+  
   const firstDayOfMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
     1
   ).getDay();
 
-  const prevMonth = () => {
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
-    );
-  };
-
-  const nextMonth = () => {
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
-    );
+  // Database থেকে আসা available dates process করা - শুধু backend dates
+  const isAvailable = (day, month, year) => {
+    if (!availableDates || availableDates.length === 0) return false;
+    
+    const currentDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    
+    return availableDates.includes(currentDateStr);
   };
 
   const isToday = (day) => {
@@ -56,8 +48,37 @@ function Calendar() {
     );
   };
 
+  const handleDateClick = (day) => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    
+    if (isAvailable(day, month, year)) {
+      const newSelectedDate = new Date(year, month, day);
+      setSelectedDate(newSelectedDate);
+      if (onDateSelect) {
+        onDateSelect(newSelectedDate);
+      }
+    }
+  };
+
+  const prevMonth = () => {
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
+    );
+    setSelectedDate(null);
+  };
+
+  const nextMonth = () => {
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
+    );
+    setSelectedDate(null);
+  };
+
   const renderCalendarDays = () => {
     const days = [];
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
 
     // Empty cells for days before the first day of the month
     for (let i = 0; i < firstDayOfMonth; i++) {
@@ -66,16 +87,30 @@ function Calendar() {
 
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
+      const available = isAvailable(day, currentMonth, currentYear);
+      const selected = selectedDate && 
+        selectedDate.getDate() === day && 
+        selectedDate.getMonth() === currentMonth &&
+        selectedDate.getFullYear() === currentYear;
+
       days.push(
         <div
           key={day}
-          className={`h-12 flex items-center justify-center rounded-lg cursor-pointer transition-all duration-300 border ${
-            isToday(day)
-              ? "bg-primary text-primary-content font-bold border-primary shadow-lg shadow-primary/20"
-              : "hover:bg-primary/10 border-transparent hover:border-primary/30 text-base-content"
-          }`}
+          onClick={() => available && handleDateClick(day)}
+          className={`h-12 flex items-center justify-center rounded-lg transition-all duration-300 border relative ${
+            selected
+              ? "bg-blue-500 text-white font-bold border-blue-600 shadow-lg"
+              : available
+              ? "bg-blue-100 text-blue-800 border-blue-300 hover:bg-blue-200 cursor-pointer"
+              : isToday(day)
+              ? "bg-gray-100 text-gray-400 border-gray-300"
+              : "bg-gray-50 text-gray-400 border-transparent"
+          } ${available ? 'cursor-pointer' : 'cursor-not-allowed'}`}
         >
           {day}
+          {available && !selected && (
+            <div className="absolute bottom-1 w-1 h-1 bg-blue-500 rounded-full"></div>
+          )}
         </div>
       );
     }
@@ -129,6 +164,18 @@ function Calendar() {
         </div>
       </div>
 
+      {/* Legend */}
+      <div className="flex items-center justify-center gap-4 mb-4 text-sm">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 bg-blue-100 border border-blue-300 rounded"></div>
+          <span>Available</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 bg-blue-500 rounded"></div>
+          <span>Selected</span>
+        </div>
+      </div>
+
       <div className="grid grid-cols-7 gap-2 mb-4">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
           <div
@@ -141,15 +188,26 @@ function Calendar() {
       </div>
 
       <div className="grid grid-cols-7 gap-2">{renderCalendarDays()}</div>
+
+      {/* Available dates info */}
+      {availableDates && availableDates.length > 0 && (
+        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+          <p className="text-sm text-blue-700 text-center">
+            Available dates for mock interview: {availableDates.length} dates
+          </p>
+        </div>
+      )}
     </div>
   );
 }
 
 export default function SkillDetailsPage() {
   const params = useParams();
+  const router = useRouter();
   const id = params?.id;
   const [skill, setSkill] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
     const fetchSkill = async () => {
@@ -157,6 +215,10 @@ export default function SkillDetailsPage() {
         if (!id) return;
         const { data } = await axiosInstance.get(`/find-skills/${id}`);
         setSkill(data);
+        
+        // Debug: দেখুন backend থেকে কি data আসছে
+        console.log('Backend data:', data);
+        console.log('Available dates from backend:', data.availabilityDates);
       } catch (err) {
         console.error(err);
       } finally {
@@ -167,6 +229,23 @@ export default function SkillDetailsPage() {
     fetchSkill();
   }, [id]);
 
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+  };
+
+  const handleConnectClick = () => {
+    if (selectedDate) {
+      // Message page-এ navigate করুন
+      router.push(`/message/${id}?date=${selectedDate.toISOString()}`);
+    } else {
+      alert('Please select an available date first');
+    }
+  };
+
+  // শুধুমাত্র backend থেকে আসা availableDates ব্যবহার করুন
+  const availableDates = skill?.availabilityDates || [];
+
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-base-100 flex items-center justify-center">
@@ -278,7 +357,7 @@ export default function SkillDetailsPage() {
                 </h3>
                 <div className="inline-block">
                   <span className="bg-primary text-primary-content px-8 py-4 rounded-xl text-xl font-bold shadow-lg hover:opacity-90 transition-colors duration-300">
-                    {skill.skillName}
+                    {skill.category}
                   </span>
                 </div>
               </div>
@@ -340,7 +419,10 @@ export default function SkillDetailsPage() {
             </div>
 
             {/* Calendar Section */}
-            <Calendar />
+              <Calendar 
+        onDateSelect={handleDateSelect} 
+        availableDates={availableDates} 
+      />
 
             {/* Stats Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -506,17 +588,28 @@ export default function SkillDetailsPage() {
             </div>
 
             {/* Action Button */}
-            <div className="bg-red-600 text-white p-8 rounded-2xl shadow-xl text-center hover:bg-red-700 transition-colors duration-300">
-              <h3 className="text-2xl font-black mb-4 uppercase tracking-wide">
-                Ready to Connect?
-              </h3>
-              <p className="text-red-100 mb-6">
-                Let's discuss your project and bring your ideas to life.
-              </p>
-              <button className="bg-black text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-800 transition-colors duration-300 w-full">
-                Get In Touch
-              </button>
-            </div>
+                <div className="bg-red-600 text-white p-8 rounded-2xl shadow-xl text-center hover:bg-red-700 transition-colors duration-300 mt-8">
+        <h3 className="text-2xl font-black mb-4 uppercase tracking-wide">
+          Ready to Connect?
+        </h3>
+        <p className="text-red-100 mb-6">
+          {selectedDate 
+            ? `Selected: ${selectedDate.toDateString()}` 
+            : "Select an available date to schedule your mock interview"
+          }
+        </p>
+        <button 
+          onClick={handleConnectClick}
+          className={`px-8 py-4 rounded-xl font-bold text-lg transition-colors duration-300 w-full ${
+            selectedDate 
+              ? "bg-blue-600 text-white hover:bg-blue-700" 
+              : "bg-gray-400 text-gray-200 cursor-not-allowed"
+          }`}
+          disabled={!selectedDate}
+        >
+          {selectedDate ? "Let's Connect" : "Select a Date First"}
+        </button>
+      </div>
           </div>
         </div>
       </div>

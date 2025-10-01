@@ -139,10 +139,7 @@ export default function SkillsPage() {
                 </div>
 
                 {/* Tags */}
-                <div className="flex items-center gap-2 mb-3 flex-wrap">
-                  <span className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs px-3 py-1 rounded-full shadow">
-                    {skill.skillName}
-                  </span>
+                <div className="flex items-center gap-2 mb-3 flex-wrap">                  
                   {skill.tags?.slice(0, 3).map((tag, i) => (
                     <span
                       key={tag}

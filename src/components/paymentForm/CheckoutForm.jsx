@@ -43,7 +43,8 @@ function CheckoutForm(props) {
       price: price,
       email: session?.user?.email,
       userName: session?.user?.name,
-      transactionId: "",
+      transactionId: "", 
+      paymentMethod:'stripe',
       date: date.toLocaleString("en-BD", options),
       status: "pending",
     };

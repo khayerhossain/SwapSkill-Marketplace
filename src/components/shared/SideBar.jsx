@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  FaBox,
+  FaCog,
   FaHome,
+  FaUser,
   FaUserCheck,
   FaUserFriends,
-  FaBox,
-  FaUser,
-  FaCog,
-  FaUsers,
+  FaUsers, 
+   FaMoneyBillWave
 } from "react-icons/fa";
 
 const Sidebar = ({
@@ -24,15 +25,11 @@ const Sidebar = ({
   const findSkillsPath = useAppBarPaths
     ? "/appBar/find-skills"
     : "/find-skills";
-  const profilePath = useAppBarPaths
-    ? "/appBar/profile"
-    : "/profile";
+  const profilePath = useAppBarPaths ? "/appBar/profile" : "/profile";
   const shareSkillsPath = useAppBarPaths
     ? "/appBar/share-skills"
     : "/share-skills";
-  const userPayment = useAppBarPaths
-    ? "/appBar/overview"
-    : "/overview";
+  const userPayment = useAppBarPaths ? "/appBar/overview" : "/overview";
   const dashboardPath = useAppBarPaths ? "/dashboard" : "/dashboard";
 
   const appBarItems = [
@@ -40,8 +37,8 @@ const Sidebar = ({
     { name: "Community", icon: <FaUserFriends />, path: communityPath },
     { name: "Find Skills", icon: <FaBox />, path: findSkillsPath },
     { name: "Profile", icon: <FaBox />, path: profilePath },
-    { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath }, 
-    { name: "Overview", icon: <FaBox />, path: userPayment,  },
+    { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath },
+    { name: "Overview", icon: <FaBox />, path: userPayment },
   ];
 
   const dashboardItems = [
@@ -64,7 +61,17 @@ const Sidebar = ({
       icon: <FaUserCheck />,
       path: "/dashboard/admin/current-skills",
     },
-    { name: "ManageSkills", icon: <FaUsers />, path: "/dashboard/manageSkills", role: "all" },
+    {
+      name: "Balance",
+      icon: < FaMoneyBillWave />,
+      path: "/dashboard/admin/balance",
+    },
+    {
+      name: "ManageSkills",
+      icon: <FaUsers />,
+      path: "/dashboard/manageSkills",
+      role: "all",
+    },
   ];
 
   const menuItems = isDashboard ? dashboardItems : appBarItems;

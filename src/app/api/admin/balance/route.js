@@ -10,16 +10,16 @@ export async function GET() {
     );
 
     // Get logged-in user
-    const session = await getServerSession(authOptions);
-    if (!session || !session.user?.email) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-      });
-    }
+    // const session = await getServerSession(authOptions);
+    // if (!session || !session.user?.email) {
+    //   return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    //     status: 401,
+    //   });
+    // }
 
     // Fetch user-specific successful payments
     const payments = await paymentCollection.find({
-      email: session.user.email,
+     
       status: "success", // jodi status field thake
     }).toArray();
 

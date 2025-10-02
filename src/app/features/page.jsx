@@ -104,12 +104,12 @@ export default function Featured() {
   ];
 
   return (
-    <div className="bg-base-100 dark:bg-base-100 min-h-screen text-base-content dark:text-base-content flex flex-col">
+    <div className="bg-base-100 dark:bg-base-100 min-h-screen text-base-content dark:text-base-content flex flex-col mt-10">
       <NavbarPage />
 
       {/* Header */}
-      <div className="py-16 text-center mb-12">
-        <h2 className="text-4xl font-bold">Featured — What sets us apart</h2>
+      <div className="py-16 text-center mb-4">
+        <h2 className="text-4xl font-bold">Featured What sets us apart</h2>
         <p className="text-base-content/70 mt-2 max-w-2xl mx-auto">
           A single-section summary of the unique tools inside{" "}
           <strong>Service Skills</strong>. Each card mirrors the look-and-feel
@@ -130,7 +130,7 @@ export default function Featured() {
               >
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-md bg-red-500/10 flex items-center justify-center">
-                    <Icon size={20} className="text-red-500" />
+                    <Icon size={30} className="text-red-500" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold">{f.name}</h3>

@@ -19,7 +19,7 @@ export default function WhyChooseUs() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            Why Choose Skill Swap?
+            Why Choose <span className="text-red-500">Skill Swap?</span>
           </motion.h2>
 
           <div className="grid sm:grid-cols-1 md:grid-cols-4 gap-8">

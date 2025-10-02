@@ -47,7 +47,6 @@ const Sidebar = ({
   const dashboardItems = [
     { name: "Profile", icon: <FaUser />, path: "/dashboard/profile" },
     { name: "Settings", icon: <FaCog />, path: "/dashboard/settings" },
-    { name: "Home", icon: <FaUsers />, path: "/" },
     { name: "Dashboard", icon: <FaHome />, path: dashboardPath },
     {
       name: "Subscribers",
@@ -55,16 +54,16 @@ const Sidebar = ({
       path: "/dashboard/admin/subscribers",
     },
     {
-      name: "All Users",
+      name: "Users",
       icon: <FaUserCheck />,
       path: "/dashboard/admin/users",
     },
     {
-      name: "All Current Skills",
+      name: "Current Skills",
       icon: <FaUserCheck />,
       path: "/dashboard/admin/current-skills",
     },
-    { name: "ManageSkills", icon: <FaUsers />, path: "/dashboard/manageSkills", role: "all" },
+    { name: "Management", icon: <FaUsers />, path: "/dashboard/manageSkills", role: "all" },
   ];
 
   const menuItems = isDashboard ? dashboardItems : appBarItems;

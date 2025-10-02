@@ -30,7 +30,8 @@ export default function Checkout() {
       price: price,
       email: session?.user?.email,
       userName: session?.user?.name,
-      transactionId: "",
+      transactionId: "", 
+      paymentMethod:'sllcoommerz',
       date: date.toLocaleString("en-BD", options),
       status: "pending",
     };

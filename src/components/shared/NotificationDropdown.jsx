@@ -1,205 +1,21 @@
-// "use client";
-
-// import { useState, useRef, useEffect } from "react";
-// import { IoNotificationsOutline, IoNotifications } from "react-icons/io5";
-// import { useNotification } from "@/context/NotificationContext";
-
-// const NotificationDropdown = () => {
-//   const [isOpen, setIsOpen] = useState(false);
-//   const dropdownRef = useRef(null);
-//   const {
-//     notifications,
-//     markAsRead,
-//     markAllAsRead,
-//     getUnreadCount,
-//     handleNotificationAction,
-//   } = useNotification();
-
-//   // Close dropdown when clicking outside
-//   useEffect(() => {
-//     const handleClickOutside = (event) => {
-//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-//         setIsOpen(false);
-//       }
-//     };
-
-//     document.addEventListener("mousedown", handleClickOutside);
-//     return () => {
-//       document.removeEventListener("mousedown", handleClickOutside);
-//     };
-//   }, []);
-
-//   const unreadCount = getUnreadCount();
-
-//   const handleMarkAllAsRead = () => {
-//     markAllAsRead();
-//   };
-
-//   const handleToggleDropdown = () => {
-//     setIsOpen(!isOpen);
-//   };
-
-//   // Handle notification actions
-//   const handleAction = (notification, userChoice) => {
-//     handleNotificationAction(notification.id, userChoice);
-//     setIsOpen(false); // Close dropdown
-//   };
-
-//   return (
-//     <div className="relative" ref={dropdownRef}>
-//       {/* Notification Button */}
-//       <button
-//         onClick={handleToggleDropdown}
-//         className="btn btn-ghost btn-sm relative p-2"
-//       >
-//         {unreadCount > 0 ? (
-//           <IoNotifications className="text-xl text-red-500" />
-//         ) : (
-//           <IoNotificationsOutline className="text-xl" />
-//         )}
-//         {unreadCount > 0 && (
-//           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-//             {unreadCount}
-//           </span>
-//         )}
-//       </button>
-
-//       {/* Dropdown Menu */}
-//       {isOpen && (
-//         <div className="absolute right-0 top-12 z-50 w-96 bg-white rounded-lg shadow-xl border border-gray-200">
-//           {/* Header */}
-//           <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50 rounded-t-lg">
-//             <h3 className="font-semibold text-gray-800">Notifications</h3>
-//             {unreadCount > 0 && (
-//               <button
-//                 onClick={handleMarkAllAsRead}
-//                 className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-//               >
-//                 Mark all read
-//               </button>
-//             )}
-//           </div>
-
-//           {/* Notifications List */}
-//           <div className="max-h-96 overflow-y-auto">
-//             {notifications.length > 0 ? (
-//               notifications.map((notification) => (
-//                 <div
-//                   key={notification.id}
-//                   className="border-b border-gray-100 last:border-b-0"
-//                 >
-//                   {notification.type === "formSuccess" ? (
-//                     // Special notification with actions
-//                     <div
-//                       className={`p-4 ${
-//                         !notification.read ? "bg-yellow-50" : ""
-//                       }`}
-//                     >
-//                       <div className="flex items-start gap-3 mb-3">
-//                         <div
-//                           className={`w-6 h-6 rounded-full flex items-center justify-center ${
-//                             !notification.read
-//                               ? "bg-yellow-100 text-yellow-600"
-//                               : "bg-gray-100 text-gray-400"
-//                           }`}
-//                         >
-//                           ⚠️
-//                         </div>
-//                         <div>
-//                           <h4 className="font-semibold text-gray-800">
-//                             Do you want to start the Quiz?
-//                           </h4>
-//                           <p className="text-sm text-gray-600 mt-1">
-//                             Choose your option!
-//                           </p>
-//                         </div>
-//                       </div>
-
-//                       <div className="flex gap-2 mt-4">
-//                         <button
-//                           onClick={() => handleAction(notification, "quiz")}
-//                           className="flex-1 py-2 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition-colors text-sm"
-//                         >
-//                           Yes, go to Quiz!
-//                         </button>
-//                         <button
-//                           onClick={() => handleAction(notification, "findPage")}
-//                           className="flex-1 py-2 bg-gray-500 text-white font-medium rounded-lg hover:bg-gray-600 transition-colors text-sm"
-//                         >
-//                           No, go to Find Page
-//                         </button>
-//                       </div>
-//                     </div>
-//                   ) : (
-//                     // Normal notification
-//                     <div
-//                       className={`p-3 hover:bg-gray-50 cursor-pointer ${
-//                         !notification.read ? "bg-blue-50" : ""
-//                       }`}
-//                       onClick={() => markAsRead(notification.id)}
-//                     >
-//                       <div className="flex items-start gap-3">
-//                         <div
-//                           className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
-//                             !notification.read ? "bg-blue-500" : "bg-gray-300"
-//                           }`}
-//                         />
-//                         <div className="flex-1 min-w-0">
-//                           <h4
-//                             className={`font-medium text-sm ${
-//                               !notification.read
-//                                 ? "text-blue-800"
-//                                 : "text-gray-800"
-//                             }`}
-//                           >
-//                             {notification.title}
-//                           </h4>
-//                           <p className="text-xs text-gray-600 mt-1">
-//                             {notification.message}
-//                           </p>
-//                           <p className="text-xs text-gray-400 mt-1">
-//                             {notification.time}
-//                           </p>
-//                         </div>
-//                       </div>
-//                     </div>
-//                   )}
-//                 </div>
-//               ))
-//             ) : (
-//               <div className="p-6 text-center text-gray-500">
-//                 No notifications yet
-//               </div>
-//             )}
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default NotificationDropdown;
-
-
+// @/components/shared/NotificationDropdown;
 "use client";
 
 import { useState, useRef, useEffect } from "react";
 import { IoNotificationsOutline, IoNotifications } from "react-icons/io5";
-import { useNotification } from "@/context/NotificationContext";
-import { MdGames, MdWifiFind } from "react-icons/md";
+import { MdGames, MdWifiFind, MdMessage } from "react-icons/md";
 import { FaBroom } from "react-icons/fa";
 import { IoMdNotifications } from "react-icons/io";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const NotificationDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(false);
   const dropdownRef = useRef(null);
-  const {
-    notifications,
-    markAsRead,
-    markAllAsRead,
-    getUnreadCount,
-    handleNotificationAction,
-  } = useNotification();
+  const router = useRouter();
+  const { data: session } = useSession();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -214,26 +30,166 @@ const NotificationDropdown = () => {
     };
   }, []);
 
-  const unreadCount = getUnreadCount();
+  // Fetch notifications from API
+  useEffect(() => {
+    if (session?.user?.id && isOpen) {
+      fetchNotifications();
+    }
+  }, [session?.user?.id, isOpen]);
 
-  const handleMarkAllAsRead = () => {
-    markAllAsRead();
+  const fetchNotifications = async () => {
+    if (!session?.user?.id) return;
+    
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/notifications?userId=${session.user.id}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setNotifications(data.notifications);
+      }
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const markAsRead = async (notificationId) => {
+    try {
+      const response = await fetch('/api/notifications', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ notificationId }),
+      });
+
+      if (response.ok) {
+        // Update local state
+        setNotifications(prev =>
+          prev.map(notification =>
+            notification._id === notificationId
+              ? { ...notification, read: true }
+              : notification
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  };
+
+  const markAllAsRead = async () => {
+    if (!session?.user?.id) return;
+    
+    try {
+      const response = await fetch('/api/notifications', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          markAll: true, 
+          userId: session.user.id 
+        }),
+      });
+
+      if (response.ok) {
+        // Update all notifications to read in local state
+        setNotifications(prev =>
+          prev.map(notification => ({ ...notification, read: true }))
+        );
+      }
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+    }
+  };
+
+  const getUnreadCount = () => {
+    return notifications.filter((n) => !n.read).length;
+  };
+
+  const handleNotificationAction = async (notificationId, userChoice) => {
+    const notification = notifications.find((n) => n._id === notificationId);
+    if (!notification) return;
+
+    // Mark as read
+    await markAsRead(notificationId);
+
+    if (notification.type === "formSuccess") {
+      if (userChoice === "quiz") {
+        router.push(
+          `/quiz?profileId=${notification.profileId}&userId=${notification.userId}&category=${notification.category}&showPopup=true`
+        );
+      } else {
+        router.push("/appBar/find-skills");
+      }
+    }
+  };
+
+  const handleChatNotification = (notification) => {
+    // Navigate to chat page when clicking on chat notification
+    if (notification.chatId) {
+      router.push(`/chat/${notification.chatId}`);
+    }
+    markAsRead(notification._id);
+    setIsOpen(false);
   };
 
   const handleToggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleAction = (notification, userChoice) => {
-    handleNotificationAction(notification.id, userChoice);
-    setIsOpen(false);
+  const formatTime = (timestamp) => {
+    const now = new Date();
+    const notificationTime = new Date(timestamp);
+    const diffInMinutes = Math.floor((now - notificationTime) / (1000 * 60));
+    
+    if (diffInMinutes < 1) return "Just now";
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+    
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `${diffInDays}d ago`;
+    
+    return notificationTime.toLocaleDateString();
   };
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case "chat":
+        return <MdMessage size={20} className="text-green-600" />;
+      case "formSuccess":
+        return <MdGames size={20} className="text-blue-600" />;
+      default:
+        return <IoMdNotifications size={20} className="text-gray-600" />;
+    }
+  };
+
+  const getNotificationBackground = (type, isRead) => {
+    if (!isRead) {
+      switch (type) {
+        case "chat":
+          return "bg-green-50 border-l-4 border-green-400";
+        case "formSuccess":
+          return "bg-blue-50 border-l-4 border-blue-400";
+        default:
+          return "bg-blue-25 border-l-4 border-blue-400";
+      }
+    }
+    return "";
+  };
+
+  const unreadCount = getUnreadCount();
 
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={handleToggleDropdown}
-        className="relative p-4 rounded-2xl transition-all duration-300 transform hover:scale-105"
+        className="relative p-4 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:bg-gray-100"
       >
         {unreadCount > 0 ? (
           <IoNotifications className="text-2xl text-blue-600" />
@@ -242,21 +198,21 @@ const NotificationDropdown = () => {
         )}
         {unreadCount > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold animate-pulse">
-            {unreadCount}
+            {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
         <div className="absolute right-0 top-16 z-50 w-96 bg-white rounded-3xl shadow-2xl border-2 border-gray-100 overflow-hidden">
-          <div className="flex1 flex  items-center justify-between p-6 bg-gradient-to-r from-gray-50 to-white border-b-2 border-gray-100">
+          <div className="flex items-center justify-between p-6 bg-gradient-to-r from-gray-50 to-white border-b-2 border-gray-100">
             <h3 className="font-bold flex items-center justify-center gap-2 text-gray-800 text-xl">
               <IoMdNotifications size={28} />
               Notifications
             </h3>
             {unreadCount > 0 && (
               <button
-                onClick={handleMarkAllAsRead}
+                onClick={markAllAsRead}
                 className="text-sm text-blue-600 hover:text-blue-800 font-semibold px-4 py-2 rounded-full hover:bg-blue-50 transition-all duration-200"
               >
                 Mark all read
@@ -265,10 +221,15 @@ const NotificationDropdown = () => {
           </div>
 
           <div className="max-h-96 overflow-y-auto">
-            {notifications.length > 0 ? (
+            {loading ? (
+              <div className="p-8 text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                <p className="text-gray-500 mt-2">Loading notifications...</p>
+              </div>
+            ) : notifications.length > 0 ? (
               notifications.map((notification) => (
                 <div
-                  key={notification.id}
+                  key={notification._id}
                   className="border-b border-gray-50 last:border-b-0"
                 >
                   {notification.type === "formSuccess" ? (
@@ -299,14 +260,14 @@ const NotificationDropdown = () => {
 
                       <div className="flex gap-3 mt-5">
                         <button
-                          onClick={() => handleAction(notification, "quiz")}
+                          onClick={() => handleNotificationAction(notification._id, "quiz")}
                           className="flex-1 flex justify-center items-center gap-2 py-4 bg-gray-100 text-gray-700 font-semibold rounded-2xl hover:bg-gray-200 transition-all duration-200"
                         >
                           <FaBroom size={28} />
                           Start Quiz!
                         </button>
                         <button
-                          onClick={() => handleAction(notification, "findPage")}
+                          onClick={() => handleNotificationAction(notification._id, "findPage")}
                           className="flex-1 flex justify-center items-center gap-2 py-4 bg-gray-100 text-gray-700 font-semibold rounded-2xl hover:bg-gray-200 transition-all duration-200"
                         >
                           <MdWifiFind size={28} />
@@ -314,38 +275,74 @@ const NotificationDropdown = () => {
                         </button>
                       </div>
                     </div>
-                  ) : (
+                  ) : notification.type === "chat" ? (
                     <div
-                      className={`p-5 hover:bg-gray-50 cursor-pointer transition-all duration-200 ${
-                        !notification.read
-                          ? "bg-blue-25 border-l-4 border-blue-400"
-                          : ""
-                      }`}
-                      onClick={() => markAsRead(notification.id)}
+                      className={`p-5 hover:bg-gray-50 cursor-pointer transition-all duration-200 ${getNotificationBackground(
+                        notification.type,
+                        notification.read
+                      )}`}
+                      onClick={() => handleChatNotification(notification)}
                     >
                       <div className="flex items-start gap-4">
-                        <div
-                          className={`w-3 h-3 rounded-full mt-3 flex-shrink-0 ${
-                            !notification.read
-                              ? "bg-blue-500 animate-pulse"
-                              : "bg-gray-300"
-                          }`}
-                        />
+                        <div className="flex-shrink-0 mt-1">
+                          {getNotificationIcon(notification.type)}
+                        </div>
                         <div className="flex-1 min-w-0">
-                          <h4
-                            className={`font-semibold ${
-                              !notification.read
-                                ? "text-gray-800"
-                                : "text-gray-600"
-                            }`}
-                          >
-                            {notification.title}
-                          </h4>
+                          <div className="flex items-start justify-between">
+                            <h4
+                              className={`font-semibold ${
+                                !notification.read
+                                  ? "text-gray-800"
+                                  : "text-gray-600"
+                              }`}
+                            >
+                              {notification.title}
+                            </h4>
+                            {!notification.read && (
+                              <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0 mt-2"></div>
+                            )}
+                          </div>
                           <p className="text-sm text-gray-600 mt-1 leading-relaxed">
                             {notification.message}
                           </p>
                           <p className="text-xs text-gray-400 mt-2">
-                            {notification.time}
+                            {formatTime(notification.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      className={`p-5 hover:bg-gray-50 cursor-pointer transition-all duration-200 ${getNotificationBackground(
+                        notification.type,
+                        notification.read
+                      )}`}
+                      onClick={() => markAsRead(notification._id)}
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 mt-1">
+                          {getNotificationIcon(notification.type)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between">
+                            <h4
+                              className={`font-semibold ${
+                                !notification.read
+                                  ? "text-gray-800"
+                                  : "text-gray-600"
+                              }`}
+                            >
+                              {notification.title}
+                            </h4>
+                            {!notification.read && (
+                              <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2"></div>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                            {notification.message}
+                          </p>
+                          <p className="text-xs text-gray-400 mt-2">
+                            {formatTime(notification.createdAt)}
                           </p>
                         </div>
                       </div>
@@ -361,6 +358,17 @@ const NotificationDropdown = () => {
               </div>
             )}
           </div>
+
+          {notifications.length > 0 && (
+            <div className="p-4 bg-gray-50 border-t border-gray-100">
+              <button
+                onClick={() => router.push('/notifications')}
+                className="w-full text-center text-blue-600 hover:text-blue-800 font-medium py-2 rounded-lg hover:bg-blue-50 transition-all duration-200"
+              >
+                View All Notifications
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

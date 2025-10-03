@@ -233,16 +233,38 @@ export default function SkillDetailsPage() {
     setSelectedDate(date);
   };
 
-  const handleConnectClick = () => {
-    if (selectedDate) {
-      // Message page-এ navigate করুন
-      router.push(`/message/${id}?date=${selectedDate.toISOString()}`);
-    } else {
-      alert('Please select an available date first');
-    }
-  };
+  const handleConnectClick = async () => {
+  if (selectedDate) {
+    try {
+      // Create new chat session
+      const response = await fetch('/api/chats', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          skillId: id,
+          skillOwnerId: skill.userId, //  skill object  userId 
+          selectedDate: selectedDate.toISOString()
+        })
+      });
 
-  // শুধুমাত্র backend থেকে আসা availableDates ব্যবহার করুন
+      const chatData = await response.json();
+      
+      if (chatData.success) {
+        // Navigate to chat page
+        router.push(`/chat/${chatData.chatId}`);
+      }
+    } catch (error) {
+      console.error('Error creating chat:', error);
+      alert('Error starting chat. Please try again.');
+    }
+  } else {
+    alert('Please select an available date first');
+  }
+};
+
+  // only backend  availableDates 
   const availableDates = skill?.availabilityDates || [];
 
   // Loading state

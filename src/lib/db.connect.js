@@ -5,7 +5,10 @@ export const collectionNamesObj = {
   skillsDirectoryCollection: "skills-directory",
   newsLatterSubscribersCollection: "subscribers",
   paymentCollection :'payment',
-  testQNACollection: "test-qna" // All quiz data will be in this collection
+  testQNACollection: "test-qna",
+  chatMessagesCollection: "chat-messages", // new
+  chatSessionsCollection: "chat-sessions", // new
+  notificationsCollection: "notifications" // new
 };
 
 const uri = process.env.MONGODB_URI;

@@ -18,6 +18,7 @@ const Sidebar = ({
   useAppBarPaths = false,
   collapsed = false,
   isDashboard = false,
+  role = "user",
 }) => {
   const pathname = usePathname();
 
@@ -44,38 +45,19 @@ const Sidebar = ({
   ];
 
   const dashboardItems = [
-    { name: "Profile", icon: <FaUser />, path: "/dashboard/profile" },
-    { name: "Settings", icon: <FaCog />, path: "/dashboard/settings" },
-    { name: "Dashboard", icon: <FaHome />, path: dashboardPath },
-    {
-      name: "Subscribers",
-      icon: <FaUserCheck />,
-      path: "/dashboard/admin/subscribers",
-    },
-    {
-      name: "Users",
-      icon: <FaUserCheck />,
-      path: "/dashboard/admin/users",
-    },
-    {
-      name: "Current Skills",
-      icon: <FaUserCheck />,
-      path: "/dashboard/admin/current-skills",
-    },
-    {
-      name: "Management",
-      icon: <FaUsers />,
-      path: "/dashboard/manageSkills",
-      role: "all",
-    },
-    {
-      name: "Balance",
-      icon: <FaMoneyBillWave />,
-      path: "/dashboard/admin/balance",
-    },
+    { name: "Profile", icon: <FaUser />, path: "/dashboard/profile", role: "all" },
+    { name: "Settings", icon: <FaCog />, path: "/dashboard/settings", role: "all" },
+    { name: "Dashboard", icon: <FaHome />, path: dashboardPath, role: "all" },
+    { name: "Subscribers", icon: <FaUserCheck />, path: "/dashboard/admin/subscribers", role: "admin" },
+    { name: "Users", icon: <FaUserCheck />, path: "/dashboard/admin/users", role: "admin" },
+    { name: "Current Skills", icon: <FaUserCheck />, path: "/dashboard/admin/current-skills", role: "admin" },
+    { name: "Management", icon: <FaUsers />, path: "/dashboard/manageSkills", role: "admin" },
+    { name: "Balance", icon: <FaMoneyBillWave />, path: "/dashboard/admin/balance", role: "admin" },
   ];
 
-  const menuItems = isDashboard ? dashboardItems : appBarItems;
+  const menuItems = isDashboard
+    ? dashboardItems.filter((item) => item.role === "all" || role === "admin")
+    : appBarItems;
 
   return (
     <ul className={`space-y-2 ${collapsed ? "px-2" : "px-4"} h-screen`}>

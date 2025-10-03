@@ -29,7 +29,7 @@ export default function DashboardLayout({ children }) {
                 {collapsed ? <IoIosArrowForward /> : <IoIosArrowBack />}
               </button>
             </div>
-            <Sidebar collapsed={collapsed} isDashboard={true} />
+            <Sidebar collapsed={collapsed} isDashboard={true} role={session?.user?.role || "user"} />
           </div>
 
           {/* Main Content */}
@@ -47,7 +47,7 @@ export default function DashboardLayout({ children }) {
               {session?.user && (
                 <button
                   aria-label="Logout"
-                  onClick={() => signOut()}
+                  onClick={() => signOut({ callbackUrl: "/login" })}
                   className="btn btn-ghost btn-sm text-error"
                   title="Logout"
                 >
@@ -90,7 +90,7 @@ export default function DashboardLayout({ children }) {
                   <IoMdClose />
                 </button>
               </div>
-              <Sidebar collapsed={false} onClick={() => setIsOpen(false)} />
+              <Sidebar collapsed={false} onClick={() => setIsOpen(false)} isDashboard={true} role={session?.user?.role || "user"} />
             </div>
           </>
         )}

@@ -33,7 +33,7 @@ export default function LoginPage() {
         });
         if (res?.ok) {
           toast.success("Logged in successfully");
-          window.location.href = "/appBar";
+          window.location.href = "/"; // allow middleware to route by role
         } else toast.error("Auto login failed!");
       } else toast.error(data.error || "Something went wrong!");
     } catch (err) {
@@ -55,7 +55,7 @@ export default function LoginPage() {
       if (result?.error) toast.error("Invalid credentials");
       else {
         toast.success("Logged in successfully");
-        router.replace("/appBar");
+        router.replace("/"); // allow middleware to route by role
       }
     } catch (err) {
       setMessage(err.response?.data?.message || "Something went wrong");
@@ -64,7 +64,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      await signIn("google", { callbackUrl: "/appBar" });
+      await signIn("google", { callbackUrl: "/" });
     } catch (err) {
       toast.error("Google login failed!");
     }

@@ -16,25 +16,18 @@ export default function NavbarPage() {
 
   console.log(theme);
 
-  // Landing page section links + Dashboard
-  const navLinks = [
+  // Base links; role-specific link appended below
+  const baseLinks = [
     { name: "Home", path: "/" },
-    // { name: "About", path: "/#about" },
-    // { name: "Why Choose Us", path: "/#why-choose-us" },
-    // { name: "Skills", path: "/#current-skills" },
-    // { name: "Reviews", path: "/#reviews" },
-    // { name: "FAQ", path: "/#faq" },
-    // { name: "Newsletter", path: "/#newsletter" },
-   
     { name: "Features", path: "/features" },
-    { name: "Dashboard", path: "/dashboard" },
-    { name: "AppBar", path: "/appBar" },
     { name: "Pricing", path: "/pricing" },
-    // { name: "Quiz", path: "/quiz" },
-    // { name: "Test", path: "/test-categories" },
-    // { name: "Skills", path: "/appBar/find-skills" },
-   
   ];
+  const roleLinks = session?.user?.role === "admin"
+    ? [{ name: "Dashboard", path: "/dashboard" }]
+    : session?.user?.role === "user"
+    ? [{ name: "AppBar", path: "/appBar" }]
+    : [];
+  const navLinks = [...baseLinks, ...roleLinks];
 
   return (
     <div className="navbar bg-base-100 fixed top-0 left-0 w-full z-50 px-0">
@@ -130,7 +123,7 @@ export default function NavbarPage() {
 
             {session ? (
               <button
-                onClick={() => signOut()}
+                onClick={() => signOut({ callbackUrl: "/login" })}
                 className="btn bg-red-500 text-white rounded-lg"
               >
                 Logout

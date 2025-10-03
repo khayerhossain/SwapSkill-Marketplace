@@ -31,7 +31,7 @@ export default function AppBarLayout({ children }) {
               {collapsed ? <IoIosArrowForward /> : <IoIosArrowBack />}
             </button>
           </div>
-          <Sidebar useAppBarPaths collapsed={collapsed} isDashboard={false} />
+          <Sidebar useAppBarPaths collapsed={collapsed} isDashboard={false} role={session?.user?.role || "user"} />
         </div>
 
         {/* Main Content */}
@@ -67,7 +67,7 @@ export default function AppBarLayout({ children }) {
               {session?.user && (
                 <button
                   aria-label="Logout"
-                  onClick={() => signOut()}
+                  onClick={() => signOut({ callbackUrl: "/login" })}
                   className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-100 rounded-full transition-colors"
                   title="Logout"
                 >
@@ -108,6 +108,8 @@ export default function AppBarLayout({ children }) {
               useAppBarPaths 
               collapsed={false} 
               onClick={() => setIsOpen(false)} 
+              isDashboard={false}
+              role={session?.user?.role || "user"}
             />
           </div>
         </>

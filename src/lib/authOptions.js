@@ -103,9 +103,25 @@ export const authOptions = {
       }
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      // Normalize redirects. For baseUrl or auth pages, send to root and let middleware route by role
+      try {
+        if (url.startsWith("/")) {
+          if (url === "/" || url === "/login" || url === "/auth/signin") {
+            return `${baseUrl}/`;
+          }
+          return `${baseUrl}${url}`;
+        }
+        const to = new URL(url);
+        if (to.origin === baseUrl) return url;
+        return baseUrl;
+      } catch {
+        return baseUrl;
+      }
+    },
   },
 
   pages: {
-    signIn: "/login",
+    signIn: "/auth/signin",
   },
 };

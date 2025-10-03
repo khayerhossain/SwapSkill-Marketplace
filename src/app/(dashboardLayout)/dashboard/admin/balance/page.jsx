@@ -1,23 +1,22 @@
 "use client";
-import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axiosInstance";
+import { CreditCard, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CiBadgeDollar } from "react-icons/ci";
+import { FaArrowTrendUp } from "react-icons/fa6";
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
   Cell,
   Legend,
-  Line,
-  LineChart,
   Pie,
   PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
-  BarChart,
-  Bar,
 } from "recharts";
-import { CreditCard, TrendingUp, DollarSign } from "lucide-react";
-
 /**
  * Balance Dashboard
  *
@@ -247,11 +246,13 @@ export default function Balance() {
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-10 rounded-full -ml-16 -mb-16"></div>
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
-                <div className="bg-white bg-opacity-20 p-3 rounded-xl backdrop-blur-sm">
-                  <DollarSign className="w-6 h-6" />
+                <div className="bg-white bg-opacity-20 p-1 rounded-xl backdrop-blur-sm">
+                  <CiBadgeDollar size={24} className="text-purple-600 " />
                 </div>
-                <div className="bg-green-400 bg-opacity-30 px-3 py-1 rounded-full backdrop-blur-sm">
-                  <span className="text-sm font-semibold">↗ 12.5%</span>
+                <div className="bg-green-400 bg-opacity-30 px-3 py-1 rounded-full backdrop-blur-sm ">
+                  <span className="text-sm font-semibold flex items-center justify-center gap-1">
+                    <FaArrowTrendUp /> <p>12.5%</p>
+                  </span>
                 </div>
               </div>
               <p className="text-purple-100 text-sm font-medium mb-2">
@@ -482,11 +483,11 @@ export default function Balance() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-200 ">
                 {payments?.map((row) => (
                   <tr
                     key={row._id ?? row.id ?? Math.random()}
-                    className="hover:bg-gray-50 transition-colors"
+                    className="hover:bg-gray-50 transition-colors hover:text-black"
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                       <div>
@@ -507,12 +508,10 @@ export default function Balance() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                          (row?.method ?? row?.gateway ?? "")
-                            .toLowerCase()
-                            .includes("stripe")
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-green-100 text-green-800"
-                        }`}
+                          row.paymentMethod === "stripe"
+                            ? "bg-blue-600 text-white"
+                            : "bg-green-500 text-white"
+                        } `}
                       >
                         {row?.method ??
                           row?.gateway ??
@@ -528,13 +527,7 @@ export default function Balance() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                          (row?.status ?? "").toLowerCase() === "completed"
-                            ? "bg-green-100 text-green-800"
-                            : (row?.status ?? "").toLowerCase() === "pending"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 `}
                       >
                         {row?.status ?? "Unknown"}
                       </span>

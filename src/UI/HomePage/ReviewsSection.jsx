@@ -70,7 +70,7 @@ export default function ReviewsSection() {
           >
             {reviews.map((item) => (
               <SwiperSlide key={item.id}>
-                <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 ">
+                <div className="bg-white p-6 rounded-xl shadow-lg transition duration-300 ">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="flex items-center justify-center mb-4">
                       <img

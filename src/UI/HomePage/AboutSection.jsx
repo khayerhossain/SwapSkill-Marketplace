@@ -2,7 +2,7 @@
 import Container from "@/components/shared/Container";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import AboutImage from "../../assets/about-image.gif";
+import AboutImage from "../../assets/about-image.png";
 
 const textVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -20,7 +20,7 @@ export default function AboutSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
           {/* Left side - Full-width Image */}
           <div className="flex justify-center lg:justify-start px-4">
-            <div className="w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow duration-500">
+            <div className="w-full max-w-lg rounded-3xl overflow-hidden transition-shadow duration-500">
               <Image
                 src={AboutImage}
                 alt="About Us"

@@ -233,7 +233,7 @@ const NotificationDropdown = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={handleToggleDropdown}
-        className="relative p-4 rounded-2xl bg-gradient-to-br from-white to-gray-50 hover:from-gray-50 hover:to-gray-100 border-2 border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+        className="relative p-4 rounded-2xl transition-all duration-300 transform hover:scale-105"
       >
         {unreadCount > 0 ? (
           <IoNotifications className="text-2xl text-blue-600" />

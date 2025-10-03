@@ -85,7 +85,7 @@ export default function CurrentSkillsPage() {
         {/* Title */}
         <div className="max-w-6xl mx-auto text-center space-y-3">
           <h1 className="text-4xl font-bold text-base-content">
-            Explore <span className="text-primary">Skill Categories</span>
+            Explore <span className="text-red-500">Skill Categories</span>
           </h1>
           <p className="text-base-content/70">
             Browse through a variety of popular skill categories and connect with

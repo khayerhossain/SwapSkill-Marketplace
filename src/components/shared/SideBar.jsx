@@ -9,8 +9,8 @@ import {
   FaUser,
   FaUserCheck,
   FaUserFriends,
-  FaUsers, 
-   FaMoneyBillWave
+  FaUsers,
+  FaMoneyBillWave,
 } from "react-icons/fa";
 
 const Sidebar = ({
@@ -38,20 +38,14 @@ const Sidebar = ({
     { name: "Community", icon: <FaUserFriends />, path: communityPath },
     { name: "Find Skills", icon: <FaBox />, path: findSkillsPath },
     { name: "Profile", icon: <FaBox />, path: profilePath },
-
     { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath },
     { name: "Overview", icon: <FaBox />, path: userPayment },
-
-    { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath }, 
-    { name: "Overview", icon: <FaBox />, path: userPayment,  },
-    { name: "Resources", icon: <FaBox />, path: resourcesPath  },
-
+    { name: "Resources", icon: <FaBox />, path: resourcesPath },
   ];
 
   const dashboardItems = [
     { name: "Profile", icon: <FaUser />, path: "/dashboard/profile" },
     { name: "Settings", icon: <FaCog />, path: "/dashboard/settings" },
-    { name: "Home", icon: <FaUsers />, path: "/" },
     { name: "Dashboard", icon: <FaHome />, path: dashboardPath },
     {
       name: "Subscribers",
@@ -59,25 +53,25 @@ const Sidebar = ({
       path: "/dashboard/admin/subscribers",
     },
     {
-      name: "All Users",
+      name: "Users",
       icon: <FaUserCheck />,
       path: "/dashboard/admin/users",
     },
     {
-      name: "All Current Skills",
+      name: "Current Skills",
       icon: <FaUserCheck />,
       path: "/dashboard/admin/current-skills",
     },
     {
-      name: "Balance",
-      icon: < FaMoneyBillWave />,
-      path: "/dashboard/admin/balance",
-    },
-    {
-      name: "ManageSkills",
+      name: "Management",
       icon: <FaUsers />,
       path: "/dashboard/manageSkills",
       role: "all",
+    },
+    {
+      name: "Balance",
+      icon: <FaMoneyBillWave />,
+      path: "/dashboard/admin/balance",
     },
   ];
 

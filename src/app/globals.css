@@ -67,3 +67,5 @@ body {
     scrollbar-width: none;     /* Firefox */
   }
 }
+
+/* Force true white background in light mode across the app */

@@ -15,7 +15,7 @@ export default function DashboardLayout({ children }) {
   const { data: session } = useSession();
 
   return (
-      <div className="min-h-screen bg-base-100 text-base-content">
+      <div className="min-h-screen bg-base-100 text-base-content overflow-x-hidden">
         <div className="flex">
           {/* Large Screen Sidebar - Fixed Position */}
           <div className={`hidden md:block fixed left-0 top-0 h-screen z-30 ${collapsed ? "w-[6rem]" : "w-[20%]"} bg-base-200 text-base-content border-r border-base-300`}>
@@ -29,11 +29,11 @@ export default function DashboardLayout({ children }) {
                 {collapsed ? <IoIosArrowForward /> : <IoIosArrowBack />}
               </button>
             </div>
-            <Sidebar collapsed={collapsed} isDashboard={true} />
+            <Sidebar collapsed={collapsed} isDashboard={true} role={session?.user?.role || "user"} />
           </div>
 
           {/* Main Content */}
-          <div className={`w-full ${collapsed ? "md:ml-[6rem]" : "md:ml-[20%]"}`}>
+          <div className={`w-full ${collapsed ? "md:pl-[6rem]" : "md:pl-[20%]"} pr-2`}>
             <div className="flex items-center justify-end gap-3 p-4 border-b border-base-300">
               {session?.user && <NotificationDropdown />}
               {session?.user && (
@@ -47,7 +47,7 @@ export default function DashboardLayout({ children }) {
               {session?.user && (
                 <button
                   aria-label="Logout"
-                  onClick={() => signOut()}
+                  onClick={() => signOut({ callbackUrl: "/login" })}
                   className="btn btn-ghost btn-sm text-error"
                   title="Logout"
                 >
@@ -90,7 +90,7 @@ export default function DashboardLayout({ children }) {
                   <IoMdClose />
                 </button>
               </div>
-              <Sidebar collapsed={false} onClick={() => setIsOpen(false)} />
+              <Sidebar collapsed={false} onClick={() => setIsOpen(false)} isDashboard={true} role={session?.user?.role || "user"} />
             </div>
           </>
         )}

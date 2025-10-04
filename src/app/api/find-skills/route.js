@@ -4,15 +4,18 @@ import { ObjectId } from "mongodb";
 // GET /api/find-skills?search=react&page=1&limit=10&sort=newest
 export async function GET(request) {
   try {
+    console.log("Find skills API called");
+    
     const url = new URL(request.url);
     const search = url.searchParams.get("search") || "";
     const page = parseInt(url.searchParams.get("page")) || 1;
     const limit = parseInt(url.searchParams.get("limit")) || 10;
     const sortParam = url.searchParams.get("sort") || "newest";
 
-    const collection = await dbConnect(
-      collectionNamesObj.skillsDirectoryCollection
-    );
+    console.log("Search params:", { search, page, limit, sortParam });
+
+    const collection = await dbConnect(collectionNamesObj.skillsDirectoryCollection);
+    console.log("Database connected successfully");
 
     // Base query: must be verified & approved
     let query = { verification: true, status: "approved" };
@@ -27,18 +30,27 @@ export async function GET(request) {
               { skillName: { $regex: search, $options: "i" } },
               { category: { $regex: search, $options: "i" } },
               { tags: { $regex: search, $options: "i" } },
+              { userName: { $regex: search, $options: "i" } },
+              { description: { $regex: search, $options: "i" } }
             ],
           },
         ],
       };
     }
 
+    console.log("Final query:", JSON.stringify(query));
+
     // Sorting
     const sort = sortParam === "oldest" ? { createdAt: 1 } : { createdAt: -1 };
 
     // Pagination
     const skip = (page - 1) * limit;
+    
+    console.log("Counting documents...");
     const total = await collection.countDocuments(query);
+    console.log("Total documents:", total);
+    
+    console.log("Fetching skills...");
     const skills = await collection
       .find(query)
       .sort(sort)
@@ -46,17 +58,32 @@ export async function GET(request) {
       .limit(limit)
       .toArray();
 
+    console.log("Skills found:", skills.length);
+
     return new Response(
       JSON.stringify({
+        success: true,
         skills,
         total,
         page,
         totalPages: Math.ceil(total / limit),
       }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      { 
+        status: 200, 
+        headers: { 
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache"
+        } 
+      }
     );
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error("Error in find-skills API:", error);
+    return new Response(
+      JSON.stringify({ 
+        success: false,
+        error: error.message,
+        message: "Failed to fetch skills" 
+      }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
@@ -67,9 +94,9 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const collection = await dbConnect(
-      collectionNamesObj.skillsDirectoryCollection
-    );
+    console.log("Creating new skill:", body);
+    
+    const collection = await dbConnect(collectionNamesObj.skillsDirectoryCollection);
 
     // createdAt auto add 
     const newSkill = {
@@ -77,45 +104,32 @@ export async function POST(request) {
       verification: false, // unverified
       status: "pending",   // pending
       createdAt: new Date(),
+      updatedAt: new Date()
     };
 
     const result = await collection.insertOne(newSkill);
 
     return new Response(
-      JSON.stringify({ success: true, id: result.insertedId }),
+      JSON.stringify({ 
+        success: true, 
+        id: result.insertedId,
+        message: "Skill added successfully" 
+      }),
       {
         status: 201,
         headers: { "Content-Type": "application/json" },
       }
     );
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error("Error creating skill:", error);
+    return new Response(
+      JSON.stringify({ 
+        success: false,
+        error: error.message,
+        message: "Failed to create skill" 
+      }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
-  }
-}
-
-// PUT - Admin approve skill
-export async function PUT(request) {
-  try {
-    const { id, approve } = await request.json(); // approve = true/false
-    const collection = await dbConnect(
-      collectionNamesObj.skillsDirectoryCollection
-    );
-
-    const result = await collection.updateOne(
-      { _id: new ObjectId(id) },
-      {
-        $set: {
-          verification: approve,
-          status: approve ? "approved" : "pending",
-        },
-      }
-    );
-
-    return new Response(JSON.stringify({ success: true, result }), { status: 200 });
-  } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 }

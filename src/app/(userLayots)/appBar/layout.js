@@ -17,7 +17,7 @@ export default function AppBarLayout({ children }) {
   const { data: session } = useSession();
 
   return (
-    <div className="min-h-screen bg-base-100 text-base-content">
+    <div className="min-h-screen bg-base-100 text-base-content overflow-x-hidden">
       <div className="flex">
         {/* Large Screen Sidebar */}
         <div className={`hidden md:block fixed left-0 top-0 h-screen z-30 ${collapsed ? "w-[6rem]" : "w-[20%]"} bg-base-200 text-base-content border-r border-base-300`}>
@@ -31,11 +31,11 @@ export default function AppBarLayout({ children }) {
               {collapsed ? <IoIosArrowForward /> : <IoIosArrowBack />}
             </button>
           </div>
-          <Sidebar useAppBarPaths collapsed={collapsed} isDashboard={false} />
+          <Sidebar useAppBarPaths collapsed={collapsed} isDashboard={false} role={session?.user?.role || "user"} />
         </div>
 
         {/* Main Content */}
-        <div className={`w-full ${collapsed ? "md:ml-[6rem]" : "md:ml-[20%]"}`}>
+        <div className={`w-full ${collapsed ? "md:pl-[6rem]" : "md:pl-[20%]"} pr-2`}>
           <header className="flex items-center justify-between p-4 border-b border-base-300 bg-white sticky top-0 z-40">
             <div className="flex items-center gap-3">
               {/* Mobile Menu Button */}
@@ -67,7 +67,7 @@ export default function AppBarLayout({ children }) {
               {session?.user && (
                 <button
                   aria-label="Logout"
-                  onClick={() => signOut()}
+                  onClick={() => signOut({ callbackUrl: "/login" })}
                   className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-100 rounded-full transition-colors"
                   title="Logout"
                 >
@@ -108,6 +108,8 @@ export default function AppBarLayout({ children }) {
               useAppBarPaths 
               collapsed={false} 
               onClick={() => setIsOpen(false)} 
+              isDashboard={false}
+              role={session?.user?.role || "user"}
             />
           </div>
         </>

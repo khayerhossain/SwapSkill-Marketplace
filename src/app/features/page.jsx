@@ -23,7 +23,7 @@ export default function Featured() {
     {
       name: "Structured Skill Categories",
       description:
-        "Curated sections and subtopics so learners follow a clear path — no guesswork.",
+        "Curated sections and subtopics so learners follow a clear path no guesswork.",
       icon: BookOpen,
     },
     {
@@ -84,7 +84,7 @@ export default function Featured() {
     {
       name: "Group Learning",
       description:
-        "Collaborative group sessions — study together, share resources, co-learn.",
+        "Collaborative group sessions study together, share resources, co-learn.",
       icon: Users,
       color:
         "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700 hover:border-green-400 dark:hover:border-green-500",
@@ -109,7 +109,7 @@ export default function Featured() {
 
       {/* Header */}
       <div className="py-16 text-center mb-12">
-        <h2 className="text-4xl font-bold">Featured — What sets us apart</h2>
+        <h2 className="text-4xl font-bold">Featured What sets us apart</h2>
         <p className="text-base-content/70 mt-2 max-w-2xl mx-auto">
           A single-section summary of the unique tools inside{" "}
           <strong>Service Skills</strong>. Each card mirrors the look-and-feel
@@ -151,7 +151,7 @@ export default function Featured() {
         <div className="mb-6 text-center">
           <h3 className="text-2xl font-bold">Upcoming</h3>
           <p className="text-base-content/70 mt-2 max-w-3xl mx-auto">
-            Planned improvements and premium capabilities we will ship soon —
+            Planned improvements and premium capabilities we will ship soon
             great for presentation and roadmap conversations.
           </p>
         </div>

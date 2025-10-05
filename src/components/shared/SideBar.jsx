@@ -12,6 +12,7 @@ import {
   FaUsers,
   FaMoneyBillWave,
 } from "react-icons/fa";
+import { FiMessageCircle } from "react-icons/fi";
 
 const Sidebar = ({
   onClick,
@@ -33,6 +34,7 @@ const Sidebar = ({
   const userPayment = useAppBarPaths ? "/appBar/overview" : "/overview";
   const dashboardPath = useAppBarPaths ? "/dashboard" : "/dashboard";
   const resourcesPath = useAppBarPaths ? "/appBar/resources" : "/resources";
+  const inboxPath = useAppBarPaths ? "/appBar/inbox" : "/inbox";
 
   const appBarItems = [
     { name: "Home", icon: <FaHome />, path: "/" },
@@ -42,6 +44,7 @@ const Sidebar = ({
     { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath },
     { name: "Overview", icon: <FaBox />, path: userPayment },
     { name: "Resources", icon: <FaBox />, path: resourcesPath },
+    { name: "Inbox", icon: <FiMessageCircle  />, path: inboxPath },
   ];
 
   const dashboardItems = [

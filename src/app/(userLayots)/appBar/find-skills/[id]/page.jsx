@@ -253,7 +253,7 @@ export default function SkillDetailsPage() {
       
       if (chatData.success) {
         // Navigate to chat page
-        router.push(`/chat/${chatData.chatId}`);
+        router.push(`/appBar/inbox/chat/${chatData.chatId}`);
       }
     } catch (error) {
       console.error('Error creating chat:', error);

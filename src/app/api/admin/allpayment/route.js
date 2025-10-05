@@ -19,7 +19,9 @@ export async function GET() {
     }
 
     // Fetch user-specific successful payments
-    const payments = await paymentCollection.find({status:'success'}).toArray();
+    const payments = await paymentCollection
+      .find({ status: "success" }, { sort: { _id: -1 } })
+      .toArray();
 
     return new Response(JSON.stringify({ payments }), { status: 200 });
   } catch (error) {

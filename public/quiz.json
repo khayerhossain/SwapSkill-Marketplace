@@ -1,0 +1,608 @@
+[
+{
+    "id": 1,
+    "question": "Which programming language is primarily used for web development alongside HTML and CSS?",
+    "options": ["C++", "Python", "JavaScript", "Java"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 2,
+    "question": "What does HTML stand for?",
+    "options": ["Hyper Trainer Marking Language", "Hyper Text Markup Language", "Hyper Text Marketing Language", "Hyper Transfer Markup Language"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 3,
+    "question": "Which programming language is known for its use in data science and machine learning?",
+    "options": ["Python", "C#", "Java", "PHP"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 4,
+    "question": "Which language is mainly used for Android app development?",
+    "options": ["Swift", "Kotlin", "C", "Ruby"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 5,
+    "question": "What does CSS stand for?",
+    "options": ["Cascading Style Sheets", "Computer Style Sheets", "Creative Style Syntax", "Control Style System"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 6,
+    "question": "Which programming language was developed by Microsoft?",
+    "options": ["C#", "Java", "Swift", "PHP"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 7,
+    "question": "Which of the following is a backend framework for Node.js?",
+    "options": ["Django", "Laravel", "Express.js", "Flask"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 8,
+    "question": "Which programming language is often used for artificial intelligence?",
+    "options": ["Python", "C", "PHP", "HTML"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 9,
+    "question": "Which of the following is a version control system?",
+    "options": ["Git", "NPM", "Yarn", "Docker"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 10,
+    "question": "Which of the following is a frontend JavaScript framework?",
+    "options": ["React", "Django", "Spring", "Laravel"],
+    "correctAnswerIndex": 0
+  },
+ {
+    "id": 11,
+    "question": "What does UI stand for in design?",
+    "options": ["User Integration", "User Interface", "Universal Interaction", "Unified Input"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 12,
+    "question": "What does UX stand for?",
+    "options": ["User Xperience", "User Exchange", "User Experience", "Unified Experience"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 13,
+    "question": "Which design principle focuses on making sure elements look balanced on a page?",
+    "options": ["Alignment", "Contrast", "Balance", "Proximity"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 14,
+    "question": "Which tool is most commonly used for vector graphic design?",
+    "options": ["Adobe Photoshop", "Figma", "Adobe Illustrator", "Canva"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 15,
+    "question": "In color theory, what are colors directly opposite each other on the color wheel called?",
+    "options": ["Analogous", "Complementary", "Monochromatic", "Triadic"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 16,
+    "question": "Which of the following is a design tool mainly used for UI/UX design?",
+    "options": ["Figma", "After Effects", "Premiere Pro", "AutoCAD"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 17,
+    "question": "What is the main purpose of wireframing in design?",
+    "options": ["Adding colors", "Showing final visuals", "Planning structure and layout", "Improving typography"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 18,
+    "question": "Which principle ensures that similar items are visually grouped together?",
+    "options": ["Hierarchy", "Proximity", "Contrast", "Balance"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 19,
+    "question": "Which term refers to the spacing between characters in typography?",
+    "options": ["Leading", "Kerning", "Tracking", "Padding"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 20,
+    "question": "What is a responsive design mainly used for?",
+    "options": ["Improving animation", "Optimizing for all screen sizes", "Enhancing color quality", "Speeding up loading time"],
+    "correctAnswerIndex": 1
+  },
+  
+  {
+    "id": 21,
+    "question": "Which country has won the most FIFA World Cup titles?",
+    "options": ["Germany", "Brazil", "Italy", "Argentina"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 22,
+    "question": "In cricket, how many players are there on one team?",
+    "options": ["10", "11", "12", "9"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 23,
+    "question": "Who is known as the fastest man in the world?",
+    "options": ["Usain Bolt", "Michael Phelps", "Tyson Gay", "Carl Lewis"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 24,
+    "question": "Which sport uses terms like 'love', 'deuce', and 'ace'?",
+    "options": ["Badminton", "Tennis", "Table Tennis", "Squash"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 25,
+    "question": "In football, what is the duration of a standard match?",
+    "options": ["80 minutes", "90 minutes", "100 minutes", "70 minutes"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 26,
+    "question": "Which country hosted the 2024 Summer Olympics?",
+    "options": ["Tokyo", "Paris", "Los Angeles", "London"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 27,
+    "question": "In basketball, how many points is a free throw worth?",
+    "options": ["1", "2", "3", "4"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 28,
+    "question": "Who has won the most Grand Slam titles in men’s tennis history?",
+    "options": ["Rafael Nadal", "Novak Djokovic", "Roger Federer", "Andy Murray"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 29,
+    "question": "What is the national sport of Bangladesh?",
+    "options": ["Football", "Cricket", "Kabaddi", "Hockey"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 30,
+    "question": "In which sport would you perform a slam dunk?",
+    "options": ["Volleyball", "Basketball", "Baseball", "Handball"],
+    "correctAnswerIndex": 1
+  },
+  
+  {
+    "id": 31,
+    "question": "What does SEO stand for in digital marketing?",
+    "options": ["Search Engine Optimization", "Social Engagement Output", "Sales Enhancement Objective", "Site Evaluation Operation"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 32,
+    "question": "Which platform is most commonly used for influencer marketing?",
+    "options": ["LinkedIn", "Instagram", "Reddit", "Pinterest"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 33,
+    "question": "What does PPC stand for in online advertising?",
+    "options": ["Pay Per Click", "Post Paid Campaign", "Public Promotion Cost", "Per Product Charge"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 34,
+    "question": "Which of the following is an example of content marketing?",
+    "options": ["TV commercial", "Blog article", "Cold call", "Billboard ad"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 35,
+    "question": "Which of the following best describes a target audience?",
+    "options": ["The general public", "People who will never buy your product", "A specific group of potential customers", "Your competitors"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 36,
+    "question": "What is the main goal of brand awareness campaigns?",
+    "options": ["Increase direct sales", "Make people recognize the brand", "Collect user data", "Launch new products"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 37,
+    "question": "Which term refers to improving website ranking on search engines?",
+    "options": ["CRO", "SEO", "SMM", "CTR"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 38,
+    "question": "Which metric measures how many visitors click on an ad?",
+    "options": ["Impressions", "Conversion Rate", "Click-Through Rate", "Engagement Rate"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 39,
+    "question": "What is a 'call to action' (CTA) in marketing?",
+    "options": ["A slogan", "A button or phrase that encourages users to take action", "A type of ad placement", "A product tagline"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 40,
+    "question": "Which marketing strategy involves sending promotional emails to customers?",
+    "options": ["Email Marketing", "Affiliate Marketing", "Social Media Marketing", "Influencer Marketing"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 41,
+    "question": "What is the most important factor for effective teamwork?",
+    "options": ["Competition", "Communication", "Independence", "Silence"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 42,
+    "question": "Which of the following best describes teamwork?",
+    "options": ["Working alone to achieve goals", "People working together to achieve a common goal", "Competing against others", "Supervising a group of workers"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 43,
+    "question": "What skill helps team members understand each other's feelings?",
+    "options": ["Empathy", "Authority", "Judgment", "Speed"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 44,
+    "question": "Why is active listening important in a team?",
+    "options": ["It helps you argue better", "It improves understanding and collaboration", "It makes meetings longer", "It avoids responsibility"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 45,
+    "question": "What should a team do when conflicts arise?",
+    "options": ["Ignore the issue", "Blame others", "Discuss openly and find a solution", "Quit the project"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 46,
+    "question": "Which of the following is a sign of a strong team?",
+    "options": ["Poor communication", "Mutual respect and trust", "Lack of leadership", "Frequent arguments"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 47,
+    "question": "What is the role of a team leader?",
+    "options": ["To control everyone", "To guide, motivate, and coordinate the team", "To do all the work alone", "To avoid making decisions"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 48,
+    "question": "How can a team build trust among members?",
+    "options": ["By keeping secrets", "By being honest and dependable", "By competing with each other", "By avoiding communication"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 49,
+    "question": "What does collaboration mean in a teamwork context?",
+    "options": ["Sharing ideas and working together", "Doing individual tasks separately", "Following orders only", "Working without communication"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 50,
+    "question": "Which of the following helps improve teamwork in remote teams?",
+    "options": ["Ignoring messages", "Using video meetings and clear communication", "Working without updates", "Avoiding team discussions"],
+    "correctAnswerIndex": 1
+  },
+  
+  {
+    "id": 51,
+    "question": "Which country is famous for the classical dance form 'Ballet'?",
+    "options": ["India", "Russia", "Spain", "China"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 52,
+    "question": "Which Indian classical dance form originated in Kerala?",
+    "options": ["Kathak", "Bharatanatyam", "Kathakali", "Odissi"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 53,
+    "question": "What is the traditional dance of Bangladesh?",
+    "options": ["Bharatanatyam", "Jhumur", "Bihu", "Manipuri"],
+    "correctAnswerIndex": 3
+  },
+  {
+    "id": 54,
+    "question": "Which dance style is often performed in hip-hop music videos?",
+    "options": ["Ballet", "Breakdance", "Salsa", "Waltz"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 55,
+    "question": "Flamenco dance originated in which country?",
+    "options": ["Mexico", "Spain", "Brazil", "Portugal"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 56,
+    "question": "Which classical dance form is known for expressive hand gestures and facial expressions?",
+    "options": ["Bharatanatyam", "Ballet", "Samba", "Hip-Hop"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 57,
+    "question": "In which dance do performers typically wear tap shoes to make rhythmic sounds?",
+    "options": ["Jazz", "Tap Dance", "Ballet", "Salsa"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 58,
+    "question": "Which Latin American dance is known for its romantic rhythm and quick steps?",
+    "options": ["Tango", "Waltz", "Foxtrot", "Ballet"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 59,
+    "question": "What is the main purpose of folk dance?",
+    "options": ["Entertainment and cultural expression", "Competition only", "Exercise routine", "Religious rituals only"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 60,
+    "question": "Which dance form became popular through Michael Jackson’s performances?",
+    "options": ["Moonwalk", "Samba", "Salsa", "Jazz"],
+    "correctAnswerIndex": 0
+  },
+  
+  {
+    "id": 61,
+    "question": "What is the main purpose of persuasive writing?",
+    "options": ["To inform the reader", "To entertain the reader", "To convince the reader", "To describe a place"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 62,
+    "question": "Which of the following is an example of formal writing?",
+    "options": ["A text to a friend", "An academic essay", "A diary entry", "A social media post"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 63,
+    "question": "What does the term 'thesis statement' refer to in an essay?",
+    "options": ["The writer’s main argument or idea", "A summary of the conclusion", "The title of the essay", "A list of examples"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 64,
+    "question": "Which writing skill involves checking grammar, punctuation, and spelling?",
+    "options": ["Drafting", "Brainstorming", "Editing", "Researching"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 65,
+    "question": "What is the main goal of creative writing?",
+    "options": ["To record facts", "To express imagination and emotions", "To explain procedures", "To write formal reports"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 66,
+    "question": "Which of the following is NOT a type of writing?",
+    "options": ["Expository", "Descriptive", "Illustrative", "Narrative"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 67,
+    "question": "What should a good conclusion in an essay do?",
+    "options": ["Introduce new topics", "Summarize main points and restate the thesis", "Include statistics", "Add unrelated ideas"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 68,
+    "question": "Which element of writing gives readers a mental image through sensory details?",
+    "options": ["Narration", "Description", "Persuasion", "Exposition"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 69,
+    "question": "In storytelling, what is the 'climax'?",
+    "options": ["The introduction of characters", "The most intense or important part of the story", "The ending", "The background information"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 70,
+    "question": "What is the first stage of the writing process?",
+    "options": ["Editing", "Brainstorming", "Revising", "Publishing"],
+    "correctAnswerIndex": 1
+  },
+   {
+    "id": 71,
+    "question": "What is the main purpose of using bait in fishing?",
+    "options": ["To scare fish", "To attract fish", "To clean the water", "To tie the hook"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 72,
+    "question": "Which of the following is a common fishing tool?",
+    "options": ["Fishing rod", "Hammer", "Axe", "Net only"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 73,
+    "question": "What do anglers use to catch fish without harming them?",
+    "options": ["Barbless hooks", "Sharp knives", "Spears", "Nets"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 74,
+    "question": "Which type of fishing is done in the ocean?",
+    "options": ["Freshwater fishing", "Ice fishing", "Saltwater fishing", "Fly fishing"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 75,
+    "question": "What is ‘catch and release’ fishing?",
+    "options": ["Catching fish and keeping them", "Catching fish and releasing them back", "Catching fish with nets", "Fishing without hooks"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 76,
+    "question": "Which device is used to detect fish underwater?",
+    "options": ["Compass", "Fish finder", "Radar gun", "Thermometer"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 77,
+    "question": "Which of these is a popular sport fishing method?",
+    "options": ["Fly fishing", "Spearfishing", "Net fishing", "Cage fishing"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 78,
+    "question": "In which season do fishermen often go ice fishing?",
+    "options": ["Summer", "Winter", "Spring", "Autumn"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 79,
+    "question": "What is the purpose of a fishing reel?",
+    "options": ["To store and control the fishing line", "To sharpen the hook", "To hold the bait", "To measure fish size"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 80,
+    "question": "Which of these is a common bait for catching fish?",
+    "options": ["Worms", "Leaves", "Pebbles", "Plastic pieces"],
+    "correctAnswerIndex": 0
+  },
+  
+  {
+    "id": 81,
+    "question": "Which of the following is a dry heat cooking method?",
+    "options": ["Boiling", "Steaming", "Roasting", "Poaching"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 82,
+    "question": "What is the main purpose of marinating meat?",
+    "options": ["To color it", "To tenderize and add flavor", "To boil it faster", "To freeze it"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 83,
+    "question": "Which ingredient is commonly used to thicken sauces?",
+    "options": ["Flour", "Sugar", "Salt", "Vinegar"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 84,
+    "question": "Which of the following knives is best for chopping vegetables?",
+    "options": ["Paring knife", "Chef’s knife", "Bread knife", "Butter knife"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 85,
+    "question": "What is the French term for cooking food slowly in liquid?",
+    "options": ["Sautéing", "Braising", "Blanching", "Roasting"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 86,
+    "question": "Which cooking method involves submerging food in hot oil?",
+    "options": ["Grilling", "Frying", "Boiling", "Steaming"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 87,
+    "question": "What is the main ingredient in a classic pesto sauce?",
+    "options": ["Basil", "Parsley", "Cilantro", "Spinach"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 88,
+    "question": "Which spice is commonly used in curry dishes?",
+    "options": ["Cumin", "Oregano", "Thyme", "Basil"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 89,
+    "question": "What is 'al dente' in cooking pasta?",
+    "options": ["Overcooked pasta", "Soft pasta", "Firm to the bite", "Frozen pasta"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 90,
+    "question": "Which cooking technique uses water vapor to cook food?",
+    "options": ["Boiling", "Steaming", "Baking", "Grilling"],
+    "correctAnswerIndex": 1
+  },
+  
+  {
+    "id": 91,
+    "question": "What does DSLR stand for?",
+    "options": ["Digital Single-Lens Reflex", "Digital Simple Lens Recorder", "Double-Shot Light Reflection", "Direct Single Lens Recording"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 92,
+    "question": "Which element of photography controls how much light enters the camera?",
+    "options": ["Shutter speed", "Aperture", "ISO", "White balance"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 93,
+    "question": "What does ISO measure in photography?",
+    "options": ["Camera resolution", "Image brightness sensitivity", "Lens quality", "Focal length"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 94,
+    "question": "Which type of lens is best for capturing wide landscapes?",
+    "options": ["Telephoto lens", "Macro lens", "Wide-angle lens", "Prime lens"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 95,
+    "question": "What is the term for adjusting focus to make the subject sharp?",
+    "options": ["Exposure", "Shutter speed", "Focusing", "Framing"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "id": 96,
+    "question": "Which photography technique uses slow shutter speed to capture motion blur?",
+    "options": ["Time-lapse", "Long exposure", "High-speed photography", "Macro photography"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 97,
+    "question": "What is bokeh in photography?",
+    "options": ["A type of camera", "The aesthetic quality of the out-of-focus background", "A lens brand", "A color filter"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 98,
+    "question": "Which mode is used for shooting moving subjects in cameras?",
+    "options": ["Portrait mode", "Sports mode", "Landscape mode", "Night mode"],
+    "correctAnswerIndex": 1
+  },
+  {
+    "id": 99,
+    "question": "Which type of photography focuses on very small subjects?",
+    "options": ["Macro photography", "Landscape photography", "Street photography", "Astrophotography"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "id": 100,
+    "question": "Which setting controls how long the camera’s sensor is exposed to light?",
+    "options": ["Aperture", "Shutter speed", "ISO", "White balance"],
+    "correctAnswerIndex": 1
+  }
+]

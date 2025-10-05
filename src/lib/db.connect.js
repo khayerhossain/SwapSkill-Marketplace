@@ -8,7 +8,8 @@ export const collectionNamesObj = {
   testQNACollection: "test-qna",
   chatMessagesCollection: "chat-messages", // new
   chatSessionsCollection: "chat-sessions", // new
-  notificationsCollection: "notifications" // new
+  notificationsCollection: "notifications",// new
+  resourcesCollection: "resources",
 };
 
 const uri = process.env.MONGODB_URI;

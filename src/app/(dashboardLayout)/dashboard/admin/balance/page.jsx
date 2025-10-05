@@ -484,7 +484,7 @@ export default function Balance() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 ">
-                {payments?.map((row) => (
+                {payments?.slice(0, 6).map?.((row) => (
                   <tr
                     key={row._id ?? row.id ?? Math.random()}
                     className="hover:bg-gray-50 transition-colors hover:text-black"
@@ -507,11 +507,11 @@ export default function Balance() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                        className={`inline-flex items-center px-3 py-1 rounded-full ${row.paymentMethod ==='coin' ? 'bg-yellow-400 text-white': ""}  text-xs font-medium ${
                           row.paymentMethod === "stripe"
                             ? "bg-blue-600 text-white"
                             : "bg-green-500 text-white"
-                        } `}
+                        }  `}
                       >
                         {row?.method ??
                           row?.gateway ??
@@ -520,7 +520,7 @@ export default function Balance() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                      ${formatNumber(row?.price ?? row?.amount ?? 0)}
+                     {row.paymentMethod === "coin" ? '💰' :"$"}  {row.paymentMethod === "coin" ? row.price * 10 :  row.price}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                       {row?.date ?? row?.createdAt ?? row?.paidAt ?? "-"}

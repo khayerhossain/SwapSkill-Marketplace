@@ -6,8 +6,7 @@ import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BsCreditCard2Back } from "react-icons/bs";
-import { FaStripe } from "react-icons/fa";
-
+import { FaCoins, FaStripe } from "react-icons/fa";
 export default function Pricing() {
   const [billing, setBilling] = useState("monthly");
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -100,6 +99,8 @@ export default function Pricing() {
       path = `/checkout?${params.toString()}`;
     } else if (method === "stripe") {
       path = `/checkoutStripe?${params.toString()}`;
+    }else if (method === 'coin') {
+    path = `/coin-payment?${params.toString()}`;
     }
 
     setIsModalOpen(false);
@@ -195,7 +196,7 @@ export default function Pricing() {
       {/* daisyUI Modal */}
       {isModalOpen && selectedPlan && (
         <dialog open className="modal">
-          <div data-aos="fade-up" className="modal-box border">
+          <div data-aos="fade-up" className="modal-box border ">
             <h3 className="font-bold text-lg mb-3">Choose Payment Method</h3>
             <p className="mb-4 text-sm">
               Selected Plan:{" "}
@@ -206,21 +207,21 @@ export default function Pricing() {
               <div
                 onClick={() => handlePayment("sslcommerz")}
                 className="
-      flex flex-col items-center justify-center p-6 w-40 h-32
+      flex flex-col items-center justify-center p-4 w-35 h-25
       bg-white border-2 border-green-500 rounded-lg shadow-lg
       hover:shadow-xl transition duration-300 ease-in-out cursor-pointer
       btn btn-card-sslcommerz hover:border-red-500"
               >
                 <BsCreditCard2Back className="text-4xl text-green-600 mb-2" />
                 <span className="font-semibold text-gray-800 text-center">
-                  Pay with SSLCommerz
+                  Pay with SSL
                 </span>
               </div>
 
               <div
                 onClick={() => handlePayment("stripe")}
                 className="
-      flex flex-col items-center justify-center p-6 w-40 h-32
+      flex flex-col items-center justify-center p-4 w-35 h-25
       bg-white border-2 border-indigo-600 rounded-lg shadow-lg
       hover:shadow-xl transition duration-300 ease-in-out cursor-pointer
       btn btn-card-stripe hover:border-red-500"
@@ -228,6 +229,19 @@ export default function Pricing() {
                 <FaStripe className="text-4xl text-indigo-700 mb-2" />
                 <span className="font-semibold text-gray-800 text-center">
                   Pay with Stripe
+                </span>
+              </div>
+              <div
+                onClick={() => handlePayment("coin")}
+                className="
+      flex flex-col items-center justify-center p-4 w-35 h-25
+      bg-white border-2 border-yellow-400 rounded-lg shadow-lg
+      hover:shadow-xl transition duration-300 ease-in-out cursor-pointer
+      btn btn-card-stripe hover:border-red-500"
+              >
+                <FaCoins className="text-4xl text-yellow-400 mb-2" />
+                <span className="font-semibold text-gray-800 text-center">
+                  Pay with Coin
                 </span>
               </div>
             </div>

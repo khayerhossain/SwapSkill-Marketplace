@@ -12,7 +12,7 @@ import {
   FaUsers,
   FaMoneyBillWave,
 } from "react-icons/fa";
-
+import { LuCoins } from "react-icons/lu";
 const Sidebar = ({
   onClick,
   useAppBarPaths = false,
@@ -29,7 +29,12 @@ const Sidebar = ({
   const profilePath = useAppBarPaths ? "/appBar/profile" : "/profile";
   const shareSkillsPath = useAppBarPaths
     ? "/appBar/share-skills"
-    : "/share-skills";
+    : "/share-skills"; 
+  const earnCoin = useAppBarPaths
+    ? "/appBar/earn-coin"
+    : "/earn-coin"; 
+
+
   const userPayment = useAppBarPaths ? "/appBar/overview" : "/overview";
   const dashboardPath = useAppBarPaths ? "/dashboard" : "/dashboard";
   const resourcesPath = useAppBarPaths ? "/appBar/resources" : "/resources";
@@ -42,6 +47,7 @@ const Sidebar = ({
     { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath },
     { name: "Overview", icon: <FaBox />, path: userPayment },
     { name: "Resources", icon: <FaBox />, path: resourcesPath },
+    { name: "Earn Coin", icon: <LuCoins />, path: earnCoin },
   ];
 
   const dashboardItems = [

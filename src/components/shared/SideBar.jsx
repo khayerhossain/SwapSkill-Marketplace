@@ -13,6 +13,7 @@ import {
   FaMoneyBillWave,
 } from "react-icons/fa";
 import { FiMessageCircle } from "react-icons/fi";
+import { LuCoins } from "react-icons/lu";
 
 const Sidebar = ({
   onClick,
@@ -45,6 +46,7 @@ const Sidebar = ({
     { name: "Overview", icon: <FaBox />, path: userPayment },
     { name: "Resources", icon: <FaBox />, path: resourcesPath },
     { name: "Inbox", icon: <FiMessageCircle  />, path: inboxPath },
+    { name: "Earn Coin", icon: <LuCoins />, path: earnCoin },
   ];
 
   const dashboardItems = [

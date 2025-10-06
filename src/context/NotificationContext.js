@@ -1,9 +1,6 @@
-// contexts/NotificationContext.js 
 "use client";
 
-import { createContext, useContext, useState, useCallback, useEffect } from "react";
-// import { useRouter } from "next/auth";
-import { useSession } from "next-auth/react";
+import { createContext, useContext, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 // Create context
@@ -12,56 +9,12 @@ const NotificationContext = createContext(undefined);
 // Provider component
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
-  const [socket, setSocket] = useState(null);
   const router = useRouter();
-  const { data: session } = useSession();
-
-  // Socket connection for real-time notifications
-  useEffect(() => {
-    if (!session?.user?.id) return;
-
-    // Dynamic import for socket.io-client to avoid SSR issues
-    import('socket.io-client').then((module) => {
-      const io = module.default;
-      const newSocket = io(process.env.NEXTAUTH_URL || 'http://localhost:3000');
-      
-      newSocket.on('connect', () => {
-        console.log("Connected to socket for notifications");
-        newSocket.emit('join_user', session.user.id);
-      });
-
-      // Listen for real-time notifications
-      newSocket.on('new_notification', (notification) => {
-        console.log("Real-time notification received:", notification);
-        
-        // Add new notification to state
-        const newNotification = {
-          _id: notification.notificationId || Date.now().toString(),
-          title: notification.title,
-          message: notification.message,
-          type: notification.type,
-          chatId: notification.chatId,
-          read: false,
-          createdAt: new Date(notification.createdAt)
-        };
-
-        setNotifications(prev => [newNotification, ...prev]);
-      });
-
-      setSocket(newSocket);
-    });
-
-    return () => {
-      if (socket) {
-        socket.disconnect();
-      }
-    };
-  }, [session?.user?.id]);
 
   // Function to add a new notification
   const addNotification = useCallback((notification) => {
     const newNotification = {
-      _id: Date.now() + Math.random(),
+      id: Date.now() + Math.random(),
       title: notification.title || "Notification",
       message: notification.message,
       time: new Date().toLocaleTimeString(),
@@ -70,8 +23,6 @@ export const NotificationProvider = ({ children }) => {
       profileId: notification.profileId,
       userId: notification.userId,
       category: notification.category,
-      chatId: notification.chatId,
-      createdAt: new Date()
     };
 
     setNotifications((prev) => [newNotification, ...prev]);
@@ -81,7 +32,7 @@ export const NotificationProvider = ({ children }) => {
   const markAsRead = useCallback((id) => {
     setNotifications((prev) =>
       prev.map((notification) =>
-        notification._id === id ? { ...notification, read: true } : notification
+        notification.id === id ? { ...notification, read: true } : notification
       )
     );
   }, []);
@@ -101,7 +52,7 @@ export const NotificationProvider = ({ children }) => {
   // Handle notification actions
   const handleNotificationAction = useCallback(
     (notificationId, userChoice) => {
-      const notification = notifications.find((n) => n._id === notificationId);
+      const notification = notifications.find((n) => n.id === notificationId);
       if (!notification) return;
 
       // Mark as read
@@ -114,11 +65,6 @@ export const NotificationProvider = ({ children }) => {
           );
         } else {
           router.push("/appBar/find-skills");
-        }
-      } else if (notification.type === "chat") {
-        // Handle chat notification
-        if (notification.chatId) {
-          router.push(`/chat/${notification.chatId}`);
         }
       }
     },

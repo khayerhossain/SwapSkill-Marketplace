@@ -1,9 +1,10 @@
 "use client";
 
+
 import axios from "axios";
 import { Coins, RefreshCw, Trophy, Zap } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import { RxStopwatch } from "react-icons/rx";
 // --- Type Definitions (for clarity) ---
 
@@ -276,7 +277,7 @@ export default function EarnCoinQuizPage() {
             {q.options.map((option, optionIndex) => (
               <label
                 key={optionIndex}
-                className={`label cursor-pointer p-4 rounded-lg border-2 transition-all duration-300 hover:text-white  hover:bg-purple-600
+                className={`label cursor-pointer p-4 rounded-lg border-2 transition-all duration-300 hover:text-black  hover:bg-gray-300
                   ${
                     selectedIndex === optionIndex
                       ? "bg-red-500/10 dark:bg-red-500/20 border-red-500 dark:border-red-400 shadow-lg shadow-red-500/20"

@@ -1,6 +1,6 @@
 "use client";
 
-import { ThemeContext } from "@/context/ThemeProvider";
+
 import axios from "axios";
 import { Coins, RefreshCw, Trophy, Zap } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -53,7 +53,7 @@ export default function EarnCoinQuizPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { data: session } = useSession();
-  const {theme} = use(ThemeContext)
+
   // --- Timer State ---
   const [timeLeft, setTimeLeft] = useState(60); // 60 seconds
   const [timerActive, setTimerActive] = useState(false);

@@ -469,12 +469,16 @@ useEffect(() => {
                 key={res._id}
                 className="bg-white dark:bg-gray-800 rounded-xl shadow p-5 hover:shadow-lg transition relative dark:border dark:border-gray-300 flex flex-col"
               >
-                <button
-                  onClick={() => removeResource(res._id)}
-                  className="absolute top-3 right-3 text-red-500 hover:text-red-700 cursor-pointer"
-                >
-                  <Trash2 className="w-5 h-5" />
+                {/* User Delete */}
+                {session?.user?.email === res.userEmail && (
+                 <button
+                   onClick={() => removeResource(res._id)}
+                   className="absolute top-3 right-3 text-red-500 hover:text-red-700 cursor-pointer"
+                   >
+                    <Trash2 className="w-5 h-5" />
                 </button>
+                 )}
+
 
                 {/* User Info */}
                 <div className="flex items-center gap-3 mb-4">

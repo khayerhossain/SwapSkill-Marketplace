@@ -113,8 +113,8 @@ const handleAction = async (profileId, attemptId, action) => {
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Quiz Skills</h1>
-          <p className="text-gray-600">Review and manage user quiz attempts</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Managed Applied Skills</h1>
+          <p className="text-gray-600">Review and manage user skills by their test</p>
         </div>
 
         {/* Stats Cards */}
@@ -228,7 +228,7 @@ const handleAction = async (profileId, attemptId, action) => {
           {filteredAttempts.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 text-6xl mb-4">📊</div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No quiz attempts found</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No Applied users found</h3>
               <p className="text-gray-600">Try adjusting your search or filters</p>
             </div>
           ) : (
@@ -237,10 +237,10 @@ const handleAction = async (profileId, attemptId, action) => {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      User
+                      Profile
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Email
+                      Name
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Category
@@ -264,15 +264,11 @@ const handleAction = async (profileId, attemptId, action) => {
                           <div className="flex-shrink-0 h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
                             {attempt.userName.charAt(0).toUpperCase()}
                           </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">
-                              {attempt.userName}
-                            </div>
-                          </div>
+                         
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{attempt.userEmail}</div>
+                        <div className="text-sm text-gray-900">{attempt.userName}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">

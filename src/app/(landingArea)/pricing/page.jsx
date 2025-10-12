@@ -1,7 +1,8 @@
 "use client";
+
 import Container from "@/components/shared/Container";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import dynamic from "next/dynamic";
+import { useEffect } from "react";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,11 +13,17 @@ export default function Pricing() {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
-  AOS.init({
-    duration: 800, // animation duration
-    easing: "ease-in-out",
-    once: true, // run only once
-  });
+  useEffect(() => {
+    (async () => {
+      const AOS = (await import("aos")).default;
+      await import("aos/dist/aos.css");
+      AOS.init({
+        duration: 800,
+        easing: "ease-in-out",
+        once: true,
+      });
+    })();
+  }, []);
   const plans = [
     {
       name: "Learner",
@@ -77,7 +84,7 @@ export default function Pricing() {
     },
   ];
 
-  // Modal open করার জন্য
+  // Modal open
   const handlePrice = (name) => {
     const plan = plans.find((p) => p.name === name);
     if (!plan) return;

@@ -3,17 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  FaBox,
-  FaCog,
-  FaHome,
-  FaUser,
-  FaUserCheck,
-  FaUserFriends,
-  FaUsers,
-  FaMoneyBillWave,
-} from "react-icons/fa";
-import { FiMessageCircle } from "react-icons/fi";
-import { LuCoins } from "react-icons/lu";
+  Home,
+  Users,
+  User,
+  Settings,
+  Box,
+  MessageSquare,
+  Coins,
+  Briefcase,
+  LayoutDashboard,
+  FileText,
+  UserCheck,
+  Wallet,
+  Search,
+} from "lucide-react";
 const Sidebar = ({
   onClick,
   useAppBarPaths = false,
@@ -41,27 +44,66 @@ const Sidebar = ({
   const resourcesPath = useAppBarPaths ? "/appBar/resources" : "/resources";
   const inboxPath = useAppBarPaths ? "/appBar/inbox" : "/inbox";
 
+  const iconByName = (name) => {
+    switch (name) {
+      case "Home":
+        return <Home size={18} />;
+      case "Community":
+        return <Users size={18} />;
+      case "Find Skills":
+        return <Search size={18} />;
+      case "Profile":
+        return <User size={18} />;
+      case "Share Skills":
+        return <Briefcase size={18} />;
+      case "Overview":
+        return <LayoutDashboard size={18} />;
+      case "Resources":
+        return <FileText size={18} />;
+      case "Earn Coin":
+        return <Coins size={18} />;
+      case "Inbox":
+        return <MessageSquare size={18} />;
+      case "Settings":
+        return <Settings size={18} />;
+      case "Subscribers":
+        return <UserCheck size={18} />;
+      case "Users":
+        return <Users size={18} />;
+      case "Current Skills":
+        return <Briefcase size={18} />;
+      case "Management":
+        return <Users size={18} />;
+      case "Balance":
+        return <Wallet size={18} />;
+      case "Dashboard":
+        return <LayoutDashboard size={18} />;
+      default:
+        return <Box size={18} />;
+    }
+  };
+
   const appBarItems = [
-    { name: "Home", icon: <FaHome />, path: "/" },
-    { name: "Community", icon: <FaUserFriends />, path: communityPath },
-    { name: "Find Skills", icon: <FaBox />, path: findSkillsPath },
-    { name: "Profile", icon: <FaBox />, path: profilePath },
-    { name: "Share Skills", icon: <FaBox />, path: shareSkillsPath },
-    { name: "Overview", icon: <FaBox />, path: userPayment },
-    { name: "Resources", icon: <FaBox />, path: resourcesPath },
-    { name: "Earn Coin", icon: <LuCoins />, path: earnCoin },
-     { name: "Inbox", icon: <FiMessageCircle  />, path: inboxPath },
+    { name: "Home", icon: iconByName("Home"), path: "/" },
+    { name: "Community", icon: iconByName("Community"), path: communityPath },
+    { name: "Find Skills", icon: iconByName("Find Skills"), path: findSkillsPath },
+    { name: "Profile", icon: iconByName("Profile"), path: profilePath },
+    { name: "Share Skills", icon: iconByName("Share Skills"), path: shareSkillsPath },
+    { name: "Overview", icon: iconByName("Overview"), path: userPayment },
+    { name: "Resources", icon: iconByName("Resources"), path: resourcesPath },
+    { name: "Earn Coin", icon: iconByName("Earn Coin"), path: earnCoin },
+    { name: "Inbox", icon: iconByName("Inbox"), path: inboxPath },
   ];
 
   const dashboardItems = [
-    { name: "Profile", icon: <FaUser />, path: "/dashboard/profile", role: "all" },
-    { name: "Settings", icon: <FaCog />, path: "/dashboard/settings", role: "all" },
-    { name: "Dashboard", icon: <FaHome />, path: dashboardPath, role: "all" },
-    { name: "Subscribers", icon: <FaUserCheck />, path: "/dashboard/admin/subscribers", role: "admin" },
-    { name: "Users", icon: <FaUserCheck />, path: "/dashboard/admin/users", role: "admin" },
-    { name: "Current Skills", icon: <FaUserCheck />, path: "/dashboard/admin/current-skills", role: "admin" },
-    { name: "Management", icon: <FaUsers />, path: "/dashboard/manageSkills", role: "admin" },
-    { name: "Balance", icon: <FaMoneyBillWave />, path: "/dashboard/admin/balance", role: "admin" },
+    { name: "Profile", icon: iconByName("Profile"), path: "/dashboard/profile", role: "all" },
+    { name: "Settings", icon: iconByName("Settings"), path: "/dashboard/settings", role: "all" },
+    { name: "Dashboard", icon: iconByName("Dashboard"), path: dashboardPath, role: "all" },
+    { name: "Subscribers", icon: iconByName("Subscribers"), path: "/dashboard/admin/subscribers", role: "admin" },
+    { name: "Users", icon: iconByName("Users"), path: "/dashboard/admin/users", role: "admin" },
+    { name: "Current Skills", icon: iconByName("Current Skills"), path: "/dashboard/admin/current-skills", role: "admin" },
+    { name: "Management", icon: iconByName("Management"), path: "/dashboard/manageSkills", role: "admin" },
+    { name: "Balance", icon: iconByName("Balance"), path: "/dashboard/admin/balance", role: "admin" },
   ];
 
   const menuItems = isDashboard

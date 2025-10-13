@@ -1,7 +1,7 @@
 "use client";
 import Container from "@/components/shared/Container";
 import { ThemeContext } from "@/context/ThemeProvider";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import { use, useState } from "react";
 
 export default function NewsletterSection() {
@@ -16,7 +16,7 @@ export default function NewsletterSection() {
     setMessage("");
 
     try {
-      const res = await axios.post("/api/subscribers", { email });
+      const res = await axiosInstance.post("/subscribers", { email });
       if (res.data?.success) {
         setMessage(" Subscribed successfully!");
         setEmail("");

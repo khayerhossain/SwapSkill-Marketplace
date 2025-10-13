@@ -3,26 +3,35 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axiosInstance";
 import Swal from "sweetalert2";
 import { Eye, EyeOff, Trash2, Info } from "lucide-react";
+import { MdOutlinePendingActions } from "react-icons/md";
+import Loading from "@/app/loading";
 
 export default function CurrentSkills() {
   const [skills, setSkills] = useState([]);
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("all");
+  const [search] = useState(""); 
+  const [filter] = useState("all"); 
   const [selectedSkill, setSelectedSkill] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  //  Fetch Skills
   useEffect(() => {
     fetchSkills();
   }, []);
 
   const fetchSkills = async () => {
     try {
+      setLoading(true);
       const { data } = await axiosInstance.get("/current-skills");
       setSkills(data);
     } catch (error) {
-      console.error("Failed to fetch skills", error);
+      console.error(" Failed to fetch skills", error);
+      Swal.fire("Error", "Failed to load skills", "error");
+    } finally {
+      setLoading(false);
     }
   };
 
+  //  Handle Visibility Toggle
   const handleVisibilityToggle = async (id, currentVisibility) => {
     const newVisibility = currentVisibility === "showing" ? "hide" : "showing";
     try {
@@ -32,11 +41,13 @@ export default function CurrentSkills() {
           String(s._id) === String(id) ? { ...s, visibility: newVisibility } : s
         )
       );
+      //Swal.fire("Updated!", `Skill visibility changed to "${newVisibility}"`, "success");
     } catch {
       Swal.fire("Error!", "Failed to update visibility.", "error");
     }
   };
 
+  //  Delete Skill
   const handleRemove = async (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -59,19 +70,81 @@ export default function CurrentSkills() {
     });
   };
 
+  //  Filter Logic
   const filteredSkills = skills.filter((s) => {
     const matchesSearch = s.userName?.toLowerCase().includes(search.toLowerCase());
     const matchesFilter = filter === "all" || s.visibility === filter;
     return matchesSearch && matchesFilter;
   });
 
+  //  Loader
+  if (loading) {
+    return (
+      <div className="min-h-screen  flex items-center justify-center ">
+       <Loading></Loading>
+      </div>
+    );
+  }
+
+  //  mt-12
   return (
-    <section className="max-w-6xl mx-auto mt-12 p-6 sm:p-8 bg-white dark:bg-gray-900 rounded-2xl shadow-lg">
-      {/* Header */}
+    <section className="max-w-6xl mx-auto  p-6 sm:p-8 bg-white dark:bg-gray-900 rounded-2xl shadow-lg">
+      <h1 className="text-3xl font-bold mb-8 text-left dark:text-white">
+        All Current Skills
+      </h1>
 
-      <h1 className="text-3xl font-bold mb-8 text-left">All Current Skills</h1>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Total Skills
+              </p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {skills.length}
+              </p>
+            </div>
+            <div className="p-3 bg-blue-100 rounded-full">
+              <MdOutlinePendingActions className="text-blue-600 text-xl" />
+            </div>
+          </div>
+        </div>
 
-      {/* Desktop Table */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Hidden
+              </p>
+              <p className="text-2xl font-bold text-yellow-600">
+                {skills.filter((a) => a.visibility === "hide").length}
+              </p>
+            </div>
+            <div className="p-3 bg-yellow-100 rounded-full">
+              <EyeOff className="text-yellow-600 text-xl" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Showing
+              </p>
+              <p className="text-2xl font-bold text-green-600">
+                {skills.filter((a) => a.visibility === "showing").length}
+              </p>
+            </div>
+            <div className="p-3 bg-green-100 rounded-full">
+              <Eye className="text-green-600 text-xl" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+            {/* Desktop Table */}
       <div className="hidden lg:block overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
         <table className="w-full text-left">
           <thead className=" border-b-2 border-gray-200">
@@ -245,6 +318,7 @@ export default function CurrentSkills() {
           </div>
         </div>
       )} 
+
 
     </section>
   );

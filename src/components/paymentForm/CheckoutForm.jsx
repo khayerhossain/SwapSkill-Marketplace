@@ -2,7 +2,7 @@ import { ThemeContext } from "@/context/ThemeProvider";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { use, useState } from "react";
@@ -72,10 +72,9 @@ function CheckoutForm(props) {
      
     }
 
-      const { data } = await axios.post(
-        "/api/stripe/create-payment-intent",
-        { piceInCents: price * 100 },
-        { headers: { "Content-Type": "application/json" } }) 
+      const { data } = await axiosInstance.post(
+        "/stripe/create-payment-intent",
+        { piceInCents: price * 100 }) 
 
 
     console.log("res form intent", data.clientSecret);  
@@ -106,10 +105,9 @@ function CheckoutForm(props) {
          paymentHistroy.status = "success";
 
   
-    await axios.post(
-        "/api/payment-history",
-        paymentHistroy,
-        { headers: { "Content-Type": "application/json" } }) 
+    await axiosInstance.post(
+        "/payment-history",
+        paymentHistroy) 
 
   Swal.fire({
     icon: "success",

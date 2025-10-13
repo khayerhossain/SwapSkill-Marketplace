@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axiosInstance from "@/lib/axiosInstance";
 import { useRouter } from "next/navigation";
 import { useNotification } from "@/context/NotificationContext";
 import { useSession } from "next-auth/react"; // 🔹 UPDATED
@@ -90,15 +91,9 @@ export default function SkillForm() {
         email: session?.user?.email || null, // 🔹 UPDATED: logged-in email
       };
 
-      const res = await fetch("/api/skills", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const { data } = await axiosInstance.post("/skills", payload);
 
-      const data = await res.json();
-
-      if (res.ok && data.success) {
+      if (data?.success) {
         if (audio) audio.play();
         addNotification({
           title: "Do you want to start the Quiz?",

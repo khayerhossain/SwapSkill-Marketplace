@@ -23,6 +23,9 @@ export const metadata = {
   },
 };
 
+import React, { Suspense } from "react";
+import Loading from "./loading";
+
 export default function RootLayout({ children }) {
   return (
     <html data-theme="light" lang="en">
@@ -35,7 +38,7 @@ export default function RootLayout({ children }) {
         <NextAuthSessionProvider>
           <ThemeProvider>
             <NotificationProvider>
-              {children}
+              <Suspense fallback={<Loading />}>{children}</Suspense>
               <Toaster position="top-center" />
             </NotificationProvider>
           </ThemeProvider>

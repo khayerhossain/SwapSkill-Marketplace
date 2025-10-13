@@ -20,6 +20,7 @@ import {
   Check,
   CheckCheck
 } from 'lucide-react';
+import Loading from '@/app/loading';
 
 let socket;
 
@@ -32,7 +33,7 @@ export default function ChatPage() {
   const [chat, setChat] = useState(null);
   const [typing, setTyping] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -285,16 +286,13 @@ export default function ChatPage() {
     return currentDate !== previousDate;
   };
 
-  // if (loading) {
-  //   return (
-  //     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-  //       <div className="text-center">
-  //         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-  //         <p className="mt-4 text-gray-600">Loading chat...</p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+       <Loading/>
+      </div>
+    );
+  }
 
     const otherUser = getOtherUser();
 
@@ -306,8 +304,6 @@ export default function ChatPage() {
     );
   }
 
-
-
   return (
     <div className="min-h-screen bg-gray-50 flex ">
       {/* Main Chat Area */}
@@ -317,7 +313,7 @@ export default function ChatPage() {
           <div className="flex items-center space-x-3">
             <button
               onClick={() => router.back()}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors lg:hidden"
+              className="p-2 btn  rounded-full transition-colors "
             >
               <ArrowLeft size={20} className="text-gray-600" />
             </button>

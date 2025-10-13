@@ -25,9 +25,9 @@ export async function GET() {
         console.error('Invalid profileId:', attempt.profileId);
       }
       return {
-        ...attempt,
-        userEmail: userProfile?.email || 'N/A',
-        userName: userProfile?.name || 'N/A',
+        ...attempt,        
+        userName: userProfile?.userName || 'N/A',
+        userImage: userProfile?.userImage || 'N/A',
         verificationStatus: userProfile?.verification || false,
         lastAttemptStatus: userProfile?.lastAttemptStatus || 'N/A'
       };

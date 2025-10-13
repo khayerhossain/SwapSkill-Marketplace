@@ -116,7 +116,9 @@ export default function ManageSkills() {
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Managed Applied Skills</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Manage Quiz Skills
+          </h1>
           <p className="text-gray-600">Review and manage user skills by their test</p>
         </div>
 
@@ -237,8 +239,12 @@ export default function ManageSkills() {
           {filteredAttempts.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 text-6xl mb-4">📊</div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No Applied users found</h3>
-              <p className="text-gray-600">Try adjusting your search or filters</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No Applied users found
+              </h3>
+              <p className="text-gray-600">
+                Try adjusting your search or filters
+              </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -273,14 +279,15 @@ export default function ManageSkills() {
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-                            {attempt.userName.charAt(0).toUpperCase()}
+                          <div className="flex-shrink-0 h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">                            
+                            <img className="rounded-full"
+                              src={attempt.userImage}                              
+                            />
                           </div>
-                         
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{attempt.userName}</div>
+                      <td className="">
+                        {attempt.userName}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
@@ -502,7 +509,7 @@ export default function ManageSkills() {
                       : "bg-green-600 text-white hover:bg-green-700"
                   }`}
                 >
-                  Approve Attempt
+                  Approve Attempt.
                 </button>
               </div>
             </div>

@@ -42,7 +42,10 @@ export default function ManageSkills() {
   const handleAction = async (profileId, attemptId, action) => {
     const result = await Swal.fire({
       title: `Are you sure?`,
-      text: `You want to ${action} this attempt?`,
+      text: `You want to ${action} this attempt? 
+      ${
+    action === "reject" ? "This will delete the attempt permanently!" : ""
+  } `,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -54,7 +57,7 @@ export default function ManageSkills() {
 
     setActionLoading(true);
     try {
-      const res = await fetch("/api/admin/update-verification", {
+      const res = await fetch("/api/admin/get-quiz-attempts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ profileId, attemptId, action }),
@@ -173,7 +176,7 @@ export default function ManageSkills() {
               <div>
                 <p className="text-sm font-medium text-gray-600">Rejected</p>
                 <p className="text-2xl font-bold text-red-600">
-                  {attempts.filter((a) => a.status === "pending").length}
+                  {attempts.filter((a) => a.status === "rejected").length}
                 </p>
               </div>
               <div className="p-3 bg-red-100 rounded-full">
@@ -248,7 +251,7 @@ export default function ManageSkills() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className=" hidden md:table w-full">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">

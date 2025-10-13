@@ -2,16 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Search, Clock, User, Star } from "lucide-react";
 import Loading from "@/app/loading";
 
 export default function InboxLayout({ children }) {
   const [skills, setSkills] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { data: session } = useSession();
-  const router = useRouter();
+  const router = useRouter();  
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -93,7 +93,7 @@ export default function InboxLayout({ children }) {
               <div
                 key={skill._id}
                 onClick={() => handleSkillClick(skill)}
-                className="flex items-center space-x-3 p-3 rounded-2xl cursor-pointer transition-all shadow-sm border border-white hover:shadow-lg     hover:scale-103  duration-300 "
+                className= "flex items-center space-x-3 p-3 rounded-2xl cursor-pointer transition-all shadow-sm border border-white hover:shadow-lg     hover:scale-103  duration-300 "
               >
                 {/* Avatar */}
                 <img

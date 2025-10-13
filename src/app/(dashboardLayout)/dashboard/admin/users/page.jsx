@@ -6,6 +6,7 @@ import { CheckCircle, XCircle, MessageSquare, Trash2 } from "lucide-react";
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchUsers();
@@ -13,10 +14,13 @@ export default function UsersPage() {
 
   const fetchUsers = async () => {
     try {
+      setLoading(true);
       const { data } = await axiosInstance.get("/users");
       setUsers(data);
     } catch (error) {
       console.error("Failed to fetch users", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,13 +79,23 @@ export default function UsersPage() {
     });
   };
 
+    //  Loader
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+
   return (
     <div>
-      <section className="max-w-6xl mx-auto mt-10 bg-white p-6 rounded-xl shadow">
+      <section className="max-w-6xl mx-auto  bg-white p-6 rounded-xl shadow">
         <h1 className="text-3xl font-bold mb-8 text-left">All Users</h1>
 
-        {/* Table screens for md and up */}
-        <div className="hidden md:block overflow-x-auto">
+        {/* Table screens for lg */}
+        <div className="hidden lg:block overflow-x-auto">
           <table className="w-full border border-gray-200 rounded-lg shadow-sm overflow-hidden">
 
             <thead className="border-b-2 border-gray-200">
@@ -182,8 +196,8 @@ export default function UsersPage() {
           </table>
         </div>
 
-        {/* Card for small screens */}
-        <div className="md:hidden space-y-4">
+        {/* Card for small / tab screens */}
+        <div className="lg:hidden space-y-4">
           {users.map((user) => (
             <div
               key={user._id}

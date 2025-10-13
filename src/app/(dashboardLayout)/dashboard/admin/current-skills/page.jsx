@@ -4,6 +4,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import Swal from "sweetalert2";
 import { Eye, EyeOff, Trash2, Info } from "lucide-react";
 import { MdOutlinePendingActions } from "react-icons/md";
+import Loading from "@/app/loading";
 
 export default function CurrentSkills() {
   const [skills, setSkills] = useState([]);
@@ -79,8 +80,8 @@ export default function CurrentSkills() {
   //  Loader
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center dark:bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen  flex items-center justify-center ">
+       <Loading></Loading>
       </div>
     );
   }

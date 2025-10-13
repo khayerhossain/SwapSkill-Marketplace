@@ -3,6 +3,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { CheckCircle, XCircle, MessageSquare, Trash2 } from "lucide-react";
+import Loading from "@/app/loading";
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -82,8 +83,8 @@ export default function UsersPage() {
     //  Loader
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center dark:bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen  flex items-center justify-center ">
+       <Loading></Loading>
       </div>
     );
   }
@@ -94,7 +95,7 @@ export default function UsersPage() {
       <section className="max-w-6xl mx-auto  bg-white p-6 rounded-xl shadow">
         <h1 className="text-3xl font-bold mb-8 text-left">All Users</h1>
 
-        {/* Table screens for lg all users data*/}
+        {/* Table screens for lg */}
         <div className="hidden lg:block overflow-x-auto">
           <table className="w-full border border-gray-200 rounded-lg shadow-sm overflow-hidden">
 

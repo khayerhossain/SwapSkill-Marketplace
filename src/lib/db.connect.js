@@ -14,7 +14,6 @@ export const collectionNamesObj = {
 
   notificationsCollection: "notifications", // new 
   userEarnCoinCollection :'earn-coin'
-
 };
 
 const uri = process.env.MONGODB_URI;

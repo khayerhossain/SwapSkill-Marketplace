@@ -3,6 +3,8 @@ import { Server } from "socket.io";
 let io;
 
 export const initSocketIO = (server) => {
+  if (io) return io; // Prevent multiple init
+
   io = new Server(server, {
     cors: {
       origin: process.env.NEXTAUTH_URL || "http://localhost:3000",
@@ -13,28 +15,28 @@ export const initSocketIO = (server) => {
   io.on("connection", (socket) => {
     console.log("User connected:", socket.id);
 
-    // User তাদের নিজের room এ join করবে
+    // Join personal room for notifications
     socket.on("join_user", (userId) => {
       socket.join(`user_${userId}`);
-      console.log(`User ${socket.id} joined user room: user_${userId}`);
+      console.log(`User ${socket.id} joined personal room: user_${userId}`);
     });
 
-    // Join a chat room
+    // Join chat room for 1:1 chat
     socket.on("join_chat", (chatId) => {
-      socket.join(chatId);
-      console.log(`User ${socket.id} joined chat ${chatId}`);
+      socket.join(`chat_${chatId}`);
+      console.log(`User ${socket.id} joined chat room: chat_${chatId}`);
     });
 
-    // Handle sending messages - FIXED NOTIFICATION
+    // Send message handler
     socket.on("send_message", async (data) => {
       try {
-        // Dynamic import for MongoDB
         const dbModule = await import('./db.connect.js');
         const dbConnect = dbModule.default;
-        const collectionNamesObj = dbModule.collectionNamesObj;
 
         const messagesCollection = await dbConnect('chat-messages');
-        
+        const chatsCollection = await dbConnect('chat-sessions');
+        const notificationsCollection = await dbConnect('notifications');
+
         const messageData = {
           chatId: data.chatId,
           senderId: data.senderId,
@@ -44,37 +46,29 @@ export const initSocketIO = (server) => {
           read: false
         };
 
+        // Save message in DB
         const result = await messagesCollection.insertOne(messageData);
         messageData._id = result.insertedId;
 
-        // Update chat session last message
-        const sessionsCollection = await dbConnect('chat-sessions');
-        await sessionsCollection.updateOne(
-          { _id: data.chatId },
-          { 
-            $set: { 
+        // Update chat last message
+        await chatsCollection.updateOne(
+          { _id: new dbModule.ObjectId(data.chatId) },
+          {
+            $set: {
               lastMessage: data.text,
               lastMessageTime: new Date(),
               updatedAt: new Date()
-            } 
+            }
           }
         );
 
-        // Get chat details for notification
-        const chat = await sessionsCollection.findOne({ _id: data.chatId });
-        if (!chat) {
-          console.error("Chat not found for notification");
-          return;
-        }
+        // Fetch chat to get receiver
+        const chat = await chatsCollection.findOne({ _id: new dbModule.ObjectId(data.chatId) });
+        if (!chat) return;
 
-        // Determine receiver ID
         const receiverId = data.senderId === chat.initiatorId ? chat.skillOwnerId : chat.initiatorId;
-        const receiverName = data.senderId === chat.initiatorId ? chat.skillOwnerName : chat.initiatorName;
 
-        console.log("Sending notification to:", receiverId);
-
-        // Create notification in database
-        const notificationsCollection = await dbConnect('notifications');
+        // Create notification for receiver
         const notificationResult = await notificationsCollection.insertOne({
           userId: receiverId,
           title: "New Message",
@@ -87,10 +81,10 @@ export const initSocketIO = (server) => {
           updatedAt: new Date()
         });
 
-        // Broadcast message to chat room
-        io.to(data.chatId).emit("receive_message", messageData);
-        
-        // Send real-time notification to receiver
+        // Emit message only to the chat room (1:1)
+        io.to(`chat_${data.chatId}`).emit("receive_message", messageData);
+
+        // Emit notification to receiver personal room
         io.to(`user_${receiverId}`).emit("new_notification", {
           notificationId: notificationResult.insertedId,
           title: "New Message",
@@ -100,40 +94,33 @@ export const initSocketIO = (server) => {
           createdAt: new Date()
         });
 
-        console.log("Notification sent successfully to user:", receiverId);
-
       } catch (error) {
-        console.error("Error sending message and notification:", error);
+        console.error("Error sending message:", error);
       }
     });
 
-    // Handle typing indicators
+    // Typing indicator
     socket.on("typing", (data) => {
-      socket.to(data.chatId).emit("user_typing", {
+      socket.to(`chat_${data.chatId}`).emit("user_typing", {
         userId: data.userId,
         userName: data.userName,
         isTyping: data.isTyping
       });
     });
 
-    // Handle message read status
+    // Mark messages as read
     socket.on("mark_messages_read", async (data) => {
       try {
         const dbModule = await import('./db.connect.js');
         const dbConnect = dbModule.default;
-
         const messagesCollection = await dbConnect('chat-messages');
-        
+
         await messagesCollection.updateMany(
-          { 
-            chatId: data.chatId, 
-            senderId: { $ne: data.userId },
-            read: false 
-          },
+          { chatId: data.chatId, senderId: { $ne: data.userId }, read: false },
           { $set: { read: true } }
         );
       } catch (error) {
-        console.error("Error marking messages as read:", error);
+        console.error("Error marking messages read:", error);
       }
     });
 
@@ -146,8 +133,6 @@ export const initSocketIO = (server) => {
 };
 
 export const getIO = () => {
-  if (!io) {
-    throw new Error("Socket.io not initialized");
-  }
+  if (!io) throw new Error("Socket.io not initialized");
   return io;
 };

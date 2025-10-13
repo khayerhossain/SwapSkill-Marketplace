@@ -41,7 +41,7 @@ export default function UsersPage() {
       text: "This user will be permanently deleted.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
+      confirmButtonColor: "#d33", 
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {

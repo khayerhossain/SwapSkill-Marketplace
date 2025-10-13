@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { Eye, EyeOff, Trash2, Info } from "lucide-react";
 import { MdOutlinePendingActions } from "react-icons/md";
 import Loading from "@/app/loading";
+import { FiXCircle } from "react-icons/fi";
 
 export default function CurrentSkills() {
   const [skills, setSkills] = useState([]);
@@ -88,20 +89,20 @@ export default function CurrentSkills() {
 
   //  mt-12
   return (
-    <section className="max-w-6xl mx-auto  p-6 sm:p-8 bg-white dark:bg-gray-900 rounded-2xl shadow-lg">
-      <h1 className="text-3xl font-bold mb-8 text-left dark:text-white">
+    <section className="max-w-6xl mx-auto  p-6 sm:p-8 bg-white  rounded-2xl shadow-lg">
+      <h1 className="text-3xl font-bold mb-8 text-left ">
         All Current Skills
       </h1>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div className="bg-white rounded-lg shadow p-6 border border-amber-50">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <p className="text-sm font-medium text-gray-600">
                 Total Skills
               </p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              <p className="text-2xl font-bold text-gray-900">
                 {skills.length}
               </p>
             </div>
@@ -111,10 +112,10 @@ export default function CurrentSkills() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div className="bg-white  rounded-lg shadow p-6 border border-amber-50">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <p className="text-sm font-medium text-gray-600">
                 Hidden
               </p>
               <p className="text-2xl font-bold text-yellow-600">
@@ -127,10 +128,10 @@ export default function CurrentSkills() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div className="bg-white rounded-lg shadow p-6 border border-amber-50 ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <p className="text-sm font-medium text-gray-600 ">
                 Showing
               </p>
               <p className="text-2xl font-bold text-green-600">
@@ -150,7 +151,7 @@ export default function CurrentSkills() {
           <thead className=" border-b-2 border-gray-200">
 
 
-            <tr>
+            <tr className="bg-gray-100">
               <th className="px-6 py-4 text-sm font-semibold  text-blue-600 dark:text-blue-400  text-center">Image</th>
               <th className="px-14 py-4 text-sm font-semibold text-blue-600 dark:text-blue-400">User</th>
               <th className="px-10 py-4 text-sm font-semibold text-blue-600 dark:text-blue-400">Category</th>
@@ -165,7 +166,7 @@ export default function CurrentSkills() {
               <tr
                 key={skill._id}
                 className={`${
-                  index % 2 === 0 ? "bg-white dark:bg-gray-900" : "bg-gray-50 dark:bg-gray-800"
+                  index % 2 === 0 ? "bg-white " : "bg-white "
                 }  transition`}
               >
                 <td className="px-6 py-4 text-center align-middle">
@@ -176,10 +177,10 @@ export default function CurrentSkills() {
                   />
                 </td>
                 <td className="px-6 py-4 align-middle">
-                  <p className="font-medium text-gray-800 dark:text-gray-200">{skill.userName}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{skill.contactInfo.email || "No email"}</p>
+                  <p className="font-medium text-gray-900 ">{skill.userName}</p>
+                  <p className="text-sm text-gray-800 ">{skill.contactInfo.email || "No email"}</p>
                 </td>
-                <td className="px-6 py-4 text-gray-700 dark:text-gray-300 align-middle">
+                <td className="px-6 py-4 text-gray-900  align-middle">
                   {skill.category || "N/A"}
                 </td>
                 <td className="px-6 py-4 text-center align-middle ">
@@ -187,8 +188,8 @@ export default function CurrentSkills() {
                     onClick={() => handleVisibilityToggle(skill._id, skill.visibility)}
                     className={`cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full font-medium text-sm shadow-sm transition ${
                       skill.visibility === "showing"
-                        ? "bg-green-100 text-green-700 hover:bg-green-200"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        ? "bg-green-100 text-green-800 hover:bg-green-200"
+                        : "bg-red-100 text-red-600 hover:bg-red-200"
                     }`}
                   >
                     {skill.visibility === "showing" ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
@@ -215,7 +216,7 @@ export default function CurrentSkills() {
             ))}
             {filteredSkills.length === 0 && (
               <tr>
-                <td colSpan="5" className="text-center py-10 text-gray-500 dark:text-gray-400 italic">
+                <td colSpan="5" className="text-center py-10 text-gray-900  italic">
                   No skills found...
                 </td>
               </tr>
@@ -229,7 +230,7 @@ export default function CurrentSkills() {
         {filteredSkills.map((skill) => (
           <div
             key={skill._id}
-            className="border rounded-xl p-4 shadow-md bg-white dark:bg-gray-800 hover:shadow-lg transition border-gray-200 dark:border-gray-700"
+            className="border rounded-xl p-4 shadow-md bg-white  hover:shadow-lg transition border-gray-200 dark:border-gray-700"
           >
             <div className="flex items-center gap-4">
               <img
@@ -238,9 +239,9 @@ export default function CurrentSkills() {
                 className="w-14 h-14 rounded-full object-cover border border-gray-300"
               />
               <div className="flex-1">
-                <p className="font-medium text-gray-800 dark:text-gray-200">{skill.userName}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{skill.contactInfo.email || "No email"}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">Category: {skill.category || "N/A"}</p>
+                <p className="font-medium text-gray-900 ">{skill.userName}</p>
+                <p className="text-sm text-gray-700">{skill.contactInfo.email || "No email"}</p>
+                <p className="text-sm text-gray-900  mt-1">Category: {skill.category || "N/A"}</p>
               </div>
             </div>
             <div className="flex flex-wrap items-center justify-between mt-4 gap-2">
@@ -249,7 +250,7 @@ export default function CurrentSkills() {
                 className={`flex items-center justify-center gap-2 px-4 py-1 rounded-lg font-medium text-sm shadow-sm transition ${
                   skill.visibility === "showing"
                     ? "bg-green-100 text-green-700 hover:bg-green-200"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    : "bg-red-100 text-red-600 hover:bg-red-200"
                 }`}
               >
                 {skill.visibility === "showing" ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
@@ -272,34 +273,46 @@ export default function CurrentSkills() {
           </div>
         ))}
         {filteredSkills.length === 0 && (
-          <p className="text-center text-gray-500 dark:text-gray-400 italic py-6">No skills found...</p>
+          <p className="text-center text-gray-900  italic py-6">No skills found...</p>
         )}
       </div>
 
       {/* Modal for Details */}
-      {selectedSkill && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-          <div className="bg-white dark:bg-gray-900 w-full max-w-lg p-6 rounded-xl shadow-2xl relative animate-fadeIn">
-            <button
-              onClick={() => setSelectedSkill(null)}
-              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white cursor-pointer"
-            >
-              ✕
-            </button>
-            <h3 className="text-2xl font-bold mb-4 text-indigo-600 dark:text-indigo-400">Skill Details</h3>
-            <div className="flex items-center gap-4 mb-4">
+            {selectedSkill && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 ">
+                <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden border border-amber-50">
+                  <div className="px-6 py-4 border-b border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-xl font-bold text-gray-900">Skill Details</h2>
+                      <button
+                        onClick={() => setSelectedSkill(null)}
+                        className="text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+                      >
+                        <FiXCircle size={24} />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+
+                    <div>
+
+                  <div className="flex items-center gap-4 mb-4">
               <img
                 src={selectedSkill.userImage || "/default-avatar.png"}
                 alt={selectedSkill.userName}
                 className="w-20 h-20 rounded-full border object-cover"
               />
               <div>
-                <p className="text-lg font-medium text-gray-800 dark:text-gray-200">{selectedSkill.userName}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-lg font-medium text-gray-900 ">{selectedSkill.userName}</p>
+                <p className="text-sm text-gray-900 ">
                   {selectedSkill.contactInfo?.email || "No Email"}
                 </p>
               </div>
-            </div>
+                  </div>
+
+                 <div>
+
             <p className="text-gray-700 dark:text-gray-300">
               <span className="font-semibold">Category:</span> {selectedSkill.category || "N/A"}
             </p>
@@ -315,9 +328,24 @@ export default function CurrentSkills() {
                 ? selectedSkill.visibility.charAt(0).toUpperCase() + selectedSkill.visibility.slice(1)
                 : "N/A"}
             </p>
-          </div>
-        </div>
-      )} 
+
+                 </div>
+
+                    </div>
+                    
+                    <div className="mt-6 flex justify-end space-x-3">
+                      <button
+                        onClick={() => setSelectedSkill(null)}
+                        className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-red-500 transition-colors cursor-pointer"
+                      >
+                        Close
+                      </button>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
 
     </section>

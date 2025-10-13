@@ -94,7 +94,7 @@ export default function UsersPage() {
       <section className="max-w-6xl mx-auto  bg-white p-6 rounded-xl shadow">
         <h1 className="text-3xl font-bold mb-8 text-left">All Users</h1>
 
-        {/* Table screens for lg */}
+        {/* Table screens for lg all users data*/}
         <div className="hidden lg:block overflow-x-auto">
           <table className="w-full border border-gray-200 rounded-lg shadow-sm overflow-hidden">
 

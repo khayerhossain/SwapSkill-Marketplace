@@ -509,7 +509,7 @@ export default function ManageSkills() {
                       : "bg-green-600 text-white hover:bg-green-700"
                   }`}
                 >
-                  Approve Attempt
+                  Approve Attempt.
                 </button>
               </div>
             </div>

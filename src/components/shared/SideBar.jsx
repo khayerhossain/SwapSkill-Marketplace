@@ -17,6 +17,7 @@ import {
   Wallet,
   Search,
 } from "lucide-react";
+import SavedItems from "@/app/(userLayots)/appBar/SavedItems/page";
 const Sidebar = ({
   onClick,
   useAppBarPaths = false,
@@ -84,7 +85,6 @@ const Sidebar = ({
   };
 
   const appBarItems = [
-    { name: "Home", icon: iconByName("Home"), path: "/" },
     { name: "Community", icon: iconByName("Community"), path: communityPath },
     { name: "Find Skills", icon: iconByName("Find Skills"), path: findSkillsPath },
     { name: "Profile", icon: iconByName("Profile"), path: profilePath },
@@ -93,6 +93,8 @@ const Sidebar = ({
     { name: "Resources", icon: iconByName("Resources"), path: resourcesPath },
     { name: "Earn Coin", icon: iconByName("Earn Coin"), path: earnCoin },
     { name: "Inbox", icon: iconByName("Inbox"), path: inboxPath },
+    { name: "Saved", icon: iconByName("Inbox"), path: "/appBar/SavedItems" },
+
   ];
 
   const dashboardItems = [

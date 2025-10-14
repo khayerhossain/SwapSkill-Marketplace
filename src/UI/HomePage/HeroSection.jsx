@@ -12,9 +12,9 @@ const HeroSection = () => {
           {/* Equal height flex layout */}
           <div className="flex flex-col lg:flex-row justify-between items-center gap-10 lg:gap-20 py-12">
             {/* ---------- LEFT CONTENT ---------- */}
-            <div className="space-y-8 flex-1 pl-4">
+            <div className="space-y-10 flex-[1.2] pl-4">
               <div className="space-y-4">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-foreground ">
+                <h1 className="text-4xl sm:text-5xl lg:text-[68px] font-bold leading-tight text-foreground">
                   Exchange Your Skills With{" "}
                   <span>
                     <span className="text-pink-500">S</span>
@@ -50,8 +50,8 @@ const HeroSection = () => {
             </div>
 
             {/* ---------- RIGHT IMAGE GRID ---------- */}
-            <div className="flex-1 flex justify-end items-center">
-              <div className="grid grid-cols-2 gap-5 w-full max-w-md">
+            <div className="flex-[0.8] flex justify-end items-center">
+              <div className="grid grid-cols-2 gap-5 w-full max-w-md ">
                 {[
                   "https://i.ibb.co.com/wFLb2p50/Gemini-Generated-Image-eanwmheanwmheanw.png",
                   "https://i.ibb.co.com/q34F7pFw/Gemini-Generated-Image-u4wg2iu4wg2iu4wg.png",

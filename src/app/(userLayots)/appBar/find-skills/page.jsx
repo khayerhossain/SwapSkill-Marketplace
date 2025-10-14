@@ -12,6 +12,7 @@ import {
   MapPin,
 } from "lucide-react";
 import Container from "@/components/shared/Container";
+import Loading from "@/app/loading";
 
 export default function SkillsPage() {
   const [skills, setSkills] = useState([]);
@@ -139,9 +140,8 @@ export default function SkillsPage() {
           )}
 
           {loading && (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="text-gray-500 mt-4">Loading skills...</p>
+            <div>              
+                <Loading/>              
             </div>
           )}
           

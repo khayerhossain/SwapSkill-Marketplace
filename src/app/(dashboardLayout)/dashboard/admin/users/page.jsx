@@ -96,27 +96,27 @@ export default function UsersPage() {
         <h1 className="text-3xl font-bold mb-8 text-left">All Users</h1>
 
         {/* Table screens for lg */}
-        <div className="hidden lg:block overflow-x-auto">
-          <table className="w-full border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+        <div className="hidden lg:block overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+          <table className="w-full border border-gray-200 rounded-lg shadow-sm overflow-hidden ">
 
             <thead className="border-b-2 border-gray-200">
 
             <tr className="bg-gray-100">
 
-               <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-400 text-center uppercase tracking-wide">
+               <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
              Profile
             </th>
 
-            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-400 text-center uppercase tracking-wide">
+            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
              Name
             </th>
-             <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-400 text-center uppercase tracking-wide">
+             <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
              Email
             </th>
-            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-400 text-center uppercase tracking-wide">
+            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
              Status
             </th>
-            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-400 text-center uppercase tracking-wide">
+            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
            Action
           </th>
          </tr>

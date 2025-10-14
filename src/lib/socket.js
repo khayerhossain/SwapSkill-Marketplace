@@ -130,6 +130,7 @@ export const initSocketIO = (server) => {
   });
 
   return io;
+  
 };
 
 export const getIO = () => {

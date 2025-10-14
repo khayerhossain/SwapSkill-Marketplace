@@ -314,13 +314,13 @@ useEffect(() => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8">
+    <div className="min-h-screen bg-white p-4 md:p-8">
       {/* Hero */}
       <div className="text-left mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
           Resources
         </h1>
-        <p className="text-gray-600 dark:text-gray-300 mt-2">
+        <p className="text-gray-600  mt-2">
           Learn, Share, and Grow with the community
         </p>
       </div>
@@ -334,7 +334,7 @@ useEffect(() => {
             placeholder="Search resources..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-l-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-400"
+            className="w-full pl-10 pr-4 py-2 rounded-l-lg border border-gray-300 dark:border-gray-700 bg-white  text-gray-900  focus:ring-2 focus:ring-indigo-400"
           />
         </div>
         <button
@@ -346,7 +346,7 @@ useEffect(() => {
       </div>
 
       {/* Create Post */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 mb-8">
+      <div className="bg-white  rounded-xl shadow p-4 mb-8">
         <div className="flex items-start gap-3 py-3">
           <img
             src={session?.user?.image || "https://i.pravatar.cc/40?img=10"}
@@ -354,10 +354,10 @@ useEffect(() => {
             className="w-10 h-10 rounded-full"
           />
           <div>
-            <p className="text-sm font-semibold dark:text-white">
+            <p className="text-sm font-semibold ">
               {session?.user?.name || "Guest User"}
             </p>
-            <p className="text-xs dark:text-white">
+            <p className="text-xs ">
               Share something with the resource
             </p>
           </div>
@@ -368,7 +368,7 @@ useEffect(() => {
             value={newPostText}
             onChange={(e) => setNewPostText(e.target.value)}
             placeholder="What's on your mind?"
-            className="w-full resize-none bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm dark:border dark:border-gray-300"
+            className="w-full resize-none bg-gray-100  text-gray-800  rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm border border-gray-300"
             rows={2}
           />
 
@@ -391,7 +391,7 @@ useEffect(() => {
           )}
 
           <div className="flex items-center justify-between mt-3">
-            <div className="flex gap-4 text-gray-600 dark:text-gray-300">
+            <div className="flex gap-4 text-gray-600 ">
               <input
                 type="file"
                 accept="image/*"
@@ -443,9 +443,9 @@ useEffect(() => {
       {/* Emoji Picker */}
       {showEmojiModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg relative">
+          <div className="bg-white  rounded-2xl p-4 shadow-lg relative border border-indigo-700">
             <button
-              className="absolute top-0 right-0 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 cursor-pointer"
+              className="absolute top-0 right-0 text-gray-500 hover:text-gray-800  cursor-pointer"
               onClick={() => setShowEmojiModal(false)}
             >
               <X className="w-5 h-5" />
@@ -467,7 +467,7 @@ useEffect(() => {
             return (
               <div
                 key={res._id}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow p-5 hover:shadow-lg transition relative dark:border dark:border-gray-300 flex flex-col"
+                className="bg-white  rounded-xl shadow p-5 hover:shadow-lg transition relative border border-gray-300 flex flex-col"
               >
                 {/* User Delete */}
                 {session?.user?.email === res.userEmail && (
@@ -487,7 +487,7 @@ useEffect(() => {
                     alt={res.userName}
                     className="w-10 h-10 rounded-full"
                   />
-                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                  <span className="font-medium text-gray-900 ">
                     {res.userName}
                   </span>
                 </div>
@@ -496,8 +496,8 @@ useEffect(() => {
                 <div
                   className={`${
                     hasMedia
-                      ? "text-lg font-semibold text-gray-900 dark:text-white mb-2"
-                      : "flex-1 flex items-center justify-center text-center text-lg font-semibold text-gray-900 dark:text-white"
+                      ? "text-lg font-semibold text-gray-900  mb-2"
+                      : "flex-1 flex items-center justify-center text-center text-lg font-semibold text-gray-900 "
                   }`}
                 >
                   {res.title}
@@ -523,7 +523,7 @@ useEffect(() => {
                 )}
 
                 {/* Actions */}
-                <div className="flex justify-between items-center text-gray-600 dark:text-gray-300 mt-auto min-h-[50px] border-t border-gray-200 dark:border-gray-700 pt-3">
+                <div className="flex justify-between items-center text-gray-600  mt-auto min-h-[50px] border-t border-gray-200 dark:border-gray-700 pt-3">
                   <div className="flex gap-5">
                     <button
                       onClick={() => handleLike(res._id)}
@@ -571,7 +571,7 @@ useEffect(() => {
                 {/* Show Comments */}
                 {expandedComments[res._id] &&
                   res.comments?.length > 0 && (
-                    <div className="mt-2 text-sm text-gray-600 dark:text-gray-300 border-t border-gray-200 dark:border-gray-700 pt-2">
+                    <div className="mt-2 text-sm text-gray-600  border-t border-gray-200 dark:border-gray-700 pt-2">
                       {res.comments.map((c, i) => (
                         <p key={i} className="mb-1">
                           <strong>{c.userName}:</strong> {c.text}
@@ -583,7 +583,7 @@ useEffect(() => {
             );
           })
         ) : (
-          <p className="text-gray-600 dark:text-gray-300 col-span-full text-center">
+          <p className="text-gray-900  col-span-full text-center">
             No resources found.
           </p>
         )}

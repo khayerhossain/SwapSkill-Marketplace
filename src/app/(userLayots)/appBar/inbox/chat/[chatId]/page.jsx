@@ -42,7 +42,9 @@ export default function ChatPage() {
     if (!session?.user?.id) return;
 
     // Initialize socket connection
-    socket = io(process.env.NEXTAUTH_URL || 'http://localhost:3000');
+    socket = io(process.env.NEXTAUTH_URL || 'http://localhost:3000',{
+      query: { userId: session.user.id },
+    });
     
     socket.on('connect', () => {
       setIsConnected(true);
@@ -93,7 +95,9 @@ export default function ChatPage() {
     loadChatData();
 
     return () => {
-      if (socket) {
+      if (socket) {    
+
+        
         socket.off('receive_message');
         socket.off('user_typing');
         socket.off('new_notification');

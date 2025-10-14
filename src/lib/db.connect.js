@@ -1,21 +1,8 @@
+
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-export const collectionNamesObj = {
-  usersCollection: "users",
-  skillsDirectoryCollection: "skills-directory",
-  newsLatterSubscribersCollection: "subscribers",
-  paymentCollection :'payment',
-  testQNACollection: "test-qna",
-  chatMessagesCollection: "chat-messages", // new
-  chatSessionsCollection: "chat-sessions", // new
-  notificationsCollection: "notifications" // new
-};
-
 const uri = process.env.MONGODB_URI;
-
-if (!uri) {
-  throw new Error("Please add MONGODB_URI in .env.local");
-}
+if (!uri) throw new Error("Please add MONGODB_URI in .env.local");
 
 let client;
 let clientPromise;
@@ -47,3 +34,15 @@ export default async function dbConnect(collectionName) {
   const conn = await clientPromise;
   return conn.db("swap-skill").collection(collectionName);
 }
+
+export const collectionNamesObj = {
+  usersCollection: "users",
+  skillsDirectoryCollection: "skills-directory",
+  newsLatterSubscribersCollection: "subscribers",
+  paymentCollection: "payment",
+  testQNACollection: "test-qna",
+  chatMessagesCollection: "chat-messages",
+  chatSessionsCollection: "chat-sessions",
+  notificationsCollection: "notifications",
+  postsCollection: "posts",
+};

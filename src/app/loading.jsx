@@ -5,3 +5,4 @@ export default function Loading() {
     <div className='text-center min-h-screen text-red-500'>Loading...</div>
   )
 }
+

@@ -152,11 +152,11 @@ export default function CurrentSkills() {
 
 
             <tr className="bg-gray-100">
-              <th className="px-6 py-4 text-sm font-semibold  text-blue-600 dark:text-blue-400  text-center">Image</th>
-              <th className="px-14 py-4 text-sm font-semibold text-blue-600 dark:text-blue-400">User</th>
-              <th className="px-10 py-4 text-sm font-semibold text-blue-600 dark:text-blue-400">Category</th>
-              <th className="px-6 py-4 text-sm font-semibold text-blue-600 dark:text-blue-400 text-center">Visibility</th>
-              <th className="px-6 py-4 text-sm font-semibold text-blue-600 dark:text-blue-400 text-center">Actions</th>
+              <th className="px-6 py-4 text-sm font-semibold  text-blue-600 dark:text-blue-500  text-center">Image</th>
+              <th className="px-14 py-4 text-sm font-semibold text-blue-600 dark:text-blue-500">User</th>
+              <th className="px-10 py-4 text-sm font-semibold text-blue-600 dark:text-blue-500">Category</th>
+              <th className="px-6 py-4 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center">Visibility</th>
+              <th className="px-6 py-4 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center">Actions</th>
             </tr>
 
 

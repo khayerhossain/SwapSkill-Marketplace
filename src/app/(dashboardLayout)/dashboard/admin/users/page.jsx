@@ -103,20 +103,20 @@ export default function UsersPage() {
 
             <tr className="bg-gray-100">
 
-               <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-400 text-center uppercase tracking-wide">
+               <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
              Profile
             </th>
 
-            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-400 text-center uppercase tracking-wide">
+            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
              Name
             </th>
-             <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-400 text-center uppercase tracking-wide">
+             <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
              Email
             </th>
-            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-400 text-center uppercase tracking-wide">
+            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
              Status
             </th>
-            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-400 text-center uppercase tracking-wide">
+            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
            Action
           </th>
          </tr>

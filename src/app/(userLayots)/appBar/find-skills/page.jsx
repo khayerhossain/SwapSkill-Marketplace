@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import axiosInstance from "@/lib/axiosInstance";
 import {
   MessageSquare,
   Eye,
@@ -30,15 +31,12 @@ export default function SkillsPage() {
       try {
         console.log("Fetching skills with params:", { searchQuery, page, limit, sort });
         
-        const res = await fetch(
-          `/api/find-skills?search=${encodeURIComponent(searchQuery)}&page=${page}&limit=${limit}&sort=${sort}`
+        const { data } = await axiosInstance.get(
+          `/find-skills`,
+          {
+            params: { search: searchQuery, page, limit, sort },
+          }
         );
-        
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        
-        const data = await res.json();
         console.log("API response:", data);
         
         if (data.success) {

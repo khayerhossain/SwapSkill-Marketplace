@@ -21,6 +21,8 @@ export async function GET(request) {
       });
     }
     
+    console.log("Fetching notifications for user:", userId);
+    
     const notificationsCollection = await dbConnect(collectionNamesObj.notificationsCollection);
     
     const notifications = await notificationsCollection
@@ -29,12 +31,23 @@ export async function GET(request) {
       .limit(50)
       .toArray();
 
-    return new Response(JSON.stringify({ success: true, notifications }), {
+    console.log("Found notifications:", notifications.length);
+
+    return new Response(JSON.stringify({ 
+      success: true, 
+      notifications: notifications.map(notif => ({
+        ...notif,
+        _id: notif._id.toString()
+      }))
+    }), {
       status: 200,
     });
   } catch (error) {
     console.error("Error fetching notifications:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      success: false,
+      error: error.message 
+    }), {
       status: 500,
     });
   }
@@ -54,10 +67,15 @@ export async function POST(request) {
     const { userId, title, message, type, chatId, relatedId } = body;
     
     if (!userId || !title || !message) {
-      return new Response(JSON.stringify({ error: "Missing required fields" }), {
+      return new Response(JSON.stringify({ 
+        success: false,
+        error: "Missing required fields: userId, title, message" 
+      }), {
         status: 400,
       });
     }
+    
+    console.log("Creating notification for user:", userId, "Title:", title);
     
     const notificationsCollection = await dbConnect(collectionNamesObj.notificationsCollection);
     
@@ -74,17 +92,25 @@ export async function POST(request) {
     };
 
     const result = await notificationsCollection.insertOne(newNotification);
+    
+    console.log("Notification created successfully:", result.insertedId);
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        notification: { ...newNotification, _id: result.insertedId } 
+        notification: { 
+          ...newNotification, 
+          _id: result.insertedId.toString() 
+        } 
       }), 
       { status: 201 }
     );
   } catch (error) {
     console.error("Error creating notification:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      success: false,
+      error: error.message 
+    }), {
       status: 500,
     });
   }
@@ -107,10 +133,13 @@ export async function PUT(request) {
     
     if (markAll && userId) {
       // Mark all notifications as read for user
+      console.log("Marking all notifications as read for user:", userId);
       const result = await notificationsCollection.updateMany(
         { userId: userId, read: false },
         { $set: { read: true, updatedAt: new Date() } }
       );
+      
+      console.log("Marked notifications as read:", result.modifiedCount);
       
       return new Response(JSON.stringify({ 
         success: true, 
@@ -120,6 +149,7 @@ export async function PUT(request) {
       });
     } else if (notificationId) {
       // Mark single notification as read
+      console.log("Marking notification as read:", notificationId);
       await notificationsCollection.updateOne(
         { _id: new ObjectId(notificationId) },
         { $set: { read: true, updatedAt: new Date() } }
@@ -129,13 +159,19 @@ export async function PUT(request) {
         status: 200,
       });
     } else {
-      return new Response(JSON.stringify({ error: "Notification ID or markAll with userId is required" }), {
+      return new Response(JSON.stringify({ 
+        success: false,
+        error: "Notification ID or markAll with userId is required" 
+      }), {
         status: 400,
       });
     }
   } catch (error) {
     console.error("Error updating notification:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      success: false,
+      error: error.message 
+    }), {
       status: 500,
     });
   }

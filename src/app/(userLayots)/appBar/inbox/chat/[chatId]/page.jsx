@@ -20,6 +20,7 @@ import {
   Check,
   CheckCheck
 } from 'lucide-react';
+import Loading from '@/app/loading';
 
 let socket;
 
@@ -32,7 +33,7 @@ export default function ChatPage() {
   const [chat, setChat] = useState(null);
   const [typing, setTyping] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -288,33 +289,20 @@ export default function ChatPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading chat...</p>
-        </div>
+       <Loading/>
       </div>
     );
   }
+
+    const otherUser = getOtherUser();
 
   if (!chat) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center bg-white p-8 rounded-2xl shadow-lg">
-          <div className="text-6xl mb-4">💬</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Chat Not Found</h2>
-          <p className="text-gray-600 mb-4">The chat you're looking for doesn't exist.</p>
-          <button
-            onClick={() => router.back()}
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Go Back
-          </button>
-        </div>
+        
       </div>
     );
   }
-
-  const otherUser = getOtherUser();
 
   return (
     <div className="min-h-screen bg-gray-50 flex ">
@@ -325,7 +313,7 @@ export default function ChatPage() {
           <div className="flex items-center space-x-3">
             <button
               onClick={() => router.back()}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors lg:hidden"
+              className="p-2 btn  rounded-full transition-colors "
             >
               <ArrowLeft size={20} className="text-gray-600" />
             </button>

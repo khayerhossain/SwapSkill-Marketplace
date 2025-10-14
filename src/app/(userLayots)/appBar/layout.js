@@ -35,7 +35,7 @@ export default function AppBarLayout({ children }) {
         </div>
 
         {/* Main Content */}
-        <div className={`w-full ${collapsed ? "md:pl-[6rem]" : "md:pl-[20%]"} pr-2`}>
+        <div className={`w-full ${collapsed ? "md:pl-[6rem]" : "md:pl-[20%]"} pr-2 `}>
           <header className="flex items-center justify-between p-4 border-b border-base-300 bg-white sticky top-0 z-40">
             <div className="flex items-center gap-3">
               {/* Mobile Menu Button */}
@@ -49,7 +49,7 @@ export default function AppBarLayout({ children }) {
               <h1 className="text-xl font-bold text-gray-800">App Bar</h1>
             </div>
             
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 ">
               {/* Notification Dropdown */}
                <NotificationDropdown />
               

@@ -19,6 +19,8 @@ export default function NavbarPage() {
   // Base links; role-specific link appended below
   const baseLinks = [
     { name: "Home", path: "/" },
+    { name: "About", path: "#about" },
+    { name: "Current Skills", path: "#current-skills" },
     { name: "Features", path: "/features" },
     { name: "Pricing", path: "/pricing" },
   ];

@@ -8,6 +8,8 @@ import { FiLogOut } from "react-icons/fi";
 import { IoMdClose, IoMdMenu } from "react-icons/io";
 import NotificationDropdown from "@/components/shared/NotificationDropdown";
 import Link from "next/link";
+import { ClipboardList } from "lucide-react";
+import Image from "next/image";
 
 export default function AppBarLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -64,6 +66,9 @@ export default function AppBarLayout({ children }) {
             </div>
 
             <div className="flex items-center gap-4 ">
+              <Link href="appBar/leader-board">
+                <ClipboardList />
+              </Link>
               {/* Notification Dropdown */}
               <NotificationDropdown />
 
@@ -71,9 +76,18 @@ export default function AppBarLayout({ children }) {
               {session?.user && (
                 <Link
                   href="/dashboard/profile"
-                  className="px-4 py-2 rounded-full bg-gray-100 text-gray-800 font-medium hover:bg-gray-200 transition-colors"
+                  className="flex items-center gap-2 px-2 py-1 rounded-full bg-gray-100 text-gray-800 font-medium hover:bg-gray-200 transition-colors"
                 >
-                  {session.user.name || "Profile"}
+                  <Image
+                    src={session.user.image}
+                    alt={session.user.name || "Profile"}
+                    width={32}
+                    height={32}
+                    className="rounded-full object-cover"
+                  />
+                  <span className="hidden lg:block">
+                    {session.user.name || "Profile"}
+                  </span>
                 </Link>
               )}
 

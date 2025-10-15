@@ -65,7 +65,7 @@ const NotificationDropdown = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-16 z-50 w-96 bg-white rounded-3xl shadow-2xl border-2 border-gray-100 overflow-hidden">
+        <div className="absolute right-0 top-16 z-50 w-96 bg-white rounded-3xl shadow-2xl border-2 border-gray-100 overflow-hidden cursor-pointer">
           <div className="flex1 flex  items-center justify-between p-6  border-b-2 border-gray-100">
             <h3 className="font-bold flex items-center justify-center gap-2 text-gray-800 text-xl">
               <IoMdNotifications size={28} />

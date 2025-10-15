@@ -132,7 +132,7 @@ export default function ProfilePage() {
 
   const handleSave = async () => {
     if (!editData.name?.trim()) {
-      setMessage("⚠️ Name is required");
+      setMessage(" Name is required");
       return;
     }
 

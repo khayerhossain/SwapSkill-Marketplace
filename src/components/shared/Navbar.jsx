@@ -24,11 +24,12 @@ export default function NavbarPage() {
     { name: "Features", path: "/features" },
     { name: "Pricing", path: "/pricing" },
   ];
-  const roleLinks = session?.user?.role === "admin"
-    ? [{ name: "Dashboard", path: "/dashboard" }]
-    : session?.user?.role === "user"
-    ? [{ name: "AppBar", path: "/appBar" }]
-    : [];
+  const roleLinks =
+    session?.user?.role === "admin"
+      ? [{ name: "Dashboard", path: "/dashboard" }]
+      : session?.user?.role === "user"
+      ? [{ name: "AppBar", path: "/appBar" }]
+      : [];
   const navLinks = [...baseLinks, ...roleLinks];
 
   return (
@@ -85,7 +86,7 @@ export default function NavbarPage() {
               <Image
                 src={logo}
                 alt="logo"
-                className={`w-12 h-8 ${theme ==='light' ? '' : ""} `}
+                className={`w-12 h-8 ${theme === "light" ? "" : ""} `}
               />
               <h1 className="font-light">SwapSkill</h1>
             </Link>
@@ -117,12 +118,20 @@ export default function NavbarPage() {
 
           {/* Navbar End: Profile + Auth */}
           <div className="navbar-end flex items-center gap-2 px-0">
-            {session?.user?.name && (
-              <div className="px-3 py-3 rounded-full bg-base-200 text-base-content font-medium">
-                {session.user.name}
-              </div>
+            {session?.user && (
+              <Link
+                href="/dashboard/profile"
+                className="flex items-center gap-2 px-1 py-1 rounded-full bg-gray-100 text-gray-800 font-medium hover:bg-gray-200 transition-colors"
+              >
+                <Image
+                  src={session.user.image}
+                  alt={session.user.name || "Profile"}
+                  width={32}
+                  height={32}
+                  className="rounded-full object-cover"
+                />
+              </Link>
             )}
-
             {session ? (
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
@@ -132,10 +141,16 @@ export default function NavbarPage() {
               </button>
             ) : (
               <>
-                <Link href="/login" className="btn bg-gray-800 rounded-lg text-white">
+                <Link
+                  href="/login"
+                  className="btn bg-gray-800 rounded-lg text-white"
+                >
                   Sign In
                 </Link>
-                <Link href="/register" className="btn bg-red-500 text-white rounded-lg">
+                <Link
+                  href="/register"
+                  className="btn bg-red-500 text-white rounded-lg"
+                >
                   Sign Up
                 </Link>
               </>

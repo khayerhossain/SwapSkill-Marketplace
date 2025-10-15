@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { io } from "socket.io-client";
-import {
-  ArrowLeft,
-  Send,
-  Clock,
+import { useState, useEffect, useRef } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { io } from 'socket.io-client';
+import { 
+  ArrowLeft, 
+  Send, 
+  Clock, 
   MoreVertical,
   Image,
   Smile,
@@ -18,9 +18,9 @@ import {
   Info,
   Search,
   Check,
-  CheckCheck,
-} from "lucide-react";
-import Loading from "@/app/loading";
+  CheckCheck
+} from 'lucide-react';
+import Loading from '@/app/loading';
 
 let socket;
 
@@ -28,71 +28,94 @@ export default function ChatPage() {
   const { chatId } = useParams();
   const { data: session } = useSession();
   const router = useRouter();
-
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
+  const [newMessage, setNewMessage] = useState('');
   const [chat, setChat] = useState(null);
   const [typing, setTyping] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
+    // Check if mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    // Socket and chat functionality
     if (!session?.user?.id) return;
 
-    socket = io(process.env.NEXTAUTH_URL || "http://localhost:3000", {
+    // Initialize socket connection
+    socket = io(process.env.NEXTAUTH_URL || 'http://localhost:3000',{
       query: { userId: session.user.id },
     });
-
-    socket.on("connect", () => {
+    
+    socket.on('connect', () => {
       setIsConnected(true);
       console.log("Socket connected");
-
-      socket.emit("join_user", session.user.id);
-      socket.emit("join_chat", chatId);
+      
+      // Join user's personal room for notifications
+      socket.emit('join_user', session.user.id);
+      
+      // Join chat room
+      socket.emit('join_chat', chatId);
     });
 
-    socket.on("disconnect", () => {
+    socket.on('disconnect', () => {
       setIsConnected(false);
       console.log("Socket disconnected");
     });
 
-    socket.on("receive_message", (message) => {
+    // Listen for new messages
+    socket.on('receive_message', (message) => {
       console.log("New message received:", message);
-      setMessages((prev) => [...prev, message]);
+      setMessages(prev => [...prev, message]);
       scrollToBottom();
-
+      
+      // Mark as read if it's the current user's chat
       if (message.senderId !== session?.user?.id) {
-        socket.emit("mark_messages_read", {
-          chatId,
-          userId: session?.user?.id,
+        socket.emit('mark_messages_read', {
+          chatId: chatId,
+          userId: session?.user?.id
         });
       }
     });
 
-    socket.on("user_typing", (data) => {
+    // Listen for typing indicators
+    socket.on('user_typing', (data) => {
       if (data.userId !== session?.user?.id) {
         setTyping(data.isTyping);
+        
         if (data.isTyping) {
           clearTimeout(typingTimeoutRef.current);
-          typingTimeoutRef.current = setTimeout(() => setTyping(false), 3000);
+          typingTimeoutRef.current = setTimeout(() => {
+            setTyping(false);
+          }, 3000);
         }
       }
     });
 
+    // Load chat details and messages
     loadChatData();
 
     return () => {
-      if (socket) {
-        socket.off("receive_message");
-        socket.off("user_typing");
-        socket.off("new_notification");
+      window.removeEventListener('resize', checkMobile);
+      
+      if (socket) {    
+        socket.off('receive_message');
+        socket.off('user_typing');
+        socket.off('new_notification');
         socket.disconnect();
       }
-      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
     };
   }, [chatId, session]);
 
@@ -258,43 +281,57 @@ export default function ChatPage() {
 
   return (
     <div className="h-[calc(100vh-100px)] flex justify-center bg-gray-50">
+      {/* Main Chat Area */}
       <div className="flex flex-col w-full max-w-4xl bg-white shadow-lg border border-gray-200 rounded-2xl overflow-hidden">
-        {/* Header */}
+        {/* Header - Messenger Style */}
         <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center space-x-3">
-            <button
-              onClick={() => router.back()}
-              className="p-2 btn rounded-full transition-colors"
-            >
-              <ArrowLeft size={20} className="text-gray-600" />
-            </button>
+            {/* Mobile Back Button */}
+            {isMobile && (
+              <button
+                onClick={() => router.push('/appBar/inbox')}
+                className="p-2 btn rounded-full transition-colors"
+              >
+                <ArrowLeft size={20} className="text-gray-600" />
+              </button>
+            )}
+            
+            {/* Desktop Back Button */}
+            {!isMobile && (
+              <button
+                onClick={() => router.back()}
+                className="p-2 btn rounded-full transition-colors"
+              >
+                <ArrowLeft size={20} className="text-gray-600" />
+              </button>
+            )}
+            
             <div className="flex items-center space-x-3">
               <div className="relative">
                 <img
-                  src={`https://ui-avatars.com/api/?name=${
-                    otherUser?.name || "User"
-                  }&background=007bff&color=fff`}
+                  src={`https://ui-avatars.com/api/?name=${otherUser?.name || 'User'}&background=007bff&color=fff`}
                   alt={otherUser?.name}
                   className="w-10 h-10 rounded-full object-cover"
                 />
-                <div
-                  className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
-                    isConnected ? "bg-green-500" : "bg-gray-400"
-                  }`}
-                />
+                <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
+                  isConnected ? 'bg-green-500' : 'bg-gray-400'
+                }`} />
               </div>
+              
               <div>
                 <h1 className="font-semibold text-gray-800 text-lg">
                   {otherUser?.name}
                 </h1>
                 <p className="text-sm text-gray-500">
-                  {isConnected ? "Active now" : "Offline"}{" "}
-                  {typing && " • Typing..."}
+                  {isConnected ? 'Active now' : 'Offline'}
+                  {typing && ' • Typing...'}
                 </p>
               </div>
             </div>
           </div>
+
           <div className="flex items-center space-x-2">
+            {/* Action Buttons */}
             <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
               <Phone size={20} className="text-gray-600" />
             </button>

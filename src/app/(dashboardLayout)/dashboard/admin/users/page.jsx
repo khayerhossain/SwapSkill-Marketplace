@@ -46,16 +46,14 @@ export default function UsersPage() {
       text: "This user will be permanently deleted.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33", 
+      confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           await axiosInstance.delete(`/users?id=${id}`);
-          setUsers((prev) =>
-            prev.filter((u) => String(u._id) !== String(id))
-          );
+          setUsers((prev) => prev.filter((u) => String(u._id) !== String(id)));
           Swal.fire("Deleted!", "User has been removed.", "success");
         } catch (error) {
           Swal.fire("Error!", "Failed to delete user.", "error");
@@ -75,119 +73,112 @@ export default function UsersPage() {
     }).then((result) => {
       if (result.isConfirmed && result.value) {
         Swal.fire("Sent!", `Message sent to ${user.email}`, "success");
-        
       }
     });
   };
 
-    //  Loader
   if (loading) {
     return (
-      <div className="min-h-screen  flex items-center justify-center ">
-       <Loading></Loading>
+      <div className="min-h-screen">
+        <Loading />
       </div>
     );
   }
 
-
   return (
     <div>
-      <section className="max-w-6xl mx-auto  bg-white p-6 rounded-xl shadow">
-        <h1 className="text-3xl font-bold mb-8 text-left">All Users</h1>
+      <section className="mx-auto bg-transparent p-6 rounded-2xl">
+        <h1 className="text-3xl font-bold mb-8 text-left text-gray-200">
+          All Users
+        </h1>
 
-        {/* Table screens for lg */}
-        <div className="hidden lg:block overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
-          <table className="w-full border border-gray-200 rounded-lg shadow-sm overflow-hidden ">
+        {/* Desktop Table */}
+        <div className="hidden lg:block overflow-x-auto rounded-xl backdrop-blur-xl bg-[#0a0a0a]/70 border border-white/10 shadow-sm">
+          <table className="w-full rounded-lg overflow-hidden text-gray-200">
+            <thead className="border-b border-white/10 bg-white/5">
+              <tr>
+                <th className="px-6 py-4 text-sm font-semibold text-gray-300 uppercase text-center">
+                  Profile
+                </th>
+                <th className="px-6 py-4 text-sm font-semibold text-gray-300 uppercase text-center">
+                  Name
+                </th>
+                <th className="px-6 py-4 text-sm font-semibold text-gray-300 uppercase text-center">
+                  Email
+                </th>
+                <th className="px-6 py-4 text-sm font-semibold text-gray-300 uppercase text-center">
+                  Status
+                </th>
+                <th className="px-6 py-4 text-sm font-semibold text-gray-300 uppercase text-center">
+                  Actions
+                </th>
+              </tr>
+            </thead>
 
-            <thead className="border-b-2 border-gray-200">
-
-            <tr className="bg-gray-100">
-
-               <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
-             Profile
-            </th>
-
-            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
-             Name
-            </th>
-             <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
-             Email
-            </th>
-            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
-             Status
-            </th>
-            <th className="px-4 py-2 md:px-6 md:py-3 text-sm font-semibold text-blue-600 dark:text-blue-500 text-center uppercase tracking-wide">
-           Action
-          </th>
-         </tr>
-         </thead>
-
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-white/10">
               {users.map((user, index) => (
                 <tr
                   key={user._id}
-                  className={` transition ${
-                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  className={`transition ${
+                    index % 2 === 0 ? "bg-white/5" : "bg-white/10"
                   }`}
                 >
-
-                <td className="px-4 py-2 md:px-6 md:py-4 text-center">
-                 <img
-                   src={user.photo || " No Photo "}
-                   alt={user.name}
-                   className="w-10 h-10 rounded-full mx-auto object-cover border"
-                  />
-                 </td>
-
-                  <td className="px-4 py-2 md:px-6 md:py-4 text-center font-medium text-gray-700">
+                  <td className="px-6 py-4 text-center">
+                    <img
+                      src={user.photo || "/default-avatar.png"}
+                      alt={user.name}
+                      className="w-10 h-10 rounded-full mx-auto object-cover border border-white/20"
+                    />
+                  </td>
+                  <td className="px-6 py-4 text-center font-medium">
                     {user.name}
                   </td>
-                  <td className="px-4 py-2 md:px-6 md:py-4 text-center text-gray-600">
+                  <td className="px-6 py-4 text-center text-gray-400">
                     {user.email}
                   </td>
-                  <td className="px-4 py-2 md:px-6 md:py-4 text-center">
-                 <button
-               onClick={() => handleStatusToggle(user._id, user.status)}
-             className={`flex cursor-pointer items-center justify-center gap-2 px-4 py-1.5 rounded-full font-medium text-sm shadow-md transition duration-200 mx-auto
-                  ${
-               user.status === "active"
-                ? "bg-green-100 text-green-700 border border-green-300 hover:bg-green-200"
-              : "bg-red-100 text-red-700 border border-red-300 hover:bg-red-200"
-                }`}
-                >
-             {user.status === "active" ? (
-               <>
-             <CheckCircle className="w-4 h-4" /> Active
-              </>
-                ) : (
-              <>
-              <XCircle className="w-4 h-4" /> Deactive
-               </>
-                )}
-              </button>
-
+                  <td className="px-6 py-4 text-center">
+                    <button
+                      onClick={() => handleStatusToggle(user._id, user.status)}
+                      className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full font-medium text-sm transition cursor-pointer shadow-none focus:outline-none ${
+                        user.status === "active"
+                          ? "bg-green-900/40 text-green-300 hover:bg-green-900/60"
+                          : "bg-red-900/40 text-red-300 hover:bg-red-900/60"
+                      }`}
+                    >
+                      {user.status === "active" ? (
+                        <>
+                          <CheckCircle className="w-4 h-4" /> Active
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="w-4 h-4" /> Deactive
+                        </>
+                      )}
+                    </button>
                   </td>
-                  <td className="px-4 py-2 md:px-6 md:py-4 text-center flex flex-wrap gap-2 justify-center">
-                    <button
-                      onClick={() => handleMessage(user)}
-                      className="bg-blue-500 cursor-pointer text-white px-2 md:px-3 py-1 md:py-2 rounded-lg shadow hover:bg-blue-600 transition text-xs md:text-sm flex items-center gap-1"
-                    >
-                      <MessageSquare className="w-4 h-4" /> 
-                    </button>
-                    <button
-                      onClick={() => handleRemove(user._id)}
-                      className="bg-red-500 cursor-pointer text-white px-2 md:px-3 py-1 md:py-2 rounded-lg shadow hover:bg-red-600 transition text-xs md:text-sm flex items-center gap-1"
-                    >
-                      <Trash2 className="w-4 h-4" /> 
-                    </button>
+                  <td className="px-6 py-4 text-center">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => handleMessage(user)}
+                        className="bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg text-sm flex items-center gap-1"
+                      >
+                        <MessageSquare className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleRemove(user._id)}
+                        className="bg-red-700 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-sm flex items-center gap-1"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
               {users.length === 0 && (
                 <tr>
                   <td
-                    colSpan="4"
-                    className="text-center py-6 text-gray-500 italic"
+                    colSpan="5"
+                    className="text-center py-10 text-gray-400 italic"
                   >
                     No users found...
                   </td>
@@ -197,51 +188,55 @@ export default function UsersPage() {
           </table>
         </div>
 
-        {/* Card for small / tab screens */}
+        {/* Mobile Cards */}
         <div className="lg:hidden space-y-4">
           {users.map((user) => (
             <div
               key={user._id}
-              className="border rounded-xl p-4 shadow-sm bg-gray-50"
+              className="border rounded-xl p-4 shadow-md bg-white hover:shadow-lg transition"
             >
-
               <div className="flex items-center gap-3">
-              <img
-               src={user.photo || "/default-avatar.png"}
-               alt={user.name}
-               className="w-12 h-12 rounded-full object-cover border"
-               />
-               <div>
-                <p className="font-semibold text-gray-800">{user.name}</p>
-                <p className="text-gray-600 text-sm">{user.email}</p>
-                 </div>
-               </div>
-               
+                <img
+                  src={user.photo || "/default-avatar.png"}
+                  alt={user.name}
+                  className="w-12 h-12 rounded-full object-cover border border-gray-300"
+                />
+                <div>
+                  <p className="font-semibold text-gray-800">{user.name}</p>
+                  <p className="text-gray-600 text-sm">{user.email}</p>
+                </div>
+              </div>
+
               <div className="flex justify-between items-center mt-4">
                 <button
                   onClick={() => handleStatusToggle(user._id, user.status)}
-                  className="flex items-center gap-1 px-2 py-1 rounded-lg shadow-sm border transition hover:bg-gray-100 text-sm "
+                  className={`flex items-center gap-2 px-3 py-1 rounded-lg font-medium text-sm ${
+                    user.status === "active"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                  }`}
                 >
                   {user.status === "active" ? (
                     <>
-                      <CheckCircle className="w-4 h-4 text-green-600" /> Active
+                      <CheckCircle className="w-4 h-4" /> Active
                     </>
                   ) : (
                     <>
-                      <XCircle className="w-4 h-4 text-red-600" /> Deactive
+                      <XCircle className="w-4 h-4" /> Deactive
                     </>
                   )}
                 </button>
+
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleMessage(user)}
-                    className="bg-blue-500 text-white px-2 py-1 rounded-lg shadow hover:bg-blue-600 transition text-xs flex items-center gap-1 "
+                    className="bg-gray-900 hover:bg-gray-800 text-white px-3 py-1 rounded-lg text-sm flex items-center gap-1"
                   >
                     <MessageSquare className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleRemove(user._id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded-lg shadow hover:bg-red-600 transition text-xs flex items-center gap-1 "
+                    className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-lg text-sm flex items-center gap-1"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -250,7 +245,9 @@ export default function UsersPage() {
             </div>
           ))}
           {users.length === 0 && (
-            <p className="text-center text-gray-500 italic">No users found...</p>
+            <p className="text-center text-gray-500 italic">
+              No users found...
+            </p>
           )}
         </div>
       </section>

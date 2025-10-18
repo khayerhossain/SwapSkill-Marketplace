@@ -30,11 +30,10 @@ export default function ManageSkills() {
       const res = await fetch("/api/admin/get-quiz-attempts");
       const data = await res.json();
       if (data.success) setAttempts(data.attempts);
-    }     catch (err) {
+    } catch (err) {
       console.error(err);
       alert("Failed to fetch attempts");
     }
-
 
     setLoading(false);
   };
@@ -43,9 +42,10 @@ export default function ManageSkills() {
     const result = await Swal.fire({
       title: `Are you sure?`,
       text: `You want to ${action} this attempt? 
-      ${action === "reject" ? "This will delete the attempt permanently!" : ""}`,
-      
-      
+      ${
+        action === "reject" ? "This will delete the attempt permanently!" : ""
+      }`,
+
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -88,8 +88,6 @@ export default function ManageSkills() {
     setActionLoading(false);
   };
 
-  
-
   const filteredAttempts = attempts.filter((attempt) => {
     const matchesSearch =
       attempt.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -105,7 +103,6 @@ export default function ManageSkills() {
 
   const categories = [...new Set(attempts.map((a) => a.category))];
 
-
   if (loading)
     return (
       <div>
@@ -114,80 +111,69 @@ export default function ManageSkills() {
     );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen text-white p-4 sm:p-6">
+      <div className=" mx-auto">
         {/* Header */}
-
-        <div className="mb-6 sm:mb-8 text-center sm:text-left">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
+        <div className="mb-8 text-center sm:text-left">
+          <h1 className="text-3xl font-bold mb-1 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
             Manage Quiz Skills
           </h1>
-          <p className="text-gray-600 text-sm sm:text-base">
-            Review and manage user skills by their test </p>          
+          <p className="text-gray-400 text-sm sm:text-base">
+            Review and manage user quiz results with ease.
+          </p>
         </div>
+
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
-         <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Total Attempts
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {attempts.length}
-                </p>
-              </div>
-              <div className="p-3 bg-blue-100 rounded-full">
-                <MdOutlinePendingActions className="text-blue-600 text-xl" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Pending</p>
-                <p className="text-2xl font-bold text-yellow-600">
-                  {attempts.filter((a) => a.status === "pending").length}
-                </p>
-              </div>
-              <div className="p-3 bg-yellow-100 rounded-full">
-                <MdOutlinePendingActions className="text-yellow-600 text-xl" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Approved</p>
-                <p className="text-2xl font-bold text-blue-600">
-                  {attempts.filter((a) => a.status === "approved").length}
-                </p>
-              </div>
-              <div className="p-3 bg-blue-100 rounded-full">
-                <FiCheckCircle className="text-blue-600 text-xl" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Rejected</p>
-                <p className="text-2xl font-bold text-red-600">
-                  {attempts.filter((a) => a.status === "rejected").length}
-                </p>
-              </div>
-              <div className="p-3 bg-red-100 rounded-full">
-                <FiXCircle className="text-red-600 text-xl" />
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+          {[
+            {
+              title: "Total Attempts",
+              count: attempts.length,
+              icon: (
+                <MdOutlinePendingActions className="text-blue-400 text-xl" />
+              ),
+              color: "from-blue-500/30 to-purple-500/30",
+            },
+            {
+              title: "Pending",
+              count: attempts.filter((a) => a.status === "pending").length,
+              icon: (
+                <MdOutlinePendingActions className="text-yellow-400 text-xl" />
+              ),
+              color: "from-yellow-500/30 to-orange-500/30",
+            },
+            {
+              title: "Approved",
+              count: attempts.filter((a) => a.status === "approved").length,
+              icon: <FiCheckCircle className="text-green-400 text-xl" />,
+              color: "from-green-500/30 to-emerald-500/30",
+            },
+            {
+              title: "Rejected",
+              count: attempts.filter((a) => a.status === "rejected").length,
+              icon: <FiXCircle className="text-red-400 text-xl" />,
+              color: "from-red-500/30 to-pink-500/30",
+            },
+          ].map((card, i) => (
+            <div
+              key={i}
+              className={`rounded-xl p-6 backdrop-blur-xl bg-gradient-to-br ${card.color} border border-white/10 shadow-lg`}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-300">
+                    {card.title}
+                  </p>
+                  <p className="text-3xl font-bold text-white">{card.count}</p>
+                </div>
+                <div className="p-3 bg-white/10 rounded-full">{card.icon}</div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow mb-6 p-4">
+        <div className="rounded-xl backdrop-blur-xl bg-white/5 border border-white/10 p-4 mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <div className="relative">
               <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -196,29 +182,39 @@ export default function ManageSkills() {
                 placeholder="Search users or categories..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 bg-transparent border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400"
               />
             </div>
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="bg-transparent border border-white/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 text-white"
             >
-              <option value="all">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="approved">Approved</option>
-              <option value="rejected">Rejected</option>
+              <option value="all" className="bg-gray-900">
+                All Status
+              </option>
+              <option value="pending" className="bg-gray-900">
+                Pending
+              </option>
+              <option value="approved" className="bg-gray-900">
+                Approved
+              </option>
+              <option value="rejected" className="bg-gray-900">
+                Rejected
+              </option>
             </select>
 
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="bg-transparent border border-white/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 text-white"
             >
-              <option value="all">All Categories</option>
+              <option value="all" className="bg-gray-900">
+                All Categories
+              </option>
               {categories.map((cat) => (
-                <option key={cat} value={cat}>
+                <option key={cat} value={cat} className="bg-gray-900">
                   {cat}
                 </option>
               ))}
@@ -230,7 +226,7 @@ export default function ManageSkills() {
                 setStatusFilter("all");
                 setCategoryFilter("all");
               }}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
+              className="px-4 py-2 bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg text-gray-200 hover:from-gray-600 hover:to-gray-700 transition"
             >
               Clear Filters
             </button>
@@ -238,68 +234,78 @@ export default function ManageSkills() {
         </div>
 
         {/* Table / Mobile Cards */}
-        
         {filteredAttempts.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-gray-400 text-6xl mb-4">📊</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="text-center py-12 backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl">
+            <div className="text-6xl mb-3">📊</div>
+            <h3 className="text-lg font-semibold text-gray-200 mb-1">
               No Applied Users Found
             </h3>
-            <p className="text-gray-600">Try adjusting your search or filters</p>
+            <p className="text-gray-400">
+              Try adjusting your search or filters
+            </p>
           </div>
         ) : (
           <>
             {/* Desktop Table */}
-            <div className="hidden md:block bg-white rounded-lg shadow overflow-x-auto">
+            <div className=" backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl overflow-x-auto shadow-lg">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-white/10">
                   <tr>
-                    {["Profile", "Name", "Category", "Score", "Status", "Actions"].map(
-                      (header) => (
-                        <th
-                          key={header}
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          {header}
-                        </th>
-                      )
-                    )}
+                    {[
+                      "Profile",
+                      "Name",
+                      "Category",
+                      "Score",
+                      "Status",
+                      "Actions",
+                    ].map((header) => (
+                      <th
+                        key={header}
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                      >
+                        {header}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody>
                   {filteredAttempts.map((a) => (
-                    <tr key={a._id} className="hover:bg-gray-500">
+                    <tr
+                      key={a._id}
+                      className="hover:bg-white/10 transition border-b border-white/10"
+                    >
                       <td className="px-6 py-4">
                         <img
                           src={a.userImage}
+                          alt="images"
                           className="w-10 h-10 rounded-full object-cover"
                         />
                       </td>
                       <td>{a.userName}</td>
                       <td>
-                        <span className="px-3 py-1 inline-flex text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                        <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-300">
                           {a.category}
                         </span>
                       </td>
                       <td>
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-gray-200">
                           {a.score}/{a.totalQuestions}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-400">
                           {((a.score / a.totalQuestions) * 100).toFixed(1)}%
                         </div>
                       </td>
                       <td>
                         {a.status === "approved" ? (
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-500/20 text-green-300">
                             <FiCheckCircle className="mr-1" /> Approved
                           </span>
                         ) : a.status === "rejected" ? (
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-500/20 text-red-300">
                             <FiXCircle className="mr-1" /> Rejected
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-500/20 text-yellow-300">
                             <MdOutlinePendingActions className="mr-1" /> Pending
                           </span>
                         )}
@@ -311,10 +317,10 @@ export default function ManageSkills() {
                               handleAction(a.profileId, a._id, "approve")
                             }
                             disabled={a.status === "approved"}
-                            className={`px-3 py-2 rounded-md ${
+                            className={`px-3 py-2 rounded-md transition ${
                               a.status === "approved"
-                                ? "bg-blue-100 text-blue-400 cursor-not-allowed"
-                                : "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                                ? "bg-green-500/10 text-green-400 cursor-not-allowed"
+                                : "bg-green-500/20 text-green-300 hover:bg-green-500/30"
                             }`}
                           >
                             <FiCheckCircle className="mr-1 inline" /> Approve
@@ -324,17 +330,17 @@ export default function ManageSkills() {
                               handleAction(a.profileId, a._id, "reject")
                             }
                             disabled={a.status === "rejected"}
-                            className={`px-3 py-2 rounded-md ${
+                            className={`px-3 py-2 rounded-md transition ${
                               a.status === "rejected"
-                                ? "bg-red-100 text-red-400 cursor-not-allowed"
-                                : "bg-red-100 text-red-700 hover:bg-red-200"
+                                ? "bg-red-500/10 text-red-400 cursor-not-allowed"
+                                : "bg-red-500/20 text-red-300 hover:bg-red-500/30"
                             }`}
                           >
                             <FiXCircle className="mr-1 inline" /> Reject
                           </button>
                           <button
                             onClick={() => setSelectedAttempt(a)}
-                            className="px-3 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
+                            className="px-3 py-2 bg-blue-500/20 text-blue-300 rounded-md hover:bg-blue-500/30 transition"
                           >
                             <FiEye className="mr-1 inline" /> View
                           </button>
@@ -345,220 +351,9 @@ export default function ManageSkills() {
                 </tbody>
               </table>
             </div>
-
-            {/* Mobile View (Cards) */}
-            <div className="block md:hidden space-y-4">
-              {filteredAttempts.map((a) => (
-                <div key={a._id} className="bg-white p-4 rounded-lg shadow">
-                  <div className="flex items-center space-x-3">
-                    <img
-                      src={a.userImage}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                    <div>
-                      <h3 className="font-semibold text-gray-900">
-                        {a.userName}
-                      </h3>
-                      <p className="text-sm text-gray-600">{a.category}</p>
-                    </div>
-                  </div>
-                  <div className="mt-3 text-sm text-gray-700">
-                    <p>
-                      <strong>Score:</strong> {a.score}/{a.totalQuestions}
-                    </p>
-                    <p>
-                      <strong>Status:</strong>{" "}
-                      <span className="capitalize">{a.status}</span>
-                    </p>
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <button
-                      onClick={() => setSelectedAttempt(a)}
-                      className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm hover:bg-blue-200"
-                    >
-                      <FiEye className="inline mr-1" /> View
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleAction(a.profileId, a._id, "approve")
-                      }
-                      disabled={a.status === "approved"}
-                      className={`px-3 py-1 text-sm rounded-md ${
-                        a.status === "approved"
-                          ? "bg-blue-100 text-blue-400 cursor-not-allowed"
-                          : "bg-blue-100 text-blue-700 hover:bg-blue-200"
-                      }`}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleAction(a.profileId, a._id, "reject")
-                      }
-                      disabled={a.status === "rejected"}
-                      className={`px-3 py-1 text-sm rounded-md ${
-                        a.status === "rejected"
-                          ? "bg-red-100 text-red-400 cursor-not-allowed"
-                          : "bg-red-100 text-red-700 hover:bg-red-200"
-                      }`}
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
           </>
         )}
       </div>
-
-      {/* View Modal */}
-      {selectedAttempt && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-gray-900">
-                Quiz Attempt Details
-              </h2>
-              <button
-                onClick={() => setSelectedAttempt(null)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <FiXCircle size={24} />
-              </button>
-            </div>
-
-            <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)] text-sm sm:text-base">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      User Information
-                    </label>
-                    <div className="mt-1 p-3 bg-gray-50 rounded-lg">
-                      <p className="font-medium text-gray-900">
-                        {selectedAttempt.userName}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {selectedAttempt.userEmail}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Quiz Details
-                    </label>
-                    <div className="mt-1 p-3 bg-gray-50 rounded-lg space-y-2">
-                      <p>
-                        <strong>Category:</strong> {selectedAttempt.category}
-                      </p>
-                      <p>
-                        <strong>Total Questions:</strong>{" "}
-                        {selectedAttempt.totalQuestions}
-                      </p>
-                      <p>
-                        <strong>Score:</strong> {selectedAttempt.score}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Results
-                    </label>
-                    <div className="mt-1 p-3 bg-gray-50 rounded-lg space-y-2">
-                      <p>
-                        <strong>Percentage:</strong>{" "}
-                        {selectedAttempt.percentage}%
-                      </p>
-                      <p>
-                        <strong>Passed:</strong>{" "}
-                        <span
-                          className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${
-                            selectedAttempt.passed
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {selectedAttempt.passed ? "Yes" : "No"}
-                        </span>
-                      </p>
-                      <p>
-                        <strong>Badge:</strong>{" "}
-                        <span className="ml-2 px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium">
-                          {selectedAttempt.badgeType || "N/A"}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Performance
-                    </label>
-                    <div className="mt-1">
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div
-                          className={`h-3 rounded-full ${
-                            selectedAttempt.passed
-                              ? "bg-blue-500"
-                              : "bg-red-500"
-                          }`}
-                          style={{
-                            width: `${selectedAttempt.percentage}%`,
-                          }}
-                        ></div>
-                      </div>
-                      <p className="text-right text-xs mt-1 text-gray-500">
-                        {selectedAttempt.percentage}%
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Actions */}
-            <div className="border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row justify-end gap-2 sm:gap-4">
-              <button
-                onClick={() =>
-                  handleAction(
-                    selectedAttempt.profileId,
-                    selectedAttempt._id,
-                    "approve"
-                  )
-                }
-                disabled={actionLoading}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              >
-                {actionLoading ? "Processing..." : "Approve"}
-              </button>
-              <button
-                onClick={() =>
-                  handleAction(
-                    selectedAttempt.profileId,
-                    selectedAttempt._id,
-                    "reject"
-                  )
-                }
-                disabled={actionLoading}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-              >
-                {actionLoading ? "Processing..." : "Reject"}
-              </button>
-              <button
-                onClick={() => setSelectedAttempt(null)}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

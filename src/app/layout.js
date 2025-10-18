@@ -28,7 +28,7 @@ import Loading from "./loading";
 
 export default function RootLayout({ children }) {
   return (
-    <html data-theme="light" lang="en">
+    <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>

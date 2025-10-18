@@ -41,22 +41,24 @@ export default function NavbarPage() {
   return (
     <div
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        scrolled ? "bg-black backdrop-blur-lg shadow-lg" : "bg-transparent"
+        scrolled ? "bg-black/80 backdrop-blur-lg shadow-lg" : "bg-black/40"
       }`}
     >
       <Container>
-        <div className="flex justify-between items-center w-full py-3">
+        <div className="flex justify-between items-center w-full py-3 text-white">
           {/* ===== SMALL DEVICES ===== */}
           <div className="flex w-full items-center justify-between lg:hidden">
-            {/* Left: Logo + Name */}
             <Link href="/" className="flex items-center gap-2">
               <Image src={logo} alt="logo" className="w-10 h-8" />
               <h1 className="font-semibold text-lg">SwapSkill</h1>
             </Link>
 
-            {/* Right: Hamburger */}
             <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button" className="btn btn-ghost">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost text-white"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6"
@@ -73,10 +75,9 @@ export default function NavbarPage() {
                 </svg>
               </div>
 
-              {/* Dropdown Menu */}
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[100] mt-3 w-56 p-2 shadow-lg"
+                className="menu menu-sm dropdown-content bg-black/90 rounded-box z-[100] mt-3 w-56 p-2 shadow-lg text-white"
               >
                 {navLinks.map((link) => (
                   <li key={link.path}>
@@ -85,8 +86,8 @@ export default function NavbarPage() {
                       scroll={true}
                       className={`${
                         pathname === link.path
-                          ? "font-semibold text-base-content border-2 border-base-content"
-                          : "font-semibold text-base-content/70"
+                          ? "font-semibold text-white underline underline-offset-4"
+                          : "text-gray-300 hover:text-white"
                       }`}
                     >
                       {link.name}
@@ -94,17 +95,16 @@ export default function NavbarPage() {
                   </li>
                 ))}
 
-                {/* Auth Buttons */}
-                <div className="flex flex-col gap-2 mt-2">
+                <div className="flex flex-col gap-2 mt-3">
                   <Link
                     href="/login"
-                    className="btn bg-gray-900 text-white rounded-lg"
+                    className="btn bg-gray-900 hover:bg-gray-800 text-white rounded-lg border-none shadow-none"
                   >
                     Sign In
                   </Link>
                   <Link
                     href="/register"
-                    className="btn bg-red-500 text-white rounded-lg"
+                    className="btn bg-red-600 hover:bg-red-500 text-white rounded-lg border-none shadow-none"
                   >
                     Sign Up
                   </Link>
@@ -115,13 +115,11 @@ export default function NavbarPage() {
 
           {/* ===== LARGE DEVICES ===== */}
           <div className="hidden lg:flex items-center justify-between w-full">
-            {/* Left: Logo */}
             <Link href="/" className="flex items-center gap-2">
               <Image src={logo} alt="logo" className="w-12 h-9" />
               <h1 className="font-semibold text-xl">SwapSkill</h1>
             </Link>
 
-            {/* Center: Routes */}
             <div className="flex-1 flex justify-center">
               <ul className="menu menu-horizontal px-1 gap-6">
                 {navLinks.map((link) => (
@@ -131,8 +129,8 @@ export default function NavbarPage() {
                       scroll={true}
                       className={`transition ${
                         pathname === link.path
-                          ? "font-semibold text-base-content underline underline-offset-4"
-                          : "font-semibold text-base-content/70 hover:text-base-content"
+                          ? "font-semibold text-white underline underline-offset-4"
+                          : "text-gray-300 hover:text-white"
                       }`}
                     >
                       {link.name}
@@ -142,18 +140,17 @@ export default function NavbarPage() {
               </ul>
             </div>
 
-            {/* Right: Auth + Theme */}
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <Link
                 href="/login"
-                className="btn bg-gray-950 text-white rounded-lg"
+                className="btn bg-gray-900 hover:bg-gray-800 text-white rounded-lg border-none shadow-none"
               >
                 Sign In
               </Link>
               <Link
                 href="/register"
-                className="btn bg-red-500 text-white rounded-lg"
+                className="btn bg-red-600 hover:bg-red-500 text-white rounded-lg border-none shadow-none"
               >
                 Sign Up
               </Link>

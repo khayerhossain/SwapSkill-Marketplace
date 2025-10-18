@@ -107,7 +107,7 @@ export default function Featured() {
       {/* Header */}
       <div className="py-16 text-center px-4 md:px-0 mt-10">
         <h2 className="text-4xl  font-bold text-white mb-4">
-          Featured What Sets Us Apart
+          <span className="text-red-500">Featured</span> What Sets Us Apart
         </h2>
         <p className="text-gray-400 max-w-3xl mx-auto text-base md:text-lg leading-relaxed">
           A single-section summary of the unique tools inside{" "}

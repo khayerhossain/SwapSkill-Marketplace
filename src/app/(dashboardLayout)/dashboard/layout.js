@@ -8,6 +8,7 @@ import { signOut, useSession } from "next-auth/react";
 import { FiLogOut } from "react-icons/fi";
 import Link from "next/link";
 import NotificationDropdown from "@/components/shared/NotificationDropdown";
+import Image from "next/image";
 
 export default function DashboardLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,85 +16,122 @@ export default function DashboardLayout({ children }) {
   const { data: session } = useSession();
 
   return (
-      <div className="min-h-screen bg-base-100 text-base-content overflow-x-hidden">
-        <div className="flex">
-          {/* Large Screen Sidebar - Fixed Position */}
-          <div className={`hidden md:block fixed left-0 top-0 h-screen z-30 ${collapsed ? "w-[6rem]" : "w-[20%]"} bg-base-200 text-base-content border-r border-base-300`}>
-            <div className="p-4 border-b border-base-300 flex items-center justify-between">
-              <Link href="/" className="text-xl font-bold">Swap Skill</Link>
-              <button
-                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-                className="btn btn-ghost btn-xs"
-                onClick={() => setCollapsed(!collapsed)}
-              >
-                {collapsed ? <IoIosArrowForward /> : <IoIosArrowBack />}
-              </button>
-            </div>
-            <Sidebar collapsed={collapsed} isDashboard={true} role={session?.user?.role || "user"} />
-          </div>
-
-          {/* Main Content */}
-          <div className={`w-full ${collapsed ? "md:pl-[6rem]" : "md:pl-[20%]"} pr-2`}>
-            <div className="flex items-center justify-end gap-3 p-4 border-b border-base-300">
-              {session?.user && <NotificationDropdown />}
-              {session?.user && (
-                <Link href="/dashboard/profile" className="px-3 py-2 rounded-full bg-base-200 text-base-content font-medium">
-                  {session.user.name || "Profile"}
-                </Link>
-              )}
-              
-
-
-              {session?.user && (
-                <button
-                  aria-label="Logout"
-                  onClick={() => signOut({ callbackUrl: "/login" })}
-                  className="btn btn-ghost btn-sm text-error"
-                  title="Logout"
-                >
-                  <FiLogOut />
-                </button>
-              )}
-            </div>
-            {children}
-          </div>
+    <div className="min-h-screen bg-[#0d0d0d] text-gray-200 overflow-x-hidden flex">
+      {/* Sidebar for large devices */}
+      <div
+        className={`hidden md:flex fixed left-0 top-0 h-screen z-30 flex-col bg-[#111111] border-r border-gray-800 transition-all duration-300 ${
+          collapsed ? "w-20" : "w-64"
+        }`}
+      >
+        {/* Logo + Toggle */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-800">
+          <Link href="/" className="text-xl font-bold text-red-500">
+            {!collapsed ? "SwapSkill" : "SS"}
+          </Link>
+          <button
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className="p-2 text-gray-400 hover:text-red-500 rounded-md transition-colors"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            {collapsed ? <IoIosArrowForward /> : <IoIosArrowBack />}
+          </button>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed top-4 left-4 p-3 text-2xl text-base-content bg-base-200 rounded-md md:hidden z-50"
-        >
-          <IoMdMenu />
-        </button>
-
-        {/* Drawer for Mobile */}
-        {isOpen && (
-          <>
-            {/* Overlay */}
-            <div
-              className="fixed inset-0 bg-base-content/50 z-40"
-              onClick={() => setIsOpen(false)}
-            ></div>
-
-            {/* Sidebar Drawer */}
-            <div
-              className={`fixed top-0 left-0 h-full w-72 bg-base-200 text-base-content shadow-lg transform transition-transform duration-300 z-50
-              ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
-            >
-              <div className="flex justify-between items-center p-4 border-b border-base-300">
-                <h1 className="text-xl font-bold">Dashboard</h1>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="text-2xl text-base-content"
-                >
-                  <IoMdClose />
-                </button>
-              </div>
-              <Sidebar collapsed={false} onClick={() => setIsOpen(false)} isDashboard={true} role={session?.user?.role || "user"} />
-            </div>
-          </>
-        )}
+        {/* Sidebar Menu */}
+        <Sidebar
+          collapsed={collapsed}
+          isDashboard={true}
+          role={session?.user?.role || "user"}
+        />
       </div>
+
+      {/* Main Content */}
+      <div
+        className={`flex-1 flex flex-col min-h-screen transition-all duration-300 w-full ${
+          collapsed ? "md:pl-20" : "md:pl-64"
+        }`}
+      >
+        {/* Top Bar */}
+        <header className="flex items-center justify-between p-3 border-b border-gray-800 bg-[#111111] sticky top-0 z-40">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsOpen(true)}
+            className="p-2 text-2xl bg-[#222222] text-gray-200 rounded-md md:hidden hover:bg-red-600 transition-colors"
+            aria-label="Open Menu"
+          >
+            <IoMdMenu />
+          </button>
+
+          {/* Right side items */}
+          <div className="flex items-center gap-4 ml-auto">
+            {session?.user && <NotificationDropdown />}
+
+            {/* Profile */}
+            {session?.user && (
+              <Link
+                href="/dashboard/profile"
+                className="flex items-center gap-2 px-2 py-1 rounded-full bg-gray-800 text-gray-200 hover:bg-red-600 transition-colors"
+              >
+                <Image
+                  src={session.user.image || "/default-profile.png"}
+                  alt="Profile"
+                  width={32}
+                  height={32}
+                  className="rounded-full object-cover"
+                />
+                <span className="hidden lg:block font-medium">
+                  {session.user.name || "Profile"}
+                </span>
+              </Link>
+            )}
+
+            {/* Logout Button */}
+            {session?.user && (
+              <button
+                aria-label="Logout"
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="p-2 text-gray-300 hover:text-white hover:bg-red-500 rounded-full transition-colors"
+              >
+                <FiLogOut size={20} />
+              </button>
+            )}
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 p-4">{children}</main>
+      </div>
+
+      {/* Mobile Drawer */}
+      {isOpen && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+            onClick={() => setIsOpen(false)}
+          ></div>
+
+          {/* Drawer Sidebar */}
+          <div className="fixed top-0 left-0 h-full w-72 bg-[#111111] text-gray-200 shadow-lg z-50 md:hidden">
+            <div className="flex justify-between items-center p-4 border-b border-gray-800">
+              <h1 className="text-xl font-bold text-red-500">Dashboard</h1>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-2xl text-gray-400 hover:text-red-500"
+              >
+                <IoMdClose />
+              </button>
+            </div>
+
+            <Sidebar
+              collapsed={false}
+              onClick={() => setIsOpen(false)}
+              isDashboard={true}
+              role={session?.user?.role || "user"}
+            />
+          </div>
+        </>
+      )}
+    </div>
   );
 }

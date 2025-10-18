@@ -224,7 +224,7 @@ export default function Balance() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6 overflow-x-hidden">
+    <div className="min-h-screen dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6 overflow-x-hidden">
       <div className="mx-auto overflow-x-hidden">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
@@ -353,21 +353,23 @@ export default function Balance() {
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Bar Chart */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 overflow-hidden">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+          <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-lg">
+            <h3 className="text-lg font-semibold text-gray-100 mb-4">
               Weekly Payment Activity
             </h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={trendData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="day" stroke="#666" fontSize={12} />
-                  <YAxis stroke="#666" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                  <XAxis dataKey="day" stroke="#aaa" fontSize={12} />
+                  <YAxis stroke="#aaa" fontSize={12} />
                   <Tooltip
                     contentStyle={{
+                      background: "rgba(17,17,17,0.8)",
+                      color: "#fff",
                       borderRadius: "12px",
                       border: "none",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
                     }}
                   />
                   <Legend />
@@ -389,8 +391,8 @@ export default function Balance() {
           </div>
 
           {/* Pie Chart */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 overflow-hidden">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+          <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-lg">
+            <h3 className="text-lg font-semibold text-gray-100 mb-4">
               Payment Gateway Distribution
             </h3>
             <div className="h-80">
@@ -415,9 +417,11 @@ export default function Balance() {
                   <Tooltip
                     formatter={(value, name) => [`${value}%`, name]}
                     contentStyle={{
+                      background: "rgba(17,17,17,0.8)",
+                      color: "#fff",
                       borderRadius: "12px",
                       border: "none",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
                     }}
                   />
                   <Legend />
@@ -427,20 +431,23 @@ export default function Balance() {
 
             <div className="grid grid-cols-2 gap-4 mt-4">
               {pieData.map((item, index) => (
-                <div key={item.name} className="bg-gray-50 rounded-xl p-4">
+                <div
+                  key={item.name}
+                  className="bg-white/10 backdrop-blur-md border border-white/10 rounded-xl p-4"
+                >
                   <div className="flex items-center mb-2">
                     <div
                       className="w-3 h-3 rounded-full mr-2"
                       style={{ backgroundColor: COLORS[index] }}
                     />
-                    <span className="font-medium text-gray-700 text-sm">
+                    <span className="font-medium text-gray-200 text-sm">
                       {item.name}
                     </span>
                   </div>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-2xl font-bold text-gray-100">
                     {formatNumber(item.count)}
                   </p>
-                  <p className="text-sm text-gray-500">{item.value}%</p>
+                  <p className="text-sm text-gray-400">{item.value}%</p>
                 </div>
               ))}
             </div>
@@ -448,20 +455,20 @@ export default function Balance() {
         </div>
 
         {/* Payment History Table */}
-        <div className="bg-white rounded-2xl shadow max-w-7xl mx-auto my-10 overflow-hidden">
+        <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl shadow max-w-7xl mx-auto my-10 overflow-hidden">
           <div className="p-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold text-gray-100">
                 Recent Transactions
               </h2>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-400">
                 {payments.length} transactions
               </span>
             </div>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-gray-700">
+              <thead className="bg-white/10 text-gray-200">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">
                     Customer
@@ -483,35 +490,37 @@ export default function Balance() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200 ">
+              <tbody className="divide-y divide-gray-700">
                 {payments?.slice(0, 6).map?.((row) => (
                   <tr
                     key={row._id ?? row.id ?? Math.random()}
-                    className="hover:bg-gray-50 transition-colors hover:text-black"
+                    className="hover:bg-white/5 transition-colors"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">
                       <div>
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-white">
                           {row?.userName ??
                             row?.user ??
                             row?.customerName ??
                             "-"}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-400">
                           {row?.email ?? "-"}
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                       {row?.transactionId ?? row?.txnId ?? row?.id ?? "-"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full ${row.paymentMethod ==='coin' ? 'bg-yellow-400 text-white': ""}  text-xs font-medium ${
-                          row.paymentMethod === "stripe"
-                            ? "bg-blue-600 text-white"
-                            : "bg-green-500 text-white"
-                        }  `}
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                          row.paymentMethod === "coin"
+                            ? "bg-yellow-400/20 text-yellow-300"
+                            : row.paymentMethod === "stripe"
+                            ? "bg-blue-500/20 text-blue-300"
+                            : "bg-green-500/20 text-green-300"
+                        }`}
                       >
                         {row?.method ??
                           row?.gateway ??
@@ -519,16 +528,17 @@ export default function Balance() {
                           "Unknown"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                     {row.paymentMethod === "coin" ? '💰' :"$"}  {row.paymentMethod === "coin" ? row.price * 10 :  row.price}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">
+                      {row.paymentMethod === "coin" ? "💰" : "$"}{" "}
+                      {row.paymentMethod === "coin"
+                        ? row.price * 10
+                        : row.price}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                       {row?.date ?? row?.createdAt ?? row?.paidAt ?? "-"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 `}
-                      >
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-300">
                         {row?.status ?? "Unknown"}
                       </span>
                     </td>

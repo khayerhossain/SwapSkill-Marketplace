@@ -1,22 +1,26 @@
 "use client";
 import { ThemeContext } from "@/context/ThemeProvider";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { use } from "react";
+import { useEffect, useState, use } from "react";
 import logo from "../../assets/logo.png";
 import Container from "./Container";
 import ThemeToggle from "./ThemeToggle";
 
 export default function NavbarPage() {
   const { data: session } = useSession();
-  const pathname = usePathname(); // get current route
+  const pathname = usePathname();
   const { theme } = use(ThemeContext);
+  const [scrolled, setScrolled] = useState(false);
 
-  console.log(theme);
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 30);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  // Base links; role-specific link appended below
   const baseLinks = [
     { name: "Home", path: "/" },
     { name: "About", path: "#about" },
@@ -24,29 +28,40 @@ export default function NavbarPage() {
     { name: "Features", path: "/features" },
     { name: "Pricing", path: "/pricing" },
   ];
+
   const roleLinks =
     session?.user?.role === "admin"
       ? [{ name: "Dashboard", path: "/dashboard" }]
       : session?.user?.role === "user"
       ? [{ name: "AppBar", path: "/appBar" }]
       : [];
+
   const navLinks = [...baseLinks, ...roleLinks];
 
   return (
-    <div className="navbar bg-base-100 fixed top-0 left-0 w-full z-50 px-0">
+    <div
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        scrolled
+          ? "backdrop-blur-md bg-base-100/90 shadow-md"
+          : "bg-transparent"
+      }`}
+    >
       <Container>
-        <div className="flex justify-between w-full items-center">
-          {/* Navbar Start: Logo + Mobile Menu */}
-          <div className="navbar-start flex items-center gap-4 px-0">
-            <div className="dropdown">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-ghost lg:hidden"
-              >
+        <div className="flex justify-between items-center w-full py-3">
+          {/* ===== SMALL DEVICES ===== */}
+          <div className="flex w-full items-center justify-between lg:hidden">
+            {/* Left: Logo + Name */}
+            <Link href="/" className="flex items-center gap-2">
+              <Image src={logo} alt="logo" className="w-10 h-8" />
+              <h1 className="font-semibold text-lg">SwapSkill</h1>
+            </Link>
+
+            {/* Right: Hamburger */}
+            <div className="dropdown dropdown-end">
+              <div tabIndex={0} role="button" className="btn btn-ghost">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
+                  className="h-6 w-6"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -55,14 +70,15 @@ export default function NavbarPage() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M4 6h16M4 12h8m-8 6h16"
+                    d="M4 6h16M4 12h16M4 18h16"
                   />
                 </svg>
               </div>
-              {/* Mobile Menu */}
+
+              {/* Dropdown Menu */}
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[100] mt-3 w-56 p-2 shadow-lg"
               >
                 {navLinks.map((link) => (
                   <li key={link.path}>
@@ -79,82 +95,71 @@ export default function NavbarPage() {
                     </Link>
                   </li>
                 ))}
+
+                {/* Auth Buttons */}
+                <div className="flex flex-col gap-2 mt-2">
+                  <Link
+                    href="/login"
+                    className="btn bg-gray-800 text-white rounded-lg"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="btn bg-red-500 text-white rounded-lg"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
               </ul>
             </div>
-            {/* Logo */}
-            <Link href="/" className="text-xl font-bold flex">
-              <Image
-                src={logo}
-                alt="logo"
-                className={`w-12 h-8 ${theme === "light" ? "" : ""} `}
-              />
-              <h1 className="font-light">SwapSkill</h1>
+          </div>
+
+          {/* ===== LARGE DEVICES ===== */}
+          <div className="hidden lg:flex items-center justify-between w-full">
+            {/* Left: Logo */}
+            <Link href="/" className="flex items-center gap-2">
+              <Image src={logo} alt="logo" className="w-12 h-9" />
+              <h1 className="font-semibold text-xl">SwapSkill</h1>
             </Link>
-          </div>
 
-          {/* Navbar Center (Desktop) */}
-          <div className="navbar-center hidden lg:flex px-0">
-            <ul className="menu menu-horizontal px-1 gap-4">
-              {navLinks.map((link) => (
-                <li key={link.path}>
-                  <Link
-                    href={link.path}
-                    scroll={true}
-                    className={`transition ${
-                      pathname === link.path
-                        ? "font-semibold text-base-content underline border-base-content"
-                        : "font-semibold text-base-content/70 hover:text-base-content"
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <p>
+            {/* Center: Routes */}
+            <div className="flex-1 flex justify-center">
+              <ul className="menu menu-horizontal px-1 gap-6">
+                {navLinks.map((link) => (
+                  <li key={link.path}>
+                    <Link
+                      href={link.path}
+                      scroll={true}
+                      className={`transition ${
+                        pathname === link.path
+                          ? "font-semibold text-base-content underline underline-offset-4"
+                          : "font-semibold text-base-content/70 hover:text-base-content"
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Right: Auth + Theme */}
+            <div className="flex items-center gap-2">
               <ThemeToggle />
-            </p>
-          </div>
-
-          {/* Navbar End: Profile + Auth */}
-          <div className="navbar-end flex items-center gap-2 px-0">
-            {session?.user && (
               <Link
-                href="/dashboard/profile"
-                className="flex items-center gap-2 px-1 py-1 rounded-full bg-gray-100 text-gray-800 font-medium hover:bg-gray-200 transition-colors"
+                href="/login"
+                className="btn bg-gray-800 text-white rounded-lg"
               >
-                <Image
-                  src={session.user.image}
-                  alt={session.user.name || "Profile"}
-                  width={32}
-                  height={32}
-                  className="rounded-full object-cover"
-                />
+                Sign In
               </Link>
-            )}
-            {session ? (
-              <button
-                onClick={() => signOut({ callbackUrl: "/login" })}
+              <Link
+                href="/register"
                 className="btn bg-red-500 text-white rounded-lg"
               >
-                Logout
-              </button>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="btn bg-gray-800 rounded-lg text-white"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/register"
-                  className="btn bg-red-500 text-white rounded-lg"
-                >
-                  Sign Up
-                </Link>
-              </>
-            )}
+                Sign Up
+              </Link>
+            </div>
           </div>
         </div>
       </Container>

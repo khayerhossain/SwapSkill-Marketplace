@@ -71,35 +71,39 @@ export default function LeaderBoard() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0d0d0f] text-gray-900 dark:text-white py-10 px-4 transition-colors duration-500">
-      <h1 className="text-4xl font-extrabold text-center mb-10 tracking-wide text-gray-900 dark:text-white drop-shadow-lg">
-        🏆 Global Quiz Leaderboard
+    <div className="min-h-screen bg-white dark:bg-[#0d0d0f] text-gray-900 dark:text-white py-12 px-4 transition-colors duration-500">
+      {/* 🏆 Header */}
+      <h1 className="text-4xl font-extrabold text-center mb-14 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-sm tracking-wide">
+        🏆 Global Skill Leaderboard
       </h1>
 
       <div className="max-w-5xl mx-auto space-y-12">
         {categories.map((category) => (
           <div
             key={category.name}
-            className="bg-gray-100 dark:bg-[#141414] rounded-2xl shadow-lg dark:shadow-[0_0_25px_rgba(255,255,255,0.05)] p-6 border border-gray-300 dark:border-gray-800 transition-all duration-500"
+            className="backdrop-blur-xl bg-white dark:bg-white/5 border border-gray-200/40 dark:border-white/10 rounded-3xl p-6 shadow-sm"
           >
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-gray-900 dark:text-white">
+            {/* Category Title */}
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
               <Trophy className="text-yellow-400" />
               {category.name}
             </h2>
 
+            {/* Players */}
             <div className="space-y-4">
               {category.players.map((player) => (
                 <div
                   key={player.name}
-                  className="flex items-center justify-between bg-white dark:bg-[#1b1b1e] rounded-xl p-4 border border-gray-300 dark:border-gray-700 transition-colors duration-500"
+                  className="flex items-center justify-between bg-gray-50 dark:bg-white/10 backdrop-blur-md border border-gray-200/40 dark:border-gray-700 rounded-2xl p-4 transition-all duration-300"
                 >
+                  {/* Left */}
                   <div className="flex items-center gap-4">
                     <span
                       className={`text-xl font-bold ${
                         player.rank === 1
                           ? "text-yellow-500"
                           : player.rank === 2
-                          ? "text-gray-500 dark:text-gray-300"
+                          ? "text-gray-400"
                           : "text-orange-500"
                       }`}
                     >
@@ -122,13 +126,14 @@ export default function LeaderBoard() {
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                         <Star size={14} /> Level:{" "}
-                        <span className="text-yellow-500 dark:text-yellow-400">
+                        <span className="text-yellow-500 dark:text-yellow-400 font-medium">
                           {player.level}
                         </span>
                       </p>
                     </div>
                   </div>
 
+                  {/* Right */}
                   <div className="flex flex-col items-end text-right">
                     <div className="flex items-center gap-2">
                       {player.rank === 1 && (
@@ -138,7 +143,7 @@ export default function LeaderBoard() {
                       {player.rank === 3 && (
                         <Medal className="text-orange-400" />
                       )}
-                      <span className="font-semibold text-yellow-500 dark:text-yellow-400 text-lg">
+                      <span className="font-semibold text-lg text-yellow-500 dark:text-yellow-400">
                         {player.points} pts
                       </span>
                     </div>
@@ -154,8 +159,9 @@ export default function LeaderBoard() {
         ))}
       </div>
 
-      <p className="text-center text-gray-600 dark:text-gray-500 mt-10 text-sm tracking-wide">
-        Updated daily | Keep pushing your limits 🚀
+      {/* Footer */}
+      <p className="text-center text-gray-600 dark:text-gray-500 mt-12 text-sm tracking-wide">
+        Updated daily | Keep grinding for the top spot 🚀
       </p>
     </div>
   );

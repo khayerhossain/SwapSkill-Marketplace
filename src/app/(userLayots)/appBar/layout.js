@@ -76,7 +76,7 @@ export default function AppBarLayout({ children }) {
               {session?.user && (
                 <Link
                   href="/dashboard/profile"
-                  className="flex items-center gap-2 px-2 py-1 rounded-full bg-gray-100 text-gray-800 font-medium hover:bg-gray-200 transition-colors"
+                  className="flex items-center gap-2 px-1  py-1 rounded-full bg-gray-100 text-gray-800 font-medium hover:bg-gray-200 transition-colors"
                 >
                   <Image
                     src={session.user.image}

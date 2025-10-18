@@ -17,9 +17,10 @@ import { SinglePaymentCard } from "./SinglePayment";
 export default function Overview() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { theme, appliedTheme } = useContext(ThemeContext);
+  const { appliedTheme } = useContext(ThemeContext);
   const isDark = appliedTheme === "dark";
   const [userData, setUserData] = useState(null);
+
   useEffect(() => {
     const fetchPayments = async () => {
       try {
@@ -36,21 +37,17 @@ export default function Overview() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      setLoading(false); // Set loading while fetching user data
       try {
         const res = await axios.get("/api/coin-earn");
         if (res.data.success) {
           setUserData(res.data.data);
-        } else {
-          setError(res.data.message || "Failed to fetch user data");
         }
       } catch (err) {
-        setError(err.response?.data?.message || "Something went wrong");
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchUserData();
   }, []);
 
@@ -58,113 +55,124 @@ export default function Overview() {
     <Container>
       <div
         className={`min-h-screen p-6 transition-colors duration-300 ${
-          isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+          isDark
+            ? "bg-gray-900 text-white"
+            : "bg-gradient-to-b from-gray-50 to-white text-gray-900"
         }`}
       >
-        {/* User Overview Section */}
-        <h1 className="text-2xl font-bold text-center mb-6">User Overview</h1>
+        {/* 🌟 Header */}
+        <h1 className="text-3xl font-extrabold text-center mb-8 tracking-tight">
+          Your Dashboard Overview
+        </h1>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div
-            className={`${
-              isDark
-                ? "bg-gray-800 text-white border-gray-700"
-                : "bg-white text-gray-900 border"
-            } shadow rounded-xl p-4 flex flex-col items-center`}
-          >
-            <FaGlobe className="text-blue-500 text-2xl mb-2" />
-            <p className="text-sm">Skills Shared</p>
-            <p className="text-xl font-bold">25</p>
-          </div>
-
-          <div
-            className={`${
-              isDark
-                ? "bg-gray-800 text-white border-gray-700"
-                : "bg-white text-gray-900 border"
-            } shadow rounded-xl p-4 flex flex-col items-center`}
-          >
-            <FaBook className="text-green-500 text-2xl mb-2" />
-            <p className="text-sm">Skills Booked</p>
-            <p className="text-xl font-bold">{payments.length}</p>
-          </div>
-
-          <div
-            className={`${
-              isDark
-                ? "bg-gray-800 text-white border-gray-700"
-                : "bg-white text-gray-900 border"
-            } shadow rounded-xl p-4 flex flex-col items-center`}
-          >
-            <FaCoins className="text-yellow-500 text-2xl mb-2" />
-            <p className="text-sm">Earning Points</p>
-            <p className="text-xl font-bold">{userData?.coinsEarned}</p>
-          </div>
-
-          <div
-            className={`${
-              isDark
-                ? "bg-gray-800 text-white border-gray-700"
-                : "bg-white text-gray-900 border"
-            } shadow rounded-xl p-4 flex flex-col items-center`}
-          >
-            <FaClock className="text-purple-500 text-2xl mb-2" />
-            <p className="text-sm">Overall Progress</p>
-            <p className="text-xl font-bold">75%</p>
-          </div>
+        {/* 📊 Stats Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+          {[
+            {
+              icon: <FaGlobe />,
+              color: "text-blue-500",
+              label: "Skills Shared",
+              value: "25",
+            },
+            {
+              icon: <FaBook />,
+              color: "text-green-500",
+              label: "Skills Booked",
+              value: payments.length,
+            },
+            {
+              icon: <FaCoins />,
+              color: "text-yellow-500",
+              label: "Earning Points",
+              value: userData?.coinsEarned || 0,
+            },
+            {
+              icon: <FaClock />,
+              color: "text-purple-500",
+              label: "Overall Progress",
+              value: "75%",
+            },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className={`relative overflow-hidden ${
+                isDark
+                  ? "bg-gray-800 border-gray-700"
+                  : "bg-white border-gray-200"
+              } border rounded-2xl p-5 flex flex-col items-center justify-center shadow`}
+            >
+              <div className={`z-10 text-3xl mb-2 ${item.color}`}>
+                {item.icon}
+              </div>
+              <p className="text-sm font-medium">{item.label}</p>
+              <p className="text-2xl font-bold mt-1">{item.value}</p>
+            </div>
+          ))}
         </div>
 
-        {/* Badges Section */}
+        {/* 🏅 Badges Section */}
         <div
           className={`${
             isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"
-          } rounded-xl p-4 shadow mb-6`}
+          } rounded-2xl p-6 shadow border ${
+            isDark ? "border-gray-700" : "border-gray-200"
+          } mb-10`}
         >
-          <h2 className="text-lg font-semibold mb-3">Your Badges</h2>
-          <div className="flex flex-wrap gap-3">
-            {/* Earned badge */}
-            <div className="flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg text-sm">
+          <h2 className="text-lg font-semibold mb-5 text-center">
+            Your Achievements
+          </h2>
+          <div className="flex flex-wrap justify-center gap-4">
+            {/* Earned Badges */}
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold text-sm shadow-md">
               <FaTrophy /> Pro Learner
             </div>
-            {/* Locked badge */}
-            <div className="flex items-center gap-2 bg-gray-600 text-gray-300 px-3 py-2 rounded-lg text-sm">
-              <FaLock /> Top Contributor
-            </div>
-            {/* Earned badge */}
-            <div className="flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg text-sm">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold text-sm shadow-md">
               <FaTrophy /> Master Mentor
+            </div>
+
+            {/* Locked Badge */}
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-700 text-gray-300 font-semibold text-sm shadow-inner">
+              <FaLock /> Top Contributor
             </div>
           </div>
         </div>
 
-        {/* Subscription Details */}
-        <h2 className="text-xl font-bold text-center mb-4">
-          Subscription Details
-        </h2>
-        {loading ? (
-          <p
-            className={`text-center ${
-              isDark ? "text-gray-400" : "text-gray-500"
-            }`}
-          >
-            Loading payments...
-          </p>
-        ) : payments.length === 0 ? (
-          <p
-            className={`text-center ${
-              isDark ? "text-gray-400" : "text-gray-500"
-            }`}
-          >
-            No payment data available.
-          </p>
-        ) : (
-          <div className="space-y-4">
-            {payments?.map((payment, index) => (
-              <SinglePaymentCard key={index} payment={payment} />
-            ))}
-          </div>
-        )}
+        {/* 💳 Subscription Details */}
+        <div
+          className={`${
+            isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+          } rounded-2xl p-6 border ${
+            isDark ? "border-gray-700" : "border-gray-200"
+          }`} // ← removed shadow + hover shadow here
+        >
+          <h2 className="text-xl font-bold text-center mb-6">
+            Subscription Details
+          </h2>
+
+          {loading ? (
+            <p
+              className={`text-center ${
+                isDark ? "text-gray-400" : "text-gray-500"
+              }`}
+            >
+              Loading payments...
+            </p>
+          ) : payments.length === 0 ? (
+            <p
+              className={`text-center ${
+                isDark ? "text-gray-400" : "text-gray-500"
+              }`}
+            >
+              No payment data available.
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {payments.map((payment, index) => (
+                <SinglePaymentCard key={index} payment={payment} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </Container>
   );

@@ -5,6 +5,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import Container from "@/components/shared/Container";
+import { motion } from "framer-motion";
 
 export default function ReviewsSection() {
   const reviews = [
@@ -47,73 +48,82 @@ export default function ReviewsSection() {
   ];
 
   return (
-    <section className="bg-white py-16 px-6">
+    <section className="relative py-28 px-4 bg-gradient-to-b from-[#0a0a0a] via-[#111111] to-[#1a1a1a] text-gray-200 overflow-hidden">
       <Container>
-        <div className=" mx-auto text-center">
-          <h4 className="font-bold text-blue-500 text-sm mb-2">
-            What our customers say about us
+        {/* Section Header */}
+        <motion.div
+          className="text-center mb-20 max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h4 className="font-medium text-red-500 mb-2 text-sm uppercase tracking-wider">
+            Hear from our community
           </h4>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+            What People Say
+          </h2>
+          <p className="text-gray-400 text-lg">
+            Our users are constantly exchanging skills, learning, and growing
+            together. Here’s what they think.
+          </p>
+        </motion.div>
 
-          <h2 className="text-3xl font-bold mb-10">Testimonials</h2>
-
-          <Swiper
-            modules={[Navigation, Pagination]}
-            spaceBetween={30}
-            slidesPerView={1}
-            navigation
-            pagination={{ clickable: true }}
-            breakpoints={{
-              768: { slidesPerView: 2 },
-              1024: { slidesPerView: 3 },
-            }}
-            className="pb-12"
-          >
-            {reviews.map((item) => (
-              <SwiperSlide key={item.id}>
-                <div className="bg-white p-6 rounded-xl shadow-lg transition duration-300 ">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="flex items-center justify-center mb-4">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-16 h-16 rounded-full border-2 border-black"
-                      />
-                    </div>
-
-                    <div className="px-3 text-left">
-                      <h4 className="text-lg font-semibold">{item.name}</h4>
-                      <p className="text-sm text-white">
-                        <span className="bg-gradient-to-r from-blue-500 to-indigo-500 px-2 rounded-xl">
-                          {item.title}
-                        </span>{" "}
-                        <span className="text-green-400 bg-green-100 px-2 rounded-xl">
-                          {item.date}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-
-                  <p className="text-gray-600 mb-4">"{item.review}"</p>
+        {/* Swiper Cards */}
+        <Swiper
+          modules={[Navigation, Pagination]}
+          spaceBetween={30}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          breakpoints={{
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+          className="pb-12"
+        >
+          {reviews.map((item, index) => (
+            <SwiperSlide key={item.id}>
+              <motion.div
+                className="relative bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 flex flex-col h-[300px] items-center text-center hover:bg-white/10 hover:scale-105 transition-all duration-300"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+              >
+                {/* Avatar */}
+                <div className="flex justify-center mb-3">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-16 h-16 rounded-full border-2 border-gray-500 shadow-lg"
+                  />
                 </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
 
-        {/* small arrows */}
-        <style jsx global>{`
-          .swiper-button-prev,
-          .swiper-button-next {
-            width: 28px;
-            height: 28px;
-          }
+                {/* Name & Title */}
+                <h4 className="text-lg font-semibold text-white mb-1">
+                  {item.name}
+                </h4>
+                <p className="text-sm mb-3 flex flex-wrap justify-center gap-2">
+                  <span className="bg-gradient-to-r from-red-500 to-red-700 px-2 py-0.5 rounded-xl text-white font-medium">
+                    {item.title}
+                  </span>
+                  <span className="bg-gray-800/50 text-gray-200 px-2 py-0.5 rounded-xl">
+                    {item.date}
+                  </span>
+                </p>
 
-          .swiper-button-prev::after,
-          .swiper-button-next::after {
-            font-size: 14px;
-          }
-        `}</style>
+                {/* Review */}
+                <p className="text-gray-300 text-sm leading-relaxed italic">
+                  "{item.review}"
+                </p>
+              </motion.div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </Container>
+
+      {/* subtle glow overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-transparent pointer-events-none" />
     </section>
   );
 }

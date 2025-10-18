@@ -1,29 +1,26 @@
 "use client";
 
 import Container from "@/components/shared/Container";
-import dynamic from "next/dynamic";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { BsCreditCard2Back } from "react-icons/bs";
 import { FaCoins, FaStripe } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+
 export default function Pricing() {
   const [billing, setBilling] = useState("monthly");
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+
   useEffect(() => {
     (async () => {
       const AOS = (await import("aos")).default;
       await import("aos/dist/aos.css");
-      AOS.init({
-        duration: 800,
-        easing: "ease-in-out",
-        once: true,
-      });
+      AOS.init({ duration: 800, easing: "ease-in-out", once: true });
     })();
   }, []);
+
   const plans = [
     {
       name: "Learner",
@@ -84,7 +81,6 @@ export default function Pricing() {
     },
   ];
 
-  // Modal open
   const handlePrice = (name) => {
     const plan = plans.find((p) => p.name === name);
     if (!plan) return;
@@ -92,7 +88,6 @@ export default function Pricing() {
     setIsModalOpen(true);
   };
 
-  // Payment selection
   const handlePayment = (method) => {
     if (!selectedPlan) return;
 
@@ -102,44 +97,38 @@ export default function Pricing() {
     });
 
     let path = "";
-    if (method === "sslcommerz") {
-      path = `/checkout?${params.toString()}`;
-    } else if (method === "stripe") {
-      path = `/checkoutStripe?${params.toString()}`;
-    }else if (method === 'coin') {
-    path = `/coin-payment?${params.toString()}`;
-    }
+    if (method === "sslcommerz") path = `/checkout?${params.toString()}`;
+    else if (method === "stripe") path = `/checkoutStripe?${params.toString()}`;
+    else if (method === "coin") path = `/coin-payment?${params.toString()}`;
 
     setIsModalOpen(false);
     router.push(path);
   };
 
   return (
-    <div className="bg-base-100 min-h-screen py-16 text-base-content">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold">Pricing</h2>
-        <p className="text-base-content/70 mt-2">
+    <div className="bg-[#111111] min-h-screen py-16 text-gray-200">
+      <div className="text-center mb-12 px-4 md:px-0">
+        <h2 className="text-4xl md:text-5xl font-bold text-white mb-2 mt-5">
+          Pricing
+        </h2>
+        <p className="text-gray-400 text-base md:text-lg">
           Simple, transparent pricing. No hidden fees.
         </p>
 
         {/* Toggle */}
-        <div className="flex items-center justify-center gap-4 mt-6">
+        <div className="flex items-center justify-center gap-4 mt-6 text-sm md:text-base">
           <span
             className={`cursor-pointer ${
-              billing === "monthly"
-                ? "text-red-500 font-bold"
-                : "text-base-content/70"
+              billing === "monthly" ? "text-red-500 font-bold" : "text-gray-500"
             }`}
             onClick={() => setBilling("monthly")}
           >
             Monthly
           </span>
-          <span className="text-base-content/50">/</span>
+          <span className="text-gray-600">/</span>
           <span
             className={`cursor-pointer ${
-              billing === "yearly"
-                ? "text-red-500 font-bold"
-                : "text-base-content/70"
+              billing === "yearly" ? "text-red-500 font-bold" : "text-gray-500"
             }`}
             onClick={() => setBilling("yearly")}
           >
@@ -154,23 +143,23 @@ export default function Pricing() {
           {plans.map((plan, idx) => (
             <div
               key={idx}
-              className="bg-base-200 border border-base-300 rounded-lg p-4 flex flex-col hover:border-red-500 transition-colors"
+              className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-6 flex flex-col hover:border-red-500 hover:shadow-lg transition-all"
             >
               <div>
-                <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-                <p className="text-base-content/70 mb-3 text-sm">
-                  {plan.description}
-                </p>
+                <h3 className="text-xl font-bold mb-2 text-red-500">
+                  {plan.name}
+                </h3>
+                <p className="text-gray-400 mb-3 text-sm">{plan.description}</p>
                 <div className="text-2xl font-bold mb-3">
                   {plan.monthly !== "—" ? (
                     <>
                       ${billing === "monthly" ? plan.monthly : plan.yearly}
-                      <span className="text-sm font-medium text-base-content/70">
+                      <span className="text-sm font-medium text-gray-400">
                         /mo
                       </span>
                     </>
                   ) : (
-                    <span className="text-base text-base-content/70">
+                    <span className="text-gray-400 text-sm">
                       Custom Pricing
                     </span>
                   )}
@@ -186,11 +175,11 @@ export default function Pricing() {
               </div>
               <button
                 onClick={() => handlePrice(plan.name)}
-                className={`mt-auto py-2 px-4 rounded-md font-semibold text-center text-sm ${
+                className={`mt-auto py-2 px-4 rounded-lg font-semibold text-white text-sm transition-colors ${
                   plan.button === "Contact Us" ||
                   plan.button === "Request Quote"
-                    ? "bg-red-700 hover:bg-red-800 text-white"
-                    : "bg-red-600 hover:bg-red-700 text-white"
+                    ? "bg-red-700 hover:bg-red-800"
+                    : "bg-red-600 hover:bg-red-700"
                 }`}
               >
                 {plan.button}
@@ -200,61 +189,58 @@ export default function Pricing() {
         </div>
       </Container>
 
-      {/* daisyUI Modal */}
+      {/* Modal */}
       {isModalOpen && selectedPlan && (
         <dialog open className="modal">
-          <div data-aos="fade-up" className="modal-box border ">
-            <h3 className="font-bold text-lg mb-3">Choose Payment Method</h3>
+          <div
+            data-aos="fade-up"
+            className="modal-box bg-[#1a1a1a] border border-gray-700 text-gray-200 rounded-xl"
+          >
+            <h3 className="font-bold text-lg mb-3 text-red-500">
+              Choose Payment Method
+            </h3>
             <p className="mb-4 text-sm">
               Selected Plan:{" "}
               <span className="font-semibold">{selectedPlan.name}</span>
             </p>
 
-            <div className="flex gap-4">
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
               <div
                 onClick={() => handlePayment("sslcommerz")}
-                className="
-      flex flex-col items-center justify-center p-4 w-35 h-25
-      bg-white border-2 border-green-500 rounded-lg shadow-lg
-      hover:shadow-xl transition duration-300 ease-in-out cursor-pointer
-      btn btn-card-sslcommerz hover:border-red-500"
+                className="flex flex-col items-center justify-center p-4 w-full md:w-1/3 bg-gray-900 border-2 border-green-500 rounded-lg shadow-lg hover:shadow-xl cursor-pointer transition-all"
               >
-                <BsCreditCard2Back className="text-4xl text-green-600 mb-2" />
-                <span className="font-semibold text-gray-800 text-center">
+                <BsCreditCard2Back className="text-4xl text-green-500 mb-2" />
+                <span className="font-semibold text-gray-200 text-center">
                   Pay with SSL
                 </span>
               </div>
 
               <div
                 onClick={() => handlePayment("stripe")}
-                className="
-      flex flex-col items-center justify-center p-4 w-35 h-25
-      bg-white border-2 border-indigo-600 rounded-lg shadow-lg
-      hover:shadow-xl transition duration-300 ease-in-out cursor-pointer
-      btn btn-card-stripe hover:border-red-500"
+                className="flex flex-col items-center justify-center p-4 w-full md:w-1/3 bg-gray-900 border-2 border-indigo-600 rounded-lg shadow-lg hover:shadow-xl cursor-pointer transition-all"
               >
-                <FaStripe className="text-4xl text-indigo-700 mb-2" />
-                <span className="font-semibold text-gray-800 text-center">
+                <FaStripe className="text-4xl text-indigo-500 mb-2" />
+                <span className="font-semibold text-gray-200 text-center">
                   Pay with Stripe
                 </span>
               </div>
+
               <div
                 onClick={() => handlePayment("coin")}
-                className="
-      flex flex-col items-center justify-center p-4 w-35 h-25
-      bg-white border-2 border-yellow-400 rounded-lg shadow-lg
-      hover:shadow-xl transition duration-300 ease-in-out cursor-pointer
-      btn btn-card-stripe hover:border-red-500"
+                className="flex flex-col items-center justify-center p-4 w-full md:w-1/3 bg-gray-900 border-2 border-yellow-400 rounded-lg shadow-lg hover:shadow-xl cursor-pointer transition-all"
               >
                 <FaCoins className="text-4xl text-yellow-400 mb-2" />
-                <span className="font-semibold text-gray-800 text-center">
+                <span className="font-semibold text-gray-200 text-center">
                   Pay with Coin
                 </span>
               </div>
             </div>
 
             <div className="modal-action">
-              <button onClick={() => setIsModalOpen(false)} className="btn">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="btn bg-gray-800 border-gray-700 hover:bg-red-600 hover:border-red-500 text-white"
+              >
                 Cancel
               </button>
             </div>

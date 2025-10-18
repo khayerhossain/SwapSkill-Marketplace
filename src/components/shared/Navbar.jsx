@@ -41,9 +41,7 @@ export default function NavbarPage() {
   return (
     <div
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        scrolled
-          ? "backdrop-blur-md bg-base-100/90 shadow-md"
-          : "bg-transparent"
+        scrolled ? "bg-black backdrop-blur-lg shadow-lg" : "bg-transparent"
       }`}
     >
       <Container>
@@ -100,7 +98,7 @@ export default function NavbarPage() {
                 <div className="flex flex-col gap-2 mt-2">
                   <Link
                     href="/login"
-                    className="btn bg-gray-800 text-white rounded-lg"
+                    className="btn bg-gray-900 text-white rounded-lg"
                   >
                     Sign In
                   </Link>
@@ -149,7 +147,7 @@ export default function NavbarPage() {
               <ThemeToggle />
               <Link
                 href="/login"
-                className="btn bg-gray-800 text-white rounded-lg"
+                className="btn bg-gray-950 text-white rounded-lg"
               >
                 Sign In
               </Link>

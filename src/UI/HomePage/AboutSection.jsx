@@ -15,76 +15,103 @@ const textVariants = {
 
 export default function AboutSection() {
   return (
-    <section className="w-full bg-white py-24 flex items-center justify-center">
+    <section className="relative w-full py-24 flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#0a0a0a] via-[#111111] to-[#1a1a1a] text-gray-200">
+      {/* ✨ Subtle glow overlay for extra depth */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-indigo-500/5 pointer-events-none" />
+
       <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
-          {/* Left side - Full-width Image */}
+        <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full z-10">
+          {/* 🖼 Left Side - Image */}
           <div className="flex justify-center lg:justify-start px-4">
-            <div className="w-full max-w-lg rounded-3xl overflow-hidden transition-shadow duration-500">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="w-full max-w-lg rounded-3xl overflow-hidden "
+            >
               <Image
                 src={AboutImage}
                 alt="About Us"
-                className="object-cover w-full h-full"
+                className="object-cover w-full h-full transition-transform duration-500 hover:scale-105"
                 priority
               />
-            </div>
+            </motion.div>
           </div>
 
-          {/* Right side - Content */}
-          <div className="space-y-6 w-full text-center lg:text-left">
-            <h2 className="text-5xl md:text-6xl font-extrabold leading-tight text-gray-900">
+          {/* 📝 Right Side - Text Content */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="space-y-6 w-full text-center lg:text-left"
+          >
+            <motion.h2
+              custom={1}
+              variants={textVariants}
+              className="text-5xl md:text-6xl font-extrabold leading-tight text-white"
+            >
               About{" "}
-              <span className="bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">
+              <span className="bg-red-500 bg-clip-text text-transparent">
                 Us
               </span>
-            </h2>
+            </motion.h2>
 
-            <p className="text-lg md:text-xl text-gray-700 leading-relaxed max-w-xl">
+            <motion.p
+              custom={2}
+              variants={textVariants}
+              className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-xl mx-auto lg:mx-0"
+            >
               We are a team of{" "}
-              <span className="font-semibold text-purple-600">innovators</span>
+              <span className="font-semibold text-gray-100">innovators</span>{" "}
               dedicated to building a platform where{" "}
-              <span className="font-semibold text-blue-600">
+              <span className="font-semibold text-gray-200">
                 skills meet opportunity
               </span>
               . Our mission is to help everyone turn their talents into
               meaningful connections.
-            </p>
+            </motion.p>
 
-            <p className="text-md md:text-lg text-gray-600 max-w-xl">
+            <motion.p
+              custom={3}
+              variants={textVariants}
+              className="text-md md:text-lg text-gray-400 max-w-xl mx-auto lg:mx-0"
+            >
               Join thousands of learners and professionals transforming their
-              expertise into
-              <span className="font-semibold text-green-600">
-                {" "}
+              expertise into{" "}
+              <span className="font-semibold text-gray-200">
                 rewarding opportunities
               </span>
               . Together, we’re shaping a community where growth is unlimited.
-            </p>
+            </motion.p>
 
-            {/* Enhanced Stats */}
-            {/* it will be dynamic later */}
+            {/* 💫 Stats Section */}
             <motion.div
               custom={4}
               variants={textVariants}
-              initial="hidden"
-              animate="visible"
-              className="flex items-center justify-center lg:justify-start gap-8 py-4 mt-6"
+              className="flex flex-wrap items-center justify-center lg:justify-center gap-8 py-6 mt-6 bg-white/5 backdrop-blur-md rounded-2xl shadow-md border border-white/10"
             >
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">10K+</div>
-                <div className="text-sm text-gray-500">Active Users</div>
+                <div className="text-3xl font-extrabold text-red-500">
+                  10K+
+                </div>
+                <div className="text-sm text-gray-400">Active Users</div>
               </div>
-              <div className="w-px h-12 bg-gray-300 hidden sm:block"></div>
+              <div className="w-px h-12 bg-gray-600/30 hidden sm:block"></div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">500+</div>
-                <div className="text-sm text-gray-500">Skills Available</div>
+                <div className="text-3xl font-extrabold text-red-500">
+                  500+
+                </div>
+                <div className="text-sm text-gray-400">Skills Available</div>
               </div>
-              <div className="w-px h-12 bg-gray-300 hidden sm:block"></div>
+              <div className="w-px h-12 bg-gray-600/30 hidden sm:block"></div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">4.9★</div>
-                <div className="text-sm text-gray-500">User Rating</div>
+                <div className="text-3xl font-extrabold text-red-500">
+                  4.9★
+                </div>
+                <div className="text-sm text-gray-400">User Rating</div>
               </div>
             </motion.div>
-          </div>
+          </motion.div>
         </div>
       </Container>
     </section>

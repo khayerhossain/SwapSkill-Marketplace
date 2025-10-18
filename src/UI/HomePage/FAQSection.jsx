@@ -1,8 +1,7 @@
 "use client";
 import Container from "@/components/shared/Container";
-import { ThemeContext } from "@/context/ThemeProvider";
 import { AnimatePresence, motion } from "framer-motion";
-import { use, useState } from "react";
+import { useState } from "react";
 import { FaChevronDown, FaRegCircle } from "react-icons/fa";
 
 const faqs = [
@@ -31,90 +30,70 @@ const faqs = [
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(0);
 
-  const { theme } = use(ThemeContext);
-  console.log("dark mood light mood", theme);
-
   return (
-    <Container>
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row gap-12">
+    <section className="relative py-24 bg-gradient-to-b from-[#0a0a0a] via-[#111111] to-[#1a1a1a] text-gray-200 overflow-hidden">
+      <Container>
+        <div className=" mx-auto">
+          <div className="flex flex-col lg:flex-row gap-12">
             {/* Left side */}
-            <div className="md:w-1/2 space-y-8 flex flex-col justify-between">
+            <div className="lg:w-1/2 flex flex-col justify-between space-y-8">
               <div>
-                <div className="flex items-center gap-4 py-2 px-4 border border-base-300 w-fit rounded-lg">
-                  <FaRegCircle className=" text-purple-600" />
-                  <p className="text-purple-600 text-xs">
+                <div className="flex items-center gap-4 py-2 px-4 border border-red-500 w-fit rounded-lg">
+                  <FaRegCircle className=" text-red-500" />
+                  <p className="text-red-500 text-xs">
                     Got questions? We’ve got answers!
                   </p>
                 </div>
-                <h1 className="text-4xl md:text-5xl lg:text-4xl font-bold text-gray-900 mt-5">
-                  Frequently asked questions
+                <h1 className="text-4xl md:text-5xl font-extrabold text-white mt-5">
+                  Frequently Asked Questions
                 </h1>
-                <p className="text-gray-600 text-sm md:text-base mt-3 max-w-md">
+                <p className="text-gray-400 text-sm md:text-base mt-3 max-w-md">
                   Here are some of the most common questions about SwapSkill to
                   help you get started quickly.
                 </p>
               </div>
 
-              <div
-                className={`${
-                  theme === "light"
-                    ? "bg-gradient-to-br from-purple-100 to-purple-200"
-                    : " border"
-                } rounded-xl shadow-md p-6`}
-              >
-                <h2
-                  className={`font-semibold ${
-                    theme === "light" ? "text-gray-900" : "text-black"
-                  } mb-2`}
-                >
+              <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-6">
+                <h2 className="font-semibold text-white mb-2">
                   Still have questions?
                 </h2>
-                <p
-                  className={` ${
-                    theme === "light" ? "text-gray-600" : "text-black"
-                  } mb-4 max-w-sm text-sm`}
-                >
+                <p className="text-gray-300 mb-4 text-sm max-w-sm">
                   If you can&apos;t find the answer you&apos;re looking for, our
                   support team is ready to assist you.
                 </p>
                 <motion.button
                   whileHover={{
                     scale: 1.05,
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className={`text-white group relative w-full sm:w-auto px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden`}
+                  className="text-white w-full sm:w-auto px-6 py-3 rounded-lg bg-gradient-to-r from-red-500 to-red-700 font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  <span className="absolute inset-0 bg-gradient-to-r from-purple-700 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                  <span className="relative flex items-center justify-center gap-2 text-xs">
-                    Send email
-                  </span>
+                  Send email
                 </motion.button>
               </div>
             </div>
 
             {/* Right side: Accordion */}
-            <div className="md:w-1/2 flex flex-col justify-between gap-4">
+            <div className="lg:w-1/2 flex flex-col gap-4">
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl"
+                  className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-white/10 hover:shadow-lg"
                 >
                   <button
                     onClick={() =>
                       setOpenIndex(openIndex === index ? null : index)
                     }
-                    className={`flex justify-between items-center w-full text-left p-5 focus:outline-none focus:ring-2 focus:ring-purple-300 transition-colors duration-200 hover:bg-purple-50 ${theme ==='light' ? '':'hover:text-black'}`}
+                    className="flex justify-between items-center w-full text-left p-5 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-200 hover:bg-white/10"
                     aria-expanded={openIndex === index}
                     aria-controls={`faq-answer-${index}`}
                   >
-                    <span className="font-semibold text-gray-900 pr-4">
+                    <span className="font-semibold text-white">
                       {faq.question}
                     </span>
                     <FaChevronDown
-                      className={`h-5 w-5 text-purple-600 transition-transform duration-500 ease-in-out ${
+                      className={`h-5 w-5 text-red-500 transition-transform duration-500 ease-in-out ${
                         openIndex === index ? "rotate-180" : ""
                       }`}
                     />
@@ -129,7 +108,7 @@ export default function FAQSection() {
                         transition={{ duration: 0.2, ease: "easeInOut" }}
                         className="overflow-hidden"
                       >
-                        <p className="p-5 text-gray-600 text-xs md:text-base leading-relaxed">
+                        <p className="p-5 text-gray-300 text-sm md:text-base leading-relaxed">
                           {faq.answer}
                         </p>
                       </motion.div>
@@ -140,7 +119,7 @@ export default function FAQSection() {
             </div>
           </div>
         </div>
-      </section>
-    </Container>
+      </Container>
+    </section>
   );
 }

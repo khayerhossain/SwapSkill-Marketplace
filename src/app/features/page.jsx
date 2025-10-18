@@ -76,65 +76,64 @@ export default function Featured() {
       description:
         "Personalized learning paths & skill recommendations powered by AI (coming soon).",
       icon: Sparkles,
-      color:
-        "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700 hover:border-blue-400 dark:hover:border-blue-500",
-      textColor: "text-blue-700 dark:text-blue-400",
-      descColor: "text-blue-950/80 dark:text-blue-200",
+      color: "bg-red-600/10 border-red-500/30 hover:bg-red-500/20",
+      textColor: "text-red-500",
+      descColor: "text-gray-200/80",
     },
     {
       name: "Group Learning",
       description:
         "Collaborative group sessions — study together, share resources, co-learn.",
       icon: Users,
-      color:
-        "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700 hover:border-green-400 dark:hover:border-green-500",
-      textColor: "text-green-700 dark:text-green-400",
-      descColor: "text-green-950/80 dark:text-green-200",
+      color: "bg-green-500/10 border-green-500/30 hover:bg-green-500/20",
+      textColor: "text-green-400",
+      descColor: "text-gray-200/80",
     },
     {
       name: "Enterprise Toolkit",
       description:
         "Team management, usage analytics and single-sign-on for organizations.",
       icon: Building2,
-      color:
-        "bg-purple-50 dark:bg-purple-900/30 border-purple-200 dark:border-purple-700 hover:border-purple-400 dark:hover:border-purple-500",
-      textColor: "text-purple-700 dark:text-purple-400",
-      descColor: "text-purple-950/80 dark:text-purple-200",
+      color: "bg-purple-500/10 border-purple-500/30 hover:bg-purple-500/20",
+      textColor: "text-purple-400",
+      descColor: "text-gray-200/80",
     },
   ];
 
   return (
-    <div className="bg-base-100 dark:bg-base-100 min-h-screen text-base-content dark:text-base-content flex flex-col mt-10">
+    <div className="bg-[#111111] min-h-screen text-gray-200 flex flex-col">
       <NavbarPage />
 
       {/* Header */}
-      <div className="py-16 text-center mb-4">
-        <h2 className="text-4xl font-bold">Featured What sets us apart</h2>
-        <p className="text-base-content/70 mt-2 max-w-2xl mx-auto">
+      <div className="py-16 text-center px-4 md:px-0 mt-10">
+        <h2 className="text-4xl  font-bold text-white mb-4">
+          Featured What Sets Us Apart
+        </h2>
+        <p className="text-gray-400 max-w-3xl mx-auto text-base md:text-lg leading-relaxed">
           A single-section summary of the unique tools inside{" "}
-          <strong>Service Skills</strong>. Each card mirrors the look-and-feel
-          of the Pricing layout so the presentation stays consistent across
-          pages.
+          <strong className="text-red-500">SwapSkill</strong>. Each card mirrors
+          the look-and-feel of the Pricing layout so the presentation stays
+          consistent across pages.
         </p>
       </div>
 
       <Container className="flex-grow">
         {/* Feature Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
+        <div className="grid md:grid-cols-4 gap-6 mb-12">
           {features.map((f, idx) => {
             const Icon = f.icon;
             return (
               <article
                 key={idx}
-                className="bg-base-200 border border-base-300 rounded-lg p-6 flex flex-col hover:border-red-500 transition-colors"
+                className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-6 flex flex-col gap-3 hover:shadow-lg hover:border-red-500 transition-all"
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-md bg-red-500/10 flex items-center justify-center">
-                    <Icon size={30} className="text-red-500" />
+                  <div className="w-12 h-12 rounded-md bg-red-500/20 flex items-center justify-center">
+                    <Icon size={28} className="text-red-500" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold">{f.name}</h3>
-                    <p className="text-sm text-base-content/70 mt-1">
+                    <p className="text-gray-400 text-sm mt-1">
                       {f.description}
                     </p>
                   </div>
@@ -145,32 +144,28 @@ export default function Featured() {
         </div>
 
         {/* Separator */}
-        <div className="border-t border-base-300 dark:border-base-300 my-8" />
+        <div className="border-t border-gray-800 my-8" />
 
         {/* Upcoming Features */}
-        <div className="mb-6 text-center">
-          <h3 className="text-2xl font-bold">Upcoming</h3>
-          <p className="text-base-content/70 mt-2 max-w-3xl mx-auto">
+        <div className="mb-8 text-center">
+          <h3 className="text-3xl font-bold text-red-500 mb-2">Upcoming</h3>
+          <p className="text-gray-400 max-w-3xl mx-auto text-base leading-relaxed">
             Planned improvements and premium capabilities we will ship soon —
             great for presentation and roadmap conversations.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-3 gap-6 mb-28">
           {upcoming.map((u, i) => {
             const Icon = u.icon;
             return (
               <div
                 key={i}
-                className={`${u.color} border rounded-lg p-6 transition-colors`}
+                className={`${u.color} border rounded-xl p-6 transition-all hover:shadow-lg`}
               >
                 <div className="flex items-start gap-3 mb-2">
-                  <div
-                    className={`w-10 h-10 rounded-md ${
-                      u.color.split(" ")[0]
-                    } flex items-center justify-center`}
-                  >
-                    <Icon size={20} className={u.textColor} />
+                  <div className="w-10 h-10 rounded-md flex items-center justify-center bg-opacity-20">
+                    <Icon size={24} className={u.textColor} />
                   </div>
                   <h4 className={`font-semibold text-lg ${u.textColor}`}>
                     {u.name}

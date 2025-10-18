@@ -17,96 +17,95 @@ export default function AppBarLayout({ children }) {
   const { data: session } = useSession();
 
   return (
-    <div className="min-h-screen bg-base-100 text-base-content overflow-x-hidden">
-      <div className="flex">
-        {/* Large Screen Sidebar */}
-        <div
-          className={`hidden md:block fixed left-0 top-0 h-screen z-30 ${
-            collapsed ? "w-[6rem]" : "w-[20%]"
-          } bg-base-200 text-base-content border-r border-base-300`}
-        >
-          <div className="p-4 flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold">
-              <span>Swap Skill</span>
+    <div className="min-h-screen bg-base-100 text-base-content overflow-x-hidden flex">
+      {/* Large Screen Sidebar */}
+      <div
+        className={`hidden md:flex fixed top-0 left-0 h-screen z-30 flex-col bg-[#111111] text-gray-200 border-r border-gray-800 transition-width duration-300 ${
+          collapsed ? "w-20" : "w-64"
+        }`}
+      >
+        <div className="flex items-center justify-between p-4 border-b border-gray-800">
+          <Link href="/" className="text-xl font-bold text-red-500">
+            {!collapsed ? "SwapSkill" : "SS"}
+          </Link>
+          <button
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className="p-2 text-gray-400 hover:text-red-500 rounded-md transition-colors"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            {collapsed ? <IoIosArrowForward /> : <IoIosArrowBack />}
+          </button>
+        </div>
+        <Sidebar
+          useAppBarPaths
+          collapsed={collapsed}
+          isDashboard={false}
+          role={session?.user?.role || "user"}
+        />
+      </div>
+
+      {/* Main Content */}
+      <div
+        className={`flex-1 flex flex-col min-h-screen transition-all duration-300 w-full ${
+          collapsed ? "md:pl-20" : "md:pl-64"
+        }`}
+      >
+        {/* AppBar */}
+        <header className="flex items-center justify-between p-1 border-b border-gray-800 bg-[#111111] text-gray-200 w-full z-40 shadow-sm sticky top-0">
+          <div className="flex items-center gap-3 flex-shrink-0">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsOpen(true)}
+              className="p-2 text-2xl bg-[#222222] text-gray-200 rounded-md md:hidden hover:bg-red-500 transition-colors"
+              aria-label="Open Menu"
+            >
+              <IoMdMenu />
+            </button>
+            <h1 className="text-xl font-bold text-red-500">App Bar</h1>
+          </div>
+
+          <div className="flex items-center gap-4 flex-shrink-0">
+            <Link
+              href="appBar/leader-board"
+              className="text-gray-200 hover:text-red-500 transition-colors flex-shrink-0"
+            >
+              <ClipboardList size={20} />
             </Link>
 
-            <button
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              className="btn btn-ghost btn-xs"
-              onClick={() => setCollapsed(!collapsed)}
-            >
-              {collapsed ? <IoIosArrowForward /> : <IoIosArrowBack />}
-            </button>
-          </div>
-          <Sidebar
-            useAppBarPaths
-            collapsed={collapsed}
-            isDashboard={false}
-            role={session?.user?.role || "user"}
-          />
-        </div>
+            <NotificationDropdown />
 
-        {/* Main Content */}
-        <div
-          className={`w-full ${
-            collapsed ? "md:pl-[6rem]" : "md:pl-[20%]"
-          } pr-2 `}
-        >
-          <header className="flex items-center justify-between p-4 border-b border-base-300 bg-white sticky top-0 z-40">
-            <div className="flex items-center gap-3">
-              {/* Mobile Menu Button */}
-              <button
-                onClick={() => setIsOpen(true)}
-                className="p-2 text-2xl text-base-content bg-base-200 rounded-md md:hidden"
-                aria-label="Open Menu"
+            {session?.user && (
+              <Link
+                href="/dashboard/profile"
+                className="flex items-center gap-2 px-2 py-1 rounded-full bg-gray-800 text-gray-200  transition-colors flex-shrink-0"
               >
-                <IoMdMenu />
-              </button>
-              <h1 className="text-xl font-bold text-gray-800">App Bar</h1>
-            </div>
-
-            <div className="flex items-center gap-4 ">
-              <Link href="appBar/leader-board">
-                <ClipboardList />
+                <Image
+                  src={session.user.image}
+                  alt={session.user.name || "Profile"}
+                  width={32}
+                  height={32}
+                  className="rounded-full object-cover"
+                />
+                <span className="hidden lg:block">
+                  {session.user.name || "Profile"}
+                </span>
               </Link>
-              {/* Notification Dropdown */}
-              <NotificationDropdown />
+            )}
 
-              {/* User Profile */}
-              {session?.user && (
-                <Link
-                  href="/dashboard/profile"
-                  className="flex items-center gap-2 px-1  py-1 rounded-full bg-gray-100 text-gray-800 font-medium hover:bg-gray-200 transition-colors"
-                >
-                  <Image
-                    src={session.user.image}
-                    alt={session.user.name || "Profile"}
-                    width={32}
-                    height={32}
-                    className="rounded-full object-cover"
-                  />
-                  <span className="hidden lg:block">
-                    {session.user.name || "Profile"}
-                  </span>
-                </Link>
-              )}
+            {session?.user && (
+              <button
+                aria-label="Logout"
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="p-2 text-gray-200 hover:text-white hover:bg-red-500 rounded-full transition-colors flex-shrink-0 cursor-pointer"
+              >
+                <FiLogOut size={20} />
+              </button>
+            )}
+          </div>
+        </header>
 
-              {/* Logout Button */}
-              {session?.user && (
-                <button
-                  aria-label="Logout"
-                  onClick={() => signOut({ callbackUrl: "/login" })}
-                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-100 rounded-full transition-colors"
-                  title="Logout"
-                >
-                  <FiLogOut className="text-lg" />
-                </button>
-              )}
-            </div>
-          </header>
-
-          <main className="w-full">{children}</main>
-        </div>
+        {/* Page Content */}
+        <main className="flex-1 w-full">{children}</main>
       </div>
 
       {/* Mobile Drawer */}
@@ -116,9 +115,8 @@ export default function AppBarLayout({ children }) {
           <div
             className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
             onClick={() => setIsOpen(false)}
-          ></div>
-
-          {/* Sidebar Drawer */}
+          />
+          {/* Drawer */}
           <div className="fixed top-0 left-0 h-full w-72 bg-white shadow-lg z-50 md:hidden">
             <div className="flex justify-between items-center p-4 border-b border-gray-200">
               <h1 className="text-xl font-bold text-gray-800">Menu</h1>

@@ -30,7 +30,7 @@ export default function LoginPage() {
           redirect: true,
           email: regform.email,
           password: regform.password,
-          callbackUrl: "/post-login",
+          // callbackUrl: "/appBar",
         });
         if (res?.ok) {
           toast.success("Logged in successfully");

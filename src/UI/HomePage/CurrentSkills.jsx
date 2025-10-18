@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/Badge";
 import Container from "@/components/shared/Container";
+import { motion } from "framer-motion";
 
 const skillsData = [
   {
@@ -47,103 +48,85 @@ const skillsData = [
     subSkills: ["Car", "Bike", "Truck"],
   },
   {
-    name: "Fishing",
-    logo: "/assets/marquee/fishing-40.png",
-    students: "6.2k",
-    subSkills: ["River", "Sea", "Fly Fishing"],
-  },
-  {
     name: "Music",
     logo: "/assets/marquee/music-27.png",
     students: "6.7k",
     subSkills: ["Piano", "Guitar", "Music Theory"],
   },
-  {
-    name: "Running",
-    logo: "/assets/marquee/running-90.png",
-    students: "4.9k",
-    subSkills: ["Sprint", "Marathon", "Relay"],
-  },
-  {
-    name: "Swimming",
-    logo: "/assets/marquee/swimming-29.png",
-    students: "5.1k",
-    subSkills: ["Freestyle", "Butterfly", "Backstroke"],
-  },
-  {
-    name: "Team Work",
-    logo: "/assets/marquee/team-work-1-75.png",
-    students: "7.5k",
-    subSkills: ["Collaboration", "Leadership", "Communication"],
-  },
 ];
 
 export default function CurrentSkillsPage() {
   return (
-    <Container>
-      <div className="py-14">
-        {/* Title */}
-        <div className="max-w-6xl mx-auto text-center space-y-3">
-          <h1 className="text-4xl font-bold text-base-content">
-            Explore <span className="text-red-500">Skill Categories</span>
+    <section className="relative w-full py-20 overflow-hidden bg-gradient-to-b from-[#0a0a0a] via-[#111] to-[#1a1a1a]">
+      {/* ✨ Subtle background gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-indigo-500/5 pointer-events-none" />
+
+      <Container>
+        {/* Title Section */}
+        <div className="relative z-10 text-center space-y-4 mb-16">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white">
+            Discover{" "}
+            <span className="bg-gradient-to-r from-red-500 to-indigo-400 bg-clip-text text-transparent">
+              Skill Categories
+            </span>
           </h1>
-          <p className="text-base-content/70">
-            Browse through a variety of popular skill categories and connect with
-            expert tutors ready to help you grow.
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Explore trending skills and connect with passionate learners &
+            mentors from around the world.
           </p>
         </div>
 
-        {/* Cards grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+        {/* Cards Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
           {skillsData.map((skill, index) => (
-            <div
+            <motion.div
               key={index}
-              className="relative bg-base-100 border border-base-300 rounded-2xl p-6 shadow-md hover:shadow-lg transition"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
+              className="group relative bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md hover:bg-white/10 hover:scale-[1.03] transition-all duration-500 shadow-lg shadow-black/30"
             >
-              {/* Top row */}
-              <div className="flex justify-between items-center mb-4">
+              {/* Top Row */}
+              <div className="flex justify-between items-center mb-5">
                 <img
                   src={skill.logo}
                   alt={skill.name}
-                  className="w-12 h-12 object-contain"
+                  className="w-14 h-14 object-contain group-hover:scale-110 transition-transform duration-300"
                 />
-                <span className="bg-base-200 text-base-content text-xs px-3 py-1 rounded-full">
+                <span className="text-xs font-medium text-gray-300 bg-white/10 px-3 py-1 rounded-full border border-white/10">
                   {skill.students} students
                 </span>
               </div>
 
               {/* Title */}
-              <h2 className="text-lg font-semibold text-base-content mb-3">
+              <h2 className="text-xl font-semibold text-white mb-3">
                 {skill.name}
               </h2>
 
               {/* Subskills */}
-              <div className="flex flex-wrap gap-2 mb-3">
-                {skill.subSkills.slice(0, 3).map((s, i) => (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {skill.subSkills.map((s, i) => (
                   <Badge
                     key={i}
                     variant="outline"
-                    className="text-base-content border-base-300"
+                    className="text-gray-300 border-white/20 hover:border-red-500/40 transition"
                   >
                     {s}
                   </Badge>
                 ))}
-                <Badge
-                  variant="outline"
-                  className="text-base-content/60 border-base-300"
-                >
-                  +2
-                </Badge>
               </div>
 
-              {/* Footer */}
-              <p className="text-sm text-base-content/70">
-                5 skills available
+              {/* Bottom info */}
+              <p className="text-sm text-gray-500">
+                More skills coming soon...
               </p>
-            </div>
+
+              {/* Glow border animation */}
+              <div className="absolute inset-0 rounded-2xl border border-transparent bg-gradient-to-r from-red-500/20 via-transparent to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none" />
+            </motion.div>
           ))}
         </div>
-      </div>
-    </Container>
+      </Container>
+    </section>
   );
 }

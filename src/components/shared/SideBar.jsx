@@ -90,7 +90,7 @@ const Sidebar = ({
     { name: "Resources", path: resourcesPath },
     { name: "Earn Coin", path: earnCoin },
     { name: "Inbox", path: inboxPath },
-    { name: "Saved", path: "/appBar/SavedItems" },
+    { name: "Saved", path: "/appBar/saved-items" },
   ];
 
   const dashboardItems = [

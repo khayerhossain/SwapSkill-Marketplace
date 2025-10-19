@@ -10,9 +10,11 @@ import {
   Star,
   Briefcase,
   MapPin,
+  Bookmark,
 } from "lucide-react";
 import Container from "@/components/shared/Container";
 import Loading from "@/app/loading";
+import { useSession } from "next-auth/react";
 
 export default function SkillsPage() {
   const [skills, setSkills] = useState([]);
@@ -24,6 +26,8 @@ export default function SkillsPage() {
   const limit = 6;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { data: session } = useSession();
+
 
   useEffect(() => {
     const fetchSkills = async () => {
@@ -71,6 +75,37 @@ export default function SkillsPage() {
     "bg-blue-100 text-blue-700",
     "bg-purple-100 text-purple-700",
   ];
+
+  // Save button when click
+     const handleSaveSkill = async ( skill ) => {
+    try {
+      
+      const userEmail = session?.user?.email;
+      if (!userEmail) {
+        alert("Please login to save this skill.");
+        return;
+      }
+
+      
+      const { data } = await axiosInstance.post("/saved-skills", {
+        skillData: skill, 
+        userEmail,        
+      });
+
+      if (data.success) {
+        alert(" Skill saved successfully!");
+      } else {
+        alert(" Failed to save skill. Try again.");
+      }
+    } catch (error) {
+      console.error("Save failed:", error);
+      alert("Error saving skill!");
+    }}
+
+
+
+
+
 
   return (
     <section>
@@ -226,8 +261,12 @@ export default function SkillsPage() {
 
                     {/* Buttons */}
                     <div className="flex mt-5 gap-3">
-                      <button className="flex items-center justify-center gap-2 w-1/2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition shadow cursor-pointer">
-                        <MessageSquare size={16} /> Message
+                      <button 
+
+                      onClick={() => handleSaveSkill(skill)}
+
+                       className="flex items-center justify-center gap-2 w-1/2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition shadow cursor-pointer">
+                        <Bookmark className="w-5 h-5" /> Save
                       </button>
                       <Link
                         href={`/appBar/find-skills/${skill._id}`}

@@ -16,6 +16,9 @@ export const collectionNamesObj = {
   notificationsCollection: "notifications", // new 
   userEarnCoinCollection: 'earn-coin',
   postsCollection: "posts",
+
+  savedSkills: "saved",
+
 };
 
 

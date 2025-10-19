@@ -11,35 +11,12 @@ import { Eye, EyeOff } from "lucide-react";
 import logo from "../../assets/logo.png";
 
 export default function LoginPage() {
-  const [regform, setRegForm] = useState({ name: "", email: "", password: "" });
   const [form, setForm] = useState({ email: "", password: "" });
-  const [isToggled, setIsToggled] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const handleChangeReg = (e) =>
-    setRegForm({ ...regform, [e.target.name]: e.target.value });
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSubmitReg = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await axiosInstance.post("/register", regform);
-      if (data.success) {
-        toast.success("Registration successful!");
-        const res = await signIn("credentials", {
-          redirect: false,
-          email: regform.email,
-          password: regform.password,
-        });
-        if (res?.ok) toast.success("Logged in successfully");
-        else toast.error("Auto login failed!");
-      } else toast.error(data.error || "Something went wrong!");
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Something went wrong");
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,7 +27,10 @@ export default function LoginPage() {
         password: form.password,
       });
       if (result?.error) toast.error("Invalid credentials");
-      else toast.success("Logged in successfully");
+      else {
+        toast.success("Logged in successfully");
+        router.push("/"); // login successful হলে redirect
+      }
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");
     }
@@ -67,7 +47,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#0a0a0a] via-[#141414] to-[#1c1c1c] text-white px-4">
       <Container>
-        {/* Subtle red glow accents */}
         <div className="absolute w-[400px] h-[400px] bg-red-600/20 rounded-full blur-[180px] top-[-150px] left-[-100px]" />
         <div className="absolute w-[400px] h-[400px] bg-red-700/20 rounded-full blur-[200px] bottom-[-150px] right-[-100px]" />
 
@@ -84,13 +63,7 @@ export default function LoginPage() {
             transition={{ delay: 0.3, duration: 0.7 }}
             className="hidden md:flex flex-col justify-center flex-1 p-8 md:p-14"
           >
-            <Image
-              src={logo}
-              alt="Logo"
-              width={70}
-              height={70}
-              className="mb-8 opacity-90 hover:opacity-100 transition"
-            />
+            <Image src={logo} alt="Logo" width={70} height={70} className="mb-8 opacity-90 hover:opacity-100 transition" />
             <h1 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
               Welcome Back
             </h1>
@@ -113,63 +86,36 @@ export default function LoginPage() {
             <motion.div
               initial={{ y: 10 }}
               animate={{ y: [10, -10, 10] }}
-              transition={{
-                repeat: Infinity,
-                duration: 10,
-                ease: "easeInOut",
-              }}
-              className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl p-6 sm:p-10 w-full sm:max-w-sm shadow-[0_0_25px_rgba(0,0,0,0.6)] transition-all duration-500"
+              transition={{ repeat: Infinity, duration: 10, ease: "easeInOut" }}
+              className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl p-6 sm:p-10 w-full sm:max-w-sm shadow-[0_0_25px_rgba(0,0,0,0.6)]"
             >
               <h2 className="text-2xl font-semibold text-center mb-6">
-                {isToggled ? "Sign In" : "Create Account"}
+                Sign In
               </h2>
 
-              <form
-                onSubmit={isToggled ? handleSubmit : handleSubmitReg}
-                className="space-y-4"
-              >
-                {!isToggled && (
-                  <div>
-                    <label className="block mb-1 text-sm text-gray-300">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      required
-                      onChange={handleChangeReg}
-                      placeholder="John Doe"
-                      className="w-full bg-white/10 text-white border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-red-500 placeholder-gray-400 transition-all duration-300"
-                    />
-                  </div>
-                )}
-
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block mb-1 text-sm text-gray-300">
-                    Email
-                  </label>
+                  <label className="block mb-1 text-sm text-gray-300">Email</label>
                   <input
                     type="email"
                     name="email"
                     required
-                    onChange={isToggled ? handleChange : handleChangeReg}
+                    onChange={handleChange}
                     placeholder="you@example.com"
-                    className="w-full bg-white/10 text-white border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-red-500 placeholder-gray-400 transition-all duration-300"
+                    className="w-full bg-white/10 text-white border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-red-500 placeholder-gray-400"
                   />
                 </div>
 
                 <div>
-                  <label className="block mb-1 text-sm text-gray-300">
-                    Password
-                  </label>
+                  <label className="block mb-1 text-sm text-gray-300">Password</label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
                       name="password"
                       required
-                      onChange={isToggled ? handleChange : handleChangeReg}
+                      onChange={handleChange}
                       placeholder="••••••••"
-                      className="w-full bg-white/10 text-white border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-red-500 placeholder-gray-400 transition-all duration-300 pr-10"
+                      className="w-full bg-white/10 text-white border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-red-500 placeholder-gray-400 pr-10"
                     />
                     <button
                       type="button"
@@ -185,9 +131,9 @@ export default function LoginPage() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   type="submit"
-                  className="w-full py-2.5 rounded-lg bg-red-500 font-semibold hover:opacity-90 transition-all shadow-lg  cursor-pointer"
+                  className="w-full py-2.5 rounded-lg bg-red-500 font-semibold hover:opacity-90 transition-all shadow-lg"
                 >
-                  {isToggled ? "Sign In" : "Register"}
+                  Sign In
                 </motion.button>
               </form>
 
@@ -196,43 +142,18 @@ export default function LoginPage() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={handleGoogleLogin}
-                  className="w-full flex items-center justify-center gap-3 bg-[#1a1a1a] text-white py-2.5 rounded-lg border border-[#2e2e2e] transition-all cursor-pointer"
+                  className="w-full flex items-center justify-center gap-3 bg-[#1a1a1a] text-white py-2.5 rounded-lg border border-[#2e2e2e]"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 48 48"
-                    width="20"
-                    height="20"
-                  >
-                    <path
-                      fill="#EA4335"
-                      d="M24 9.5c3.5 0 6.3 1.2 8.3 3.2l6.1-6.1C34.8 3.3 29.8 1 24 1 14.7 1 6.7 6.6 3.1 14.4l7.1 5.5C11.9 13.3 17.4 9.5 24 9.5z"
-                    />
-                    <path
-                      fill="#34A853"
-                      d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.5-1.9 4.6-4 6.1l6.2 4.8c3.6-3.4 5.5-8.5 5.5-15.4z"
-                    />
-                    <path
-                      fill="#FBBC05"
-                      d="M10.2 28.8c-.5-1.5-.8-3.1-.8-4.8s.3-3.3.8-4.8l-7.1-5.5C1.1 16.4 0 20.1 0 24s1.1 7.6 3.1 10.3l7.1-5.5z"
-                    />
-                    <path
-                      fill="#4285F4"
-                      d="M24 47c5.8 0 10.6-1.9 14.1-5.1l-6.2-4.8c-1.7 1.2-4 2-7.9 2-6.6 0-12.1-3.8-13.8-9l-7.1 5.5C6.7 41.4 14.7 47 24 47z"
-                    />
-                  </svg>
-                  <span className="font-medium text-sm">
-                    Log in with Google
-                  </span>
+                  <span className="font-medium text-sm">Log in with Google</span>
                 </motion.button>
 
                 <p className="mt-4 text-sm text-gray-400">
-                  {isToggled ? "Don't have an account?" : "Already registered?"}{" "}
+                  Don’t have an account?{" "}
                   <button
-                    onClick={() => setIsToggled(!isToggled)}
-                    className="text-red-400 hover:text-red-300 underline ml-1 transition cursor-pointer"
+                    onClick={() => router.push("/register")}
+                    className="text-red-400 hover:text-red-300 underline ml-1"
                   >
-                    {isToggled ? "Register" : "Login"}
+                    Register
                   </button>
                 </p>
               </div>

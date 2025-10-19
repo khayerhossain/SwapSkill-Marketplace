@@ -1,25 +1,18 @@
-
 import { MongoClient, ServerApiVersion } from "mongodb";
 
 export const collectionNamesObj = {
   usersCollection: "users",
+  postsCollection: "posts",
   skillsDirectoryCollection: "skills-directory",
   newsLatterSubscribersCollection: "subscribers",
   paymentCollection: 'payment',
   testQNACollection: "test-qna",
-  chatMessagesCollection: "chat-messages", // new
-  chatSessionsCollection: "chat-sessions", // new
-
-  notificationsCollection: "notifications",// new
+  chatMessagesCollection: "chat-messages",
+  chatSessionsCollection: "chat-sessions",
+  notificationsCollection: "notifications",
   resourcesCollection: "resources",
-
-  notificationsCollection: "notifications", // new 
   userEarnCoinCollection: 'earn-coin',
-  postsCollection: "posts",
 };
-
-
-
 
 const uri = process.env.MONGODB_URI;
 if (!uri) throw new Error("Please add MONGODB_URI in .env.local");
@@ -30,22 +23,14 @@ let clientPromise;
 if (process.env.NODE_ENV === "development") {
   if (!global._mongoClientPromise) {
     client = new MongoClient(uri, {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-      },
+      serverApi: { version: ServerApiVersion.v1, strict: true, deprecationErrors: true },
     });
     global._mongoClientPromise = client.connect();
   }
   clientPromise = global._mongoClientPromise;
 } else {
   client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    },
+    serverApi: { version: ServerApiVersion.v1, strict: true, deprecationErrors: true },
   });
   clientPromise = client.connect();
 }
@@ -54,4 +39,3 @@ export default async function dbConnect(collectionName) {
   const conn = await clientPromise;
   return conn.db("swap-skill").collection(collectionName);
 }
-

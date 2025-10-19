@@ -22,23 +22,35 @@ export default function SubscribersPage() {
   const handleRemove = async (id) => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
-      text: "You won’t be able to revert this!",
+      text: "This action can’t be undone.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
       confirmButtonText: "Yes, remove it!",
+      background: "#111",
+      color: "#fff",
     });
 
     if (confirm.isConfirmed) {
       try {
         await axios.delete("/api/subscribers", { data: { id } });
-
         setSubscribers((prev) => prev.filter((s) => s._id !== id));
-
-        Swal.fire("Removed!", "Subscriber has been removed.", "success");
+        Swal.fire({
+          title: "Removed!",
+          text: "Subscriber has been deleted.",
+          icon: "success",
+          background: "#111",
+          color: "#fff",
+        });
       } catch (err) {
-        Swal.fire("Error!", "Something went wrong.", "error");
+        Swal.fire({
+          title: "Error!",
+          text: "Something went wrong.",
+          icon: "error",
+          background: "#111",
+          color: "#fff",
+        });
         console.error("Error removing subscriber:", err);
       }
     }
@@ -49,80 +61,80 @@ export default function SubscribersPage() {
   }, []);
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">
-        Newsletter <span className="bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">Subscribers</span> 
-      </h1>
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#0e0e0e] to-[#151515] p-6 flex flex-col items-center">
+      <div className="w-full rounded-2xl shadow-2xl p-6 text-white">
+        <h1 className="text-3xl md:text-4xl font-bold mb-8">
+          Newsletter{" "}
+          <span className="text-red-500 drop-shadow-lg">Subscribers</span>
+        </h1>
 
-      {loading ? (
-        <div className="flex justify-center items-center h-40">
-          <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      ) : (
-        <div className="overflow-x-auto rounded-lg shadow">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-100 text-gray-700">
-                <th className="p-3 text-left">Image</th>
-                <th className="p-3 text-left">Name</th>
-                <th className="p-3 text-left">Email</th>
-                <th className="p-3 text-left">Date</th>
-                <th className="p-3 text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {subscribers.map((sub, idx) => (
-                <tr
-                  key={sub._id}
-                  className={`${
-                    idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                  } hover:bg-gray-100 transition`}
-                >
-                  <td className="p-3">
-                    <img
-                      src={sub.image || "https://i.pravatar.cc/100"}
-                      alt="avatar"
-                      className="w-10 h-10 rounded-full border"
-                    />
-                  </td>
-                  <td className="p-3 font-medium text-gray-800">
-                    {sub.name || "Anonymous"}
-                  </td>
-                  <td className="p-3 text-gray-600">{sub.email}</td>
-                  <td className="p-3 text-gray-500">
-                    {sub.createdAt
-                      ? new Date(sub.createdAt).toLocaleDateString()
-                      : "—"}
-                  </td>
-                  <td className="p-3 text-center">
-                    <button
-                      onClick={() => handleRemove(sub._id)}
-                      className="cursor-pointer px-5 py-2 text-sm rounded-lg font-semibold text-white shadow-md 
-                      bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 
-                      transition transform hover:scale-105 hover:shadow-lg"
+        {loading ? (
+          <div className="flex justify-center items-center h-40">
+            <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto rounded-xl border border-white/10">
+            <table className="w-full text-sm md:text-base">
+              <thead>
+                <tr className="bg-white/10 text-gray-200 uppercase text-xs tracking-wider">
+                  <th className="p-4 text-left">Image</th>
+                  <th className="p-4 text-left">Name</th>
+                  <th className="p-4 text-left">Email</th>
+                  <th className="p-4 text-left">Date</th>
+                  <th className="p-4 text-center">Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {subscribers.length > 0 ? (
+                  subscribers.map((sub, idx) => (
+                    <tr
+                      key={sub._id}
+                      className={`${
+                        idx % 2 === 0 ? "bg-white/5" : "bg-white/10"
+                      } hover:bg-white/20 transition-all duration-200`}
                     >
-                      Remove
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {subscribers.length === 0 && (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="p-6 text-center text-gray-500 italic"
-                  >
-                    No subscribers found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+                      <td className="p-4">
+                        <img
+                          src={sub.image || "https://i.pravatar.cc/100"}
+                          alt="avatar"
+                          className="w-10 h-10 rounded-full object-cover border border-white/20"
+                        />
+                      </td>
+                      <td className="p-4 font-medium text-gray-100">
+                        {sub.name || "Anonymous"}
+                      </td>
+                      <td className="p-4 text-gray-400">{sub.email}</td>
+                      <td className="p-4 text-gray-500">
+                        {sub.createdAt
+                          ? new Date(sub.createdAt).toLocaleDateString()
+                          : "—"}
+                      </td>
+                      <td className="p-4 text-center">
+                        <button
+                          onClick={() => handleRemove(sub._id)}
+                          className="px-5 py-2 text-sm rounded-lg font-semibold bg-white/10 hover:bg-red-600 hover:text-white border border-white/10 transition-all duration-200"
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="p-8 text-center text-gray-500 italic"
+                    >
+                      No subscribers found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
-
-
-

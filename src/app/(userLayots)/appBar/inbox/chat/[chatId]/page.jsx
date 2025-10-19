@@ -75,9 +75,9 @@ export default function ChatPage() {
     // Listen for new messages
     socket.on("receive_message", (message) => {
       console.log("New message received:", message);
-      setMessages((prev) => [...prev, message]);
-      scrollToBottom();
-
+      setMessages(prev => [...prev, message]);    
+      
+      
       // Mark as read if it's the current user's chat
       if (message.senderId !== session?.user?.id) {
         socket.emit("mark_messages_read", {
@@ -130,8 +130,8 @@ export default function ChatPage() {
       const messagesResponse = await fetch(`/api/chats/${chatId}/messages`);
       const messagesData = await messagesResponse.json();
       if (messagesData.success) {
-        setMessages(messagesData.messages);
-        scrollToBottom();
+        setMessages(messagesData.messages);        
+        
       }
 
       if (socket && session?.user?.id) {
@@ -142,13 +142,6 @@ export default function ChatPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const scrollToBottom = () => {
-    setTimeout(
-      () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }),
-      100
-    );
   };
 
   const sendMessage = async () => {
@@ -179,8 +172,7 @@ export default function ChatPage() {
 
     setMessages((prev) => [...prev, optimisticMessage]);
     setNewMessage("");
-    setTyping(false);
-    scrollToBottom();
+    setTyping(false);    
 
     if (socket) {
       socket.emit("typing", {

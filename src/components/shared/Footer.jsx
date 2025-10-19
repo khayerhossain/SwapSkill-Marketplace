@@ -13,7 +13,7 @@ import logo from "../../assets/logo.png";
 
 export default function FooterPage() {
   return (
-    <footer className="bg-[#111111] text-gray-200 py-12 border-t">
+    <footer className="bg-[#111111] text-gray-200 py-12 ">
       <Container>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
           {/* Branding / Logo */}

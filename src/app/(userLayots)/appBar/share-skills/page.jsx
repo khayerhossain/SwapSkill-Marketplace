@@ -207,9 +207,9 @@ export default function SkillForm() {
   );
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black py-16 px-4 flex items-center justify-center">
+    <section className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black py-8 flex items-center justify-center ">
       <div className="w-full max-w-6xl p-10 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl">
-        <h2 className="text-3xl font-bold mb-8 text-white text-left">
+        <h2 className="text-3xl font-bold mb-8 text-white text-left ">
           Share Your Skills
         </h2>
 

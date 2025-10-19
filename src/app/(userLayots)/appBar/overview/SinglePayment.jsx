@@ -64,9 +64,9 @@ export function SinglePaymentCard({ payment }) {
 
   // Glow effect class based on percentage remaining
   const getGlowClass = (percentage) => {
-    if (percentage > 50) return "shadow-red-500/50";
-    if (percentage > 20) return "shadow-yellow-500/50";
-    return "shadow-green-500/50";
+    if (percentage > 50) return "";
+    if (percentage > 20) return "";
+    return "";
   };
 
   console.log("aaaa", payment.data);

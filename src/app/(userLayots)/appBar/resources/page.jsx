@@ -24,30 +24,27 @@ export default function Resources() {
   const [showEmojiModal, setShowEmojiModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredResources, setFilteredResources] = useState([]);
-  const [expandedComments, setExpandedComments] = useState({}); 
+  const [expandedComments, setExpandedComments] = useState({});
 
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
 
   const { data: session } = useSession();
 
+  // Fetch resources
+  const fetchResources = async () => {
+    try {
+      const res = await axiosInstance.get("/resources");
+      setResources(res.data);
+      setFilteredResources(res.data);
+    } catch (error) {
+      console.error("Error fetching resources:", error);
+    }
+  };
 
-// Fetch resources
-const fetchResources = async () => {
-  try {
-    const res = await axiosInstance.get("/resources");
-    setResources(res.data);
-    setFilteredResources(res.data);
-  } catch (error) {
-    console.error("Error fetching resources:", error);
-  }
-};
-
-// first reload
-useEffect(() => {
-  fetchResources();
-}, []);
-
+  useEffect(() => {
+    fetchResources();
+  }, []);
 
   // Delete Resource
   const removeResource = async (id) => {
@@ -107,9 +104,7 @@ useEffect(() => {
       setFilteredResources([added, ...filteredResources]);
       setNewPostText("");
       setSelectedMedia(null);
-
       await fetchResources();
-
     } catch (error) {
       console.error("Error adding resource:", error);
     }
@@ -145,14 +140,9 @@ useEffect(() => {
     setFilteredResources(filtered);
   };
 
-  // Like
   const handleLike = async (id) => {
     if (!session?.user?.email)
-      return Swal.fire(
-        "Login First",
-        "You must log in to like posts.",
-        "info"
-      );
+      return Swal.fire("Login First", "You must log in to like posts.", "info");
     try {
       await axiosInstance.patch(`/resources/${id}`, {
         action: "like",
@@ -169,7 +159,6 @@ useEffect(() => {
     }
   };
 
-  // Comment
   const handleComment = async (id, text) => {
     if (!session?.user?.name)
       return Swal.fire("Login Required", "Please log in to comment.", "info");
@@ -185,23 +174,22 @@ useEffect(() => {
           r._id === id
             ? {
                 ...r,
-                comments: [...(r.comments || []), { userName: session.user.name, text }],
+                comments: [
+                  ...(r.comments || []),
+                  { userName: session.user.name, text },
+                ],
               }
             : r
         )
       );
 
-      // Auto-expand comments after posting
       setExpandedComments((prev) => ({ ...prev, [id]: true }));
-
-      
       await fetchResources();
     } catch (error) {
       Swal.fire("Error", "Failed to comment!", "error");
     }
   };
 
-  // SweetAlert comment input
   const openCommentBox = (id) => {
     Swal.fire({
       title: "Write a comment",
@@ -216,88 +204,64 @@ useEffect(() => {
     });
   };
 
- //Share
   const handleShare = async (id) => {
-  const shareUrl = `${window.location.origin}/resources/${id}`;
-
-  Swal.fire({
-    title: "Share this post",
-    html: `
-      <div style="display:flex; flex-direction:column; gap:14px; text-align:left; font-size:16px;">
-        <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" style="display:flex; align-items:center; gap:8px; text-decoration:none; color:#1877F2;">
-          <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-facebook" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-          Share on Facebook
-        </a>
-
-        <a href="https://twitter.com/intent/tweet?url=${shareUrl}" target="_blank" style="display:flex; align-items:center; gap:8px; text-decoration:none; color:#1DA1F2;">
-          <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-twitter" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.43.36a9 9 0 0 1-2.83 1.08A4.48 4.48 0 0 0 16.11 0c-2.5 0-4.5 2.24-4.5 5a5.33 5.33 0 0 0 .11 1.14A12.94 12.94 0 0 1 1.67.89a5.22 5.22 0 0 0-.61 2.52c0 1.74.86 3.28 2.17 4.18A4.41 4.41 0 0 1 .8 7.3v.06c0 2.44 1.63 4.47 3.8 4.93a4.52 4.52 0 0 1-2.04.08c.58 1.9 2.24 3.29 4.2 3.33A9 9 0 0 1 0 18.54a12.94 12.94 0 0 0 7 2.06c8.39 0 13-7.42 13-13.86 0-.21 0-.42-.02-.63A9.4 9.4 0 0 0 23 3z"/></svg>
-          Share on Twitter
-        </a>
-
-        <a href="https://api.whatsapp.com/send?text=${shareUrl}" target="_blank" style="display:flex; align-items:center; gap:8px; text-decoration:none; color:#25D366;">
-          <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-message-circle" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
-          Share on WhatsApp
-        </a>
-
-        <button id="copyLink" style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#f4f4f4; border:none; border-radius:6px; cursor:pointer; font-size:15px;">
-          <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-link" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 1 0-7l1-1a5 5 0 0 1 7 7l-1 1M14 11a5 5 0 0 1 0 7l-1 1a5 5 0 0 1-7-7l1-1"/></svg>
-          Copy Link
-        </button>
-      </div>
-    `,
-    showConfirmButton: false,
-    width: 400,
-    background: "#fff",
-  });
-
-  //  Copy Link Handler
-  Swal.getPopup().querySelector("#copyLink").addEventListener("click", async () => {
-    await navigator.clipboard.writeText(shareUrl);
-    
+    const shareUrl = `${window.location.origin}/resources/${id}`;
     Swal.fire({
-  position: "top-end",
-  icon: "success",
-  title: "Successfully link copied",
-  showConfirmButton: false,
-  timer: 1500
-});
-  });
+      title: "Share this post",
+      html: `<div style="display:flex; flex-direction:column; gap:10px; text-align:left; font-size:16px;">
+        <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" style="color:#1877F2;">Facebook</a>
+        <a href="https://twitter.com/intent/tweet?url=${shareUrl}" target="_blank" style="color:#1DA1F2;">Twitter</a>
+        <a href="https://api.whatsapp.com/send?text=${shareUrl}" target="_blank" style="color:#25D366;">WhatsApp</a>
+        <button id="copyLink" style="padding:8px; background:#f4f4f4; border-radius:6px; cursor:pointer;">Copy Link</button>
+      </div>`,
+      showConfirmButton: false,
+      width: 400,
+      background: "#111827",
+      color: "#fff",
+    });
 
-  //  backend share count update
-  try {
-    await axiosInstance.patch(`/resources/${id}`, { action: "share" });
-    setResources((prev) =>
-      prev.map((r) => (r._id === id ? { ...r, shares: (r.shares || 0) + 1 } : r))
-    );
-    await fetchResources();
-  } catch (error) {
-    console.error("Share count update failed:", error);
-  }
-};
+    Swal.getPopup()
+      .querySelector("#copyLink")
+      .addEventListener("click", async () => {
+        await navigator.clipboard.writeText(shareUrl);
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Link copied",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
 
+    try {
+      await axiosInstance.patch(`/resources/${id}`, { action: "share" });
+      setResources((prev) =>
+        prev.map((r) =>
+          r._id === id ? { ...r, shares: (r.shares || 0) + 1 } : r
+        )
+      );
+      await fetchResources();
+    } catch (error) {
+      console.error("Share count update failed:", error);
+    }
+  };
 
-
-  // Save
   const handleSave = async (id) => {
     if (!session?.user?.email)
-      return Swal.fire(
-        "Login First",
-        "You must log in to save posts.",
-        "info"
-      );
+      return Swal.fire("Login First", "You must log in to save posts.", "info");
     try {
       await axiosInstance.patch(`/resources/${id}`, {
         action: "save",
         userEmail: session.user.email,
       });
 
-     Swal.fire({
-    position: "top-end",
-    icon: "success",
-    title: "Post has been saved successfully",
-    showConfirmButton: false,
-    timer: 1500
-    });
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Post saved",
+        showConfirmButton: false,
+        timer: 1500,
+      });
 
       await fetchResources();
     } catch (error) {
@@ -305,7 +269,6 @@ useEffect(() => {
     }
   };
 
-  // Toggle comment visibility
   const toggleComments = (id) => {
     setExpandedComments((prev) => ({
       ...prev,
@@ -314,13 +277,11 @@ useEffect(() => {
   };
 
   return (
-    <div className="min-h-screen bg-white p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black p-4 md:p-8 text-white">
       {/* Hero */}
       <div className="text-left mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-          Resources
-        </h1>
-        <p className="text-gray-600  mt-2">
+        <h1 className="text-3xl md:text-4xl font-bold">Resources</h1>
+        <p className="text-gray-300 mt-2">
           Learn, Share, and Grow with the community
         </p>
       </div>
@@ -334,7 +295,7 @@ useEffect(() => {
             placeholder="Search resources..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-l-lg border border-gray-300 dark:border-gray-700 bg-white  text-gray-900  focus:ring-2 focus:ring-indigo-400"
+            className="w-full pl-10 pr-4 py-2 rounded-l-lg border border-gray-700 bg-black/40 text-white focus:ring-2 focus:ring-indigo-400"
           />
         </div>
         <button
@@ -346,7 +307,7 @@ useEffect(() => {
       </div>
 
       {/* Create Post */}
-      <div className="bg-white  rounded-xl shadow p-4 mb-8">
+      <div className="bg-black/50 backdrop-blur-md rounded-xl p-4 mb-8 border border-gray-700">
         <div className="flex items-start gap-3 py-3">
           <img
             src={session?.user?.image || "https://i.pravatar.cc/40?img=10"}
@@ -354,10 +315,10 @@ useEffect(() => {
             className="w-10 h-10 rounded-full"
           />
           <div>
-            <p className="text-sm font-semibold ">
+            <p className="text-sm font-semibold">
               {session?.user?.name || "Guest User"}
             </p>
-            <p className="text-xs ">
+            <p className="text-xs text-gray-300">
               Share something with the resource
             </p>
           </div>
@@ -368,30 +329,30 @@ useEffect(() => {
             value={newPostText}
             onChange={(e) => setNewPostText(e.target.value)}
             placeholder="What's on your mind?"
-            className="w-full resize-none bg-gray-100  text-gray-800  rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm border border-gray-300"
+            className="w-full resize-none bg-black/30 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400 text-sm border border-gray-700"
             rows={2}
           />
 
           {selectedMedia && (
-            <div className="mt-3">
+            <div className="mt-3 overflow-hidden rounded-lg h-48 w-full">
               {selectedMedia.type === "image" ? (
                 <img
                   src={selectedMedia.url}
                   alt="preview"
-                  className="w-40 rounded-lg"
+                  className="w-full h-full object-cover rounded-lg"
                 />
               ) : (
                 <video
                   src={selectedMedia.url}
                   controls
-                  className="w-60 rounded-lg"
+                  className="w-full h-full object-cover rounded-lg"
                 />
               )}
             </div>
           )}
 
           <div className="flex items-center justify-between mt-3">
-            <div className="flex gap-4 text-gray-600 ">
+            <div className="flex gap-4 text-gray-300">
               <input
                 type="file"
                 accept="image/*"
@@ -408,14 +369,14 @@ useEffect(() => {
               />
 
               <button
-                className="flex items-center gap-1 hover:text-indigo-600 cursor-pointer"
+                className="flex items-center gap-1 hover:text-indigo-400 cursor-pointer"
                 onClick={() => imageInputRef.current.click()}
               >
                 <ImageIcon className="w-5 h-5" /> Photo
               </button>
 
               <button
-                className="flex items-center gap-1 hover:text-indigo-600 cursor-pointer"
+                className="flex items-center gap-1 hover:text-indigo-400 cursor-pointer"
                 onClick={() => videoInputRef.current.click()}
               >
                 <Video className="w-5 h-5" /> Video
@@ -423,7 +384,7 @@ useEffect(() => {
 
               <button
                 type="button"
-                className="flex items-center gap-1 hover:text-indigo-600 cursor-pointer"
+                className="flex items-center gap-1 hover:text-indigo-400 cursor-pointer"
                 onClick={() => setShowEmojiModal(true)}
               >
                 <Smile className="w-5 h-5" /> Feeling
@@ -442,10 +403,10 @@ useEffect(() => {
 
       {/* Emoji Picker */}
       {showEmojiModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50">
-          <div className="bg-white  rounded-2xl p-4 shadow-lg relative border border-indigo-700">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-black/70 backdrop-blur-md rounded-2xl p-4 shadow-lg relative border border-indigo-700">
             <button
-              className="absolute top-0 right-0 text-gray-500 hover:text-gray-800  cursor-pointer"
+              className="absolute top-0 right-0 text-gray-400 hover:text-white cursor-pointer"
               onClick={() => setShowEmojiModal(false)}
             >
               <X className="w-5 h-5" />
@@ -459,26 +420,22 @@ useEffect(() => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredResources.length > 0 ? (
           filteredResources.map((res) => {
-            const hasMedia =
-              res.media?.url &&
-              (res.media?.type?.startsWith("image") ||
-                res.media?.type?.startsWith("video"));
+            const hasMedia = res.media?.url;
 
             return (
               <div
                 key={res._id}
-                className="bg-white  rounded-xl shadow p-5 hover:shadow-lg transition relative border border-gray-300 flex flex-col"
+                className="bg-black/50 backdrop-blur-md text-white rounded-xl p-5 flex flex-col border border-gray-700"
               >
-                {/* User Delete */}
+                {/* Delete */}
                 {session?.user?.email === res.userEmail && (
-                 <button
-                   onClick={() => removeResource(res._id)}
-                   className="absolute top-3 right-3 text-red-500 hover:text-red-700 cursor-pointer"
-                   >
+                  <button
+                    onClick={() => removeResource(res._id)}
+                    className="absolute top-3 right-3 text-red-500 hover:text-red-700 cursor-pointer"
+                  >
                     <Trash2 className="w-5 h-5" />
-                </button>
-                 )}
-
+                  </button>
+                )}
 
                 {/* User Info */}
                 <div className="flex items-center gap-3 mb-4">
@@ -487,43 +444,35 @@ useEffect(() => {
                     alt={res.userName}
                     className="w-10 h-10 rounded-full"
                   />
-                  <span className="font-medium text-gray-900 ">
-                    {res.userName}
-                  </span>
+                  <span className="font-medium">{res.userName}</span>
                 </div>
 
                 {/* Title */}
-                <div
-                  className={`${
-                    hasMedia
-                      ? "text-lg font-semibold text-gray-900  mb-2"
-                      : "flex-1 flex items-center justify-center text-center text-lg font-semibold text-gray-900 "
-                  }`}
-                >
-                  {res.title}
+                <div className="min-h-[3rem] text-lg font-semibold mb-2">
+                  {res.title || "\u00A0"}
                 </div>
 
                 {/* Media */}
                 {hasMedia && (
-                  <div className="mb-3">
-                    {res.media.type === "image" ? (
+                  <div className="mb-3 overflow-hidden rounded-lg h-48 w-full">
+                    {res.media.type.startsWith("image") ? (
                       <img
                         src={res.media.url}
                         alt="post"
-                        className="w-full rounded-lg"
+                        className="w-full h-full object-cover rounded-lg"
                       />
                     ) : (
                       <video
                         src={res.media.url}
                         controls
-                        className="w-full rounded-lg"
+                        className="w-full h-full object-cover rounded-lg"
                       />
                     )}
                   </div>
                 )}
 
                 {/* Actions */}
-                <div className="flex justify-between items-center text-gray-600  mt-auto min-h-[50px] border-t border-gray-200 dark:border-gray-700 pt-3">
+                <div className="flex justify-between items-center mt-auto min-h-[50px] border-t border-gray-700 pt-3 text-gray-300">
                   <div className="flex gap-5">
                     <button
                       onClick={() => handleLike(res._id)}
@@ -531,7 +480,6 @@ useEffect(() => {
                     >
                       <Heart className="w-5 h-5" /> {res.likes || 0}
                     </button>
-
                     <button
                       onClick={() => openCommentBox(res._id)}
                       className="flex items-center gap-1 hover:text-green-500 cursor-pointer"
@@ -539,7 +487,6 @@ useEffect(() => {
                       <MessageCircle className="w-5 h-5" />{" "}
                       {res.comments?.length || 0}
                     </button>
-
                     <button
                       onClick={() => handleSave(res._id)}
                       className="flex items-center gap-1 hover:text-yellow-500 cursor-pointer"
@@ -547,7 +494,6 @@ useEffect(() => {
                       <Bookmark className="w-5 h-5" />
                     </button>
                   </div>
-
                   <button
                     onClick={() => handleShare(res._id)}
                     className="flex items-center gap-1 hover:text-blue-500 cursor-pointer"
@@ -561,29 +507,30 @@ useEffect(() => {
                   <div className="mt-2 text-sm">
                     <button
                       onClick={() => toggleComments(res._id)}
-                      className="text-indigo-600 hover:underline cursor-pointer"
+                      className="text-indigo-400 hover:underline cursor-pointer"
                     >
-                      {expandedComments[res._id] ? "Hide Comments" : "View Comments"}
+                      {expandedComments[res._id]
+                        ? "Hide Comments"
+                        : "View Comments"}
                     </button>
                   </div>
                 )}
 
                 {/* Show Comments */}
-                {expandedComments[res._id] &&
-                  res.comments?.length > 0 && (
-                    <div className="mt-2 text-sm text-gray-600  border-t border-gray-200 dark:border-gray-700 pt-2">
-                      {res.comments.map((c, i) => (
-                        <p key={i} className="mb-1">
-                          <strong>{c.userName}:</strong> {c.text}
-                        </p>
-                      ))}
-                    </div>
-                  )}
+                {expandedComments[res._id] && res.comments?.length > 0 && (
+                  <div className="mt-2 text-sm text-gray-300 border-t border-gray-700 pt-2">
+                    {res.comments.map((c, i) => (
+                      <p key={i} className="mb-1">
+                        <strong>{c.userName}:</strong> {c.text}
+                      </p>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })
         ) : (
-          <p className="text-gray-900  col-span-full text-center">
+          <p className="text-white col-span-full text-center">
             No resources found.
           </p>
         )}

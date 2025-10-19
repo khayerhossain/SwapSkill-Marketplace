@@ -46,18 +46,20 @@ export default function CommunityFeed() {
   const [menuOpen, setMenuOpen] = useState(null);
   const fileRef = useRef(null);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch("/api/posts");
-        const data = await res.json();
-        setPosts(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchPosts();
-  }, []);
+ useEffect(() => {
+  const fetchPosts = async () => {
+    try {
+      const res = await fetch("/api/posts");
+      const data = await res.json();
+      // Make sure posts is an array
+      setPosts(Array.isArray(data) ? data : data.posts || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  fetchPosts();
+}, []);
+
 
   const handleFile = (e) => {
     const f = e.target.files?.[0];

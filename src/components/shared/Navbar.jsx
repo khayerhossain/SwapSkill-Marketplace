@@ -23,7 +23,7 @@ export default function NavbarPage() {
 
   const baseLinks = [
     { name: "Home", path: "/" },
-    { name: "About", path: "#about" },
+    { name: "About Us", path: "#about" },
     { name: "Current Skills", path: "#current-skills" },
     { name: "Features", path: "/features" },
     { name: "Pricing", path: "/pricing" },

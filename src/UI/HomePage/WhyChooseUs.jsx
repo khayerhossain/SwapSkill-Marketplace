@@ -37,7 +37,7 @@ export default function WhyChooseUs() {
   ];
 
   return (
-    <section className="relative py-24 px-4 bg-gradient-to-b from-[#0a0a0a] via-[#111111] to-[#1a1a1a] text-gray-200 overflow-hidden">
+    <section className="relative py-24 bg-gradient-to-b from-[#0a0a0a] via-[#111111] to-[#1a1a1a] text-gray-200 overflow-hidden">
       <Container>
         <motion.div
           className="text-center mb-16"
@@ -50,7 +50,7 @@ export default function WhyChooseUs() {
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Not just a platform — it’s a movement where skills meet passion and
-            learners become teachers.
+            learners become teachers.npm
           </p>
         </motion.div>
 

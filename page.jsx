@@ -106,13 +106,10 @@ export default function Featured() {
   return (
     <div className="bg-base-100 dark:bg-base-100 min-h-screen text-base-content dark:text-base-content flex flex-col mt-10">
       <NavbarPage />
-
       {/* Header */}
-<<<<<<< HEAD
-      <div className="py-16 text-center mb-12">
-=======
+
       <div className="py-16 text-center mb-4">
->>>>>>> 96ecc721fddb0d9823d43f2cc2ae4c76e1c4b194
+
         <h2 className="text-4xl font-bold">Featured What sets us apart</h2>
         <p className="text-base-content/70 mt-2 max-w-2xl mx-auto">
           A single-section summary of the unique tools inside{" "}

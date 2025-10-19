@@ -45,7 +45,7 @@ export default function FAQSection() {
                   </p>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-extrabold text-white mt-5">
-                  Frequently Asked Questions
+                  Frequently Asked <span className="text-red-500">Questions</span>
                 </h1>
                 <p className="text-gray-400 text-sm md:text-base mt-3 max-w-md">
                   Here are some of the most common questions about SwapSkill to

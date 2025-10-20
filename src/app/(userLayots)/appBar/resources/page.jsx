@@ -339,13 +339,13 @@ export default function Resources() {
                 <img
                   src={selectedMedia.url}
                   alt="preview"
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-40 h-full object-cover rounded-lg"
                 />
               ) : (
                 <video
                   src={selectedMedia.url}
                   controls
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-60 h-full object-cover rounded-lg"
                 />
               )}
             </div>

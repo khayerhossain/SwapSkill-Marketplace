@@ -39,7 +39,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      await signIn("google", { callbackUrl: "/post-login" });
+      await signIn("google", { callbackUrl: "/" });
     } catch {
       toast.error("Google login failed!");
     }

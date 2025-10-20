@@ -17,7 +17,7 @@ export default function AppBarLayout({ children }) {
   const { data: session } = useSession();
 
   return (
-    <div className="min-h-screen bg-base-100 text-base-content overflow-x-hidden flex">
+    <div className="min-h-screen bg-[#0d0d0d] text-base-content overflow-x-hidden flex">
       {/* Large Screen Sidebar */}
       <div
         className={`hidden md:flex fixed top-0 left-0 h-screen z-30 flex-col bg-[#111111] text-gray-200 border-r border-gray-800 transition-width duration-300 ${

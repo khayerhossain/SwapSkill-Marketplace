@@ -1,6 +1,6 @@
 "use client";
 import { ThemeContext } from "@/context/ThemeProvider";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -142,7 +142,17 @@ export default function NavbarPage() {
 
             <div className="flex items-center gap-2">
               <ThemeToggle />
-              <Link
+
+              {session?.user ? <button
+               aria-label="Logout"
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="btn bg-red-600 hover:bg-red-500 text-white rounded-lg border-none shadow-none"
+              >
+                Sign Out
+              </button> 
+              :                
+             <div>
+                <Link
                 href="/login"
                 className="btn bg-gray-900 hover:bg-gray-800 text-white rounded-lg border-none shadow-none"
               >
@@ -154,6 +164,7 @@ export default function NavbarPage() {
               >
                 Sign Up
               </Link>
+             </div>} 
             </div>
           </div>
         </div>

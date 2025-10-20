@@ -31,7 +31,7 @@ export default function RegisterPage() {
         });
         if (res?.ok) toast.success("Logged in successfully");
         else toast.error("Auto login failed!");
-        router.push("/");
+        router.push("/appBar");
       } else toast.error(data.error || "Something went wrong!");
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");

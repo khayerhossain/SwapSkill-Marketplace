@@ -1,3 +1,4 @@
+// api/profile/update/routeModule.js 
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db.connect";

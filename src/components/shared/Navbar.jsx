@@ -140,7 +140,7 @@ export default function NavbarPage() {
               </ul>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <ThemeToggle />
 
               {session?.user ? <button
@@ -154,7 +154,7 @@ export default function NavbarPage() {
              <div>
                 <Link
                 href="/login"
-                className="btn bg-gray-900 hover:bg-gray-800 text-white rounded-lg border-none shadow-none"
+                className="btn bg-gray-900 hover:bg-gray-800 text-white rounded-lg border-none shadow-none mr-3"
               >
                 Sign In
               </Link>

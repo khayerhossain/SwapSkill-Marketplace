@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import logo from "../../assets/logo.png";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -63,7 +64,13 @@ export default function LoginPage() {
             transition={{ delay: 0.3, duration: 0.7 }}
             className="hidden md:flex flex-col justify-center flex-1 p-8 md:p-14"
           >
-            <Image src={logo} alt="Logo" width={70} height={70} className="mb-8 opacity-90 hover:opacity-100 transition" />
+            <Image
+              src={logo}
+              alt="Logo"
+              width={70}
+              height={70}
+              className="mb-8 opacity-90 hover:opacity-100 transition"
+            />
             <h1 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
               Welcome Back
             </h1>
@@ -71,9 +78,11 @@ export default function LoginPage() {
               Join the SwapSkill community to connect, collaborate, and grow.
               Let’s get you signed in!
             </p>
-            <button className="px-6 py-2 rounded-lg bg-gradient-to-r from-red-600 to-orange-500 hover:opacity-90 transition-all font-semibold text-white shadow-lg shadow-red-700/40 w-fit">
-              Learn More
-            </button>
+            <Link href="/">
+              <button className="px-6 py-2 rounded-lg bg-red-500 hover:opacity-90 transition-all font-semibold text-white shadow-lg shadow-red-700/40 w-fit cursor-pointer">
+                Back to Home
+              </button>
+            </Link>
           </motion.div>
 
           {/* RIGHT SIDE */}
@@ -95,7 +104,9 @@ export default function LoginPage() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block mb-1 text-sm text-gray-300">Email</label>
+                  <label className="block mb-1 text-sm text-gray-300">
+                    Email
+                  </label>
                   <input
                     type="email"
                     name="email"
@@ -107,7 +118,9 @@ export default function LoginPage() {
                 </div>
 
                 <div>
-                  <label className="block mb-1 text-sm text-gray-300">Password</label>
+                  <label className="block mb-1 text-sm text-gray-300">
+                    Password
+                  </label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
@@ -131,7 +144,7 @@ export default function LoginPage() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   type="submit"
-                  className="w-full py-2.5 rounded-lg bg-red-500 font-semibold hover:opacity-90 transition-all shadow-lg"
+                  className="w-full py-2.5 rounded-lg bg-red-500 font-semibold hover:opacity-90 transition-all shadow-lg cursor-pointer"
                 >
                   Sign In
                 </motion.button>
@@ -142,16 +155,41 @@ export default function LoginPage() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={handleGoogleLogin}
-                  className="w-full flex items-center justify-center gap-3 bg-[#1a1a1a] text-white py-2.5 rounded-lg border border-[#2e2e2e]"
+                  className="w-full flex items-center justify-center gap-3 bg-[#1a1a1a] text-white py-2.5 rounded-lg border border-[#2e2e2e] transition-all cursor-pointer"
                 >
-                  <span className="font-medium text-sm">Log in with Google</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 48 48"
+                    width="20"
+                    height="20"
+                  >
+                    <path
+                      fill="#EA4335"
+                      d="M24 9.5c3.5 0 6.3 1.2 8.3 3.2l6.1-6.1C34.8 3.3 29.8 1 24 1 14.7 1 6.7 6.6 3.1 14.4l7.1 5.5C11.9 13.3 17.4 9.5 24 9.5z"
+                    />
+                    <path
+                      fill="#34A853"
+                      d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.5-1.9 4.6-4 6.1l6.2 4.8c3.6-3.4 5.5-8.5 5.5-15.4z"
+                    />
+                    <path
+                      fill="#FBBC05"
+                      d="M10.2 28.8c-.5-1.5-.8-3.1-.8-4.8s.3-3.3.8-4.8l-7.1-5.5C1.1 16.4 0 20.1 0 24s1.1 7.6 3.1 10.3l7.1-5.5z"
+                    />
+                    <path
+                      fill="#4285F4"
+                      d="M24 47c5.8 0 10.6-1.9 14.1-5.1l-6.2-4.8c-1.7 1.2-4 2-7.9 2-6.6 0-12.1-3.8-13.8-9l-7.1 5.5C6.7 41.4 14.7 47 24 47z"
+                    />
+                  </svg>
+                  <span className="font-medium text-sm">
+                    Log in with Google
+                  </span>
                 </motion.button>
 
                 <p className="mt-4 text-sm text-gray-400">
                   Don’t have an account?{" "}
                   <button
                     onClick={() => router.push("/register")}
-                    className="text-red-400 hover:text-red-300 underline ml-1"
+                    className="text-red-400 hover:text-red-300 underline ml-1 cursor-pointer"
                   >
                     Register
                   </button>

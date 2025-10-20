@@ -45,36 +45,38 @@ export default function SavedItems() {
   }, [session]);
 
   // Delete saved skill
-     const handleDelete = async (id) => {
-       Swal.fire({
-         title: "Are you sure?",
-         text: "This skill will be permanently deleted.",
-         icon: "warning",
-         showCancelButton: true,
-         confirmButtonColor: "#d33",
-         cancelButtonColor: "#3085d6",
-         confirmButtonText: "Yes, delete it!",
-       }).then(async (result) => {
-         if (result.isConfirmed) {
-           try {
-             await axiosInstance.delete(`/saved-skills?id=${id}`);
-             setSavedSkills((prev) => prev.filter((s) => String(s._id) !== String(id)));
+  const handleDelete = async (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This skill will be permanently deleted.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          console.log("Deleting skill with id:", id);
+          await axiosInstance.delete(`/saved-skills?id=${id}`);
 
-             Swal.fire("Deleted!", "Skill has been removed.", "success");
-           } catch {
-             Swal.fire("Error!", "Failed to delete skill.", "error");
-           }
-         }
-       });
-     };
+          setSavedSkills((prev) =>
+            prev.filter((s) => String(s._id) !== String(id))
+          );
 
+          Swal.fire("Deleted!", "Skill has been removed.", "success");
+        } catch (error) {
+          console.error("Delete failed:", error);
+          Swal.fire("Error!", "Failed to delete skill.", "error");
+        }
+      }
+    });
+  };
 
   return (
     <section>
       <Container>
-        <h1 className="text-3xl font-bold mb-6 text-center">
-          💾 My Saved Skills
-        </h1>
+        <h1 className="text-3xl font-bold mb-6 text-center">My Saved Skills</h1>
 
         {loading && <Loading />}
 

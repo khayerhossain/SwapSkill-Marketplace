@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -164,7 +164,6 @@ export default function CommunityFeed() {
       )
     );
     setComments((prev) => ({ ...prev, [postId]: "" }));
-
     try {
       await axiosInstance.patch(`/posts?id=${postId}`, {
         comment: newComment,

@@ -10,6 +10,7 @@ import NotificationDropdown from "@/components/shared/NotificationDropdown";
 import Link from "next/link";
 import { ClipboardList } from "lucide-react";
 import Image from "next/image";
+import { UserStatsProvider } from "@/context/UserStatsContext";
 
 export default function AppBarLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -106,7 +107,11 @@ export default function AppBarLayout({ children }) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 w-full">{children}</main>
+        <main className="flex-1 w-full">
+          <UserStatsProvider>
+            {children}
+          </UserStatsProvider>
+          </main>
       </div>
 
       {/* Mobile Drawer */}

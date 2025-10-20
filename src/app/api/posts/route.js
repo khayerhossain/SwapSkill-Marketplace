@@ -1,12 +1,22 @@
+
+
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import dbConnect, { collectionNamesObj } from "@/lib/db.connect";
 
-// GET — Fetch all posts
-export async function GET() {
+// GET — Fetch all posts or posts by user
+export async function GET(req) {
   try {
     const collection = await dbConnect(collectionNamesObj.postsCollection);
-    const posts = await collection.find({}).toArray();
+
+    // Get userId from query params
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    // If userId is provided, filter posts for that user
+    const filter = userId ? { "user.id": userId } : {};
+
+    const posts = await collection.find(filter).toArray();
 
     console.log("Fetched posts:", posts); 
     return NextResponse.json(posts);

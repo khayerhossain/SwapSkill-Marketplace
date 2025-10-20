@@ -60,6 +60,7 @@ function StatChip({ label, value, accent = "text-blue-400", icon = null }) {
 function Calendar({ onDateSelect, availableDates = [] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
+
   const today = new Date();
 
   const monthShort = [

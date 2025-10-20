@@ -23,6 +23,7 @@ export async function POST(request) {
 
     const newSavedSkill = {
       ...skillData,
+      _id: undefined,
       savedBy: userEmail,
       savedAt: new Date(),
     };
@@ -49,6 +50,10 @@ export async function POST(request) {
     );
   }
 }
+
+
+
+
 
 //get data
 

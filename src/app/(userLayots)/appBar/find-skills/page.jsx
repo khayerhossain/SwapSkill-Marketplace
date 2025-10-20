@@ -15,6 +15,7 @@ import {
 import Container from "@/components/shared/Container";
 import Loading from "@/app/loading";
 import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 export default function SkillsPage() {
   const [skills, setSkills] = useState([]);
@@ -77,30 +78,49 @@ export default function SkillsPage() {
   ];
 
   // Save button when click
-     const handleSaveSkill = async ( skill ) => {
-    try {
-      
-      const userEmail = session?.user?.email;
-      if (!userEmail) {
-        alert("Please login to save this skill.");
-        return;
-      }
 
-      
-      const { data } = await axiosInstance.post("/saved-skills", {
-        skillData: skill, 
-        userEmail,        
+const handleSaveSkill = async (skill) => {
+  try {
+    const userEmail = session?.user?.email;
+    if (!userEmail) {
+      Swal.fire({
+        icon: "warning",
+        title: "Login Required",
+        text: "Please login to save this skill.",
       });
+      return;
+    }
 
-      if (data.success) {
-        alert(" Skill saved successfully!");
-      } else {
-        alert(" Failed to save skill. Try again.");
-      }
-    } catch (error) {
-      console.error("Save failed:", error);
-      alert("Error saving skill!");
-    }}
+    const { data } = await axiosInstance.post("/saved-skills", {
+      skillData: skill,
+      userEmail,
+    });
+
+    if (data.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Saved!",
+        text: "Skill saved successfully!",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Failed!",
+        text: "Failed to save skill. Try again.",
+      });
+    }
+  } catch (error) {
+    console.error("Save failed:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error!",
+      text: "Something went wrong while saving skill.",
+    });
+  }
+};
+
 
 
 
@@ -115,7 +135,7 @@ export default function SkillsPage() {
           <div className="flex flex-col mb-6">
             {/* Left section */}
             <div className="flex-1 pr-6">
-              <h1 className="text-4xl font-bold mb-3">
+              <h1 className="text-4xl font-bold mb-3 text-white pt-6">
                 Find & <span className="text-red-500">Swap Skills</span>
               </h1>
               <p className="text-gray-600 mb-4 max-w-lg text-base">

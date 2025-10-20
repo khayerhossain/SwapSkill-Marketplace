@@ -12,6 +12,9 @@ export const collectionNamesObj = {
   resourcesCollection: "resources",
   userEarnCoinCollection: "earn-coin",
   postsCollection: "posts",
+
+  savedSkills: "saved",
+
 };
 
 const uri = process.env.MONGODB_URI;

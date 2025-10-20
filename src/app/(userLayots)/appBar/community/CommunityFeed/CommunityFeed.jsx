@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
-import axiosInstance from "@/lib/axiosInstance"; // make sure you already have this
+import axiosInstance from "@/lib/axiosInstance";
 import {
   MoreHorizontal,
   ThumbsUp,
@@ -21,12 +21,12 @@ import {
 } from "lucide-react";
 
 const FEELINGS = [
-  { icon: Smile, label: "Happy", color: "text-yellow-500" },
-  { icon: Heart, label: "Loved", color: "text-red-500" },
-  { icon: Zap, label: "Excited", color: "text-orange-500" },
-  { icon: Frown, label: "Sad", color: "text-blue-500" },
-  { icon: Angry, label: "Angry", color: "text-red-600" },
-  { icon: Meh, label: "Thoughtful", color: "text-gray-500" },
+  { icon: Smile, label: "Happy", color: "text-yellow-400" },
+  { icon: Heart, label: "Loved", color: "text-pink-500" },
+  { icon: Zap, label: "Excited", color: "text-orange-400" },
+  { icon: Frown, label: "Sad", color: "text-blue-400" },
+  { icon: Angry, label: "Angry", color: "text-red-500" },
+  { icon: Meh, label: "Thoughtful", color: "text-gray-400" },
 ];
 
 export default function CommunityFeed() {
@@ -47,7 +47,6 @@ export default function CommunityFeed() {
   const [menuOpen, setMenuOpen] = useState(null);
   const fileRef = useRef(null);
 
-  //  Fetch posts with axiosInstance
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -76,7 +75,6 @@ export default function CommunityFeed() {
     if (fileRef.current) fileRef.current.value = "";
   };
 
-  //  Create new post
   const handlePost = async () => {
     if (!content.trim() && !media && !feeling) return;
     const newPost = {
@@ -100,7 +98,6 @@ export default function CommunityFeed() {
     }
   };
 
-  //  Delete post
   const deletePost = async (id, postUserId) => {
     if (postUserId !== currentUser.id) return;
     const result = await Swal.fire({
@@ -109,6 +106,8 @@ export default function CommunityFeed() {
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
+      background: "#1e1e1e",
+      color: "#fff",
     });
 
     if (result.isConfirmed) {
@@ -121,7 +120,6 @@ export default function CommunityFeed() {
     }
   };
 
-  //  Like toggle
   const toggleLike = async (postId) => {
     setPosts((prev) =>
       prev.map((p) =>
@@ -149,7 +147,6 @@ export default function CommunityFeed() {
     }
   };
 
-  //  Add comment
   const addComment = async (postId) => {
     const txt = comments[postId]?.trim();
     if (!txt) return;
@@ -186,9 +183,9 @@ export default function CommunityFeed() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-[#0f0f0f] text-gray-200 space-y-6 p-4">
       {/* Create Post Section */}
-      <div className="bg-white shadow rounded-2xl p-4 space-y-3">
+      <div className="bg-[#1a1a1a] border border-gray-800 rounded-2xl p-4 space-y-3 shadow-lg">
         <div className="flex items-center gap-3">
           <img
             src={currentUser.avatar}
@@ -197,7 +194,7 @@ export default function CommunityFeed() {
           />
           <div>
             <p className="text-sm font-semibold">{currentUser.name}</p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-400">
               Share something with the community
             </p>
           </div>
@@ -207,11 +204,11 @@ export default function CommunityFeed() {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="What's on your mind?"
-          className="w-full resize-none p-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-blue-300"
+          className="w-full resize-none p-2 bg-[#2a2a2a] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 text-gray-200"
         />
 
         {feeling && (
-          <div className="flex items-center gap-2 bg-blue-50 p-2 rounded">
+          <div className="flex items-center gap-2 bg-[#2b2b2b] p-2 rounded">
             <feeling.icon className={`w-5 h-5 ${feeling.color}`} /> Feeling{" "}
             {feeling.label}
             <button onClick={() => setFeeling(null)} className="ml-auto">
@@ -229,16 +226,16 @@ export default function CommunityFeed() {
             )}
             <button
               onClick={removeMedia}
-              className="absolute top-2 right-2 bg-white/80 p-1 rounded-full"
+              className="absolute top-2 right-2 bg-black/70 p-1 rounded-full"
             >
-              <Trash2 className="w-4 h-4 text-red-600" />
+              <Trash2 className="w-4 h-4 text-red-500" />
             </button>
           </div>
         )}
 
         <div className="flex justify-between items-center">
-          <div className="flex gap-4 text-sm text-gray-600">
-            <label className="flex items-center gap-1 cursor-pointer">
+          <div className="flex gap-4 text-sm text-gray-400">
+            <label className="flex items-center gap-1 cursor-pointer hover:text-gray-200">
               <ImageIcon className="w-5 h-5" /> Photo
               <input
                 ref={fileRef}
@@ -250,19 +247,19 @@ export default function CommunityFeed() {
             </label>
             <button
               onClick={() => fileRef.current?.click()}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 hover:text-gray-200"
             >
               <Video className="w-5 h-5" /> Video
             </button>
             <div className="relative">
               <button
                 onClick={() => setShowFeeling(!showFeeling)}
-                className="flex items-center gap-1"
+                className="flex items-center gap-1 hover:text-gray-200"
               >
                 <Smile className="w-5 h-5" /> Feeling
               </button>
               {showFeeling && (
-                <div className="absolute mt-2 bg-white shadow rounded p-2 z-10">
+                <div className="absolute mt-2 bg-[#1f1f1f] border border-gray-700 shadow rounded p-2 z-10">
                   {FEELINGS.map((f) => (
                     <button
                       key={f.label}
@@ -270,7 +267,7 @@ export default function CommunityFeed() {
                         setFeeling(f);
                         setShowFeeling(false);
                       }}
-                      className="flex items-center gap-2 p-1 hover:bg-gray-100 w-full text-sm"
+                      className="flex items-center gap-2 p-1 hover:bg-[#2b2b2b] w-full text-sm text-gray-200"
                     >
                       <f.icon className={`w-5 h-5 ${f.color}`} /> {f.label}
                     </button>
@@ -282,7 +279,7 @@ export default function CommunityFeed() {
           <button
             onClick={handlePost}
             disabled={!content.trim() && !media && !feeling}
-            className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full text-sm"
           >
             Post
           </button>
@@ -299,7 +296,7 @@ export default function CommunityFeed() {
         return (
           <div
             key={p._id}
-            className="bg-white shadow rounded-2xl p-4 space-y-3"
+            className="bg-[#1a1a1a] border border-gray-800 rounded-2xl p-4 space-y-3 shadow-md"
           >
             <div className="flex gap-3 items-center">
               <img
@@ -307,20 +304,22 @@ export default function CommunityFeed() {
                 className="w-10 h-10 rounded-full"
               />
               <div>
-                <p className="text-sm font-semibold">{p.user?.name}</p>
+                <p className="text-sm font-semibold text-gray-100">
+                  {p.user?.name}
+                </p>
                 <p className="text-xs text-gray-500">{timeAgo(p.createdAt)}</p>
               </div>
               <div className="ml-auto relative">
                 <button
                   onClick={() => setMenuOpen(menuOpen === p._id ? null : p._id)}
                 >
-                  <MoreHorizontal className="text-gray-500 cursor-pointer" />
+                  <MoreHorizontal className="text-gray-400 cursor-pointer" />
                 </button>
                 {menuOpen === p._id && p.user?.id === currentUser.id && (
-                  <div className="absolute right-0 top-5 bg-white shadow rounded p-2 z-10 text-sm">
+                  <div className="absolute right-0 top-5 bg-[#1f1f1f] border border-gray-700 shadow rounded p-2 z-10 text-sm">
                     <button
                       onClick={() => deletePost(p._id, p.user.id)}
-                      className="hover:bg-gray-100 px-2 py-1 text-red-500"
+                      className="hover:bg-[#2a2a2a] px-2 py-1 text-red-500"
                     >
                       Delete
                     </button>
@@ -329,7 +328,7 @@ export default function CommunityFeed() {
               </div>
             </div>
 
-            {p.text && <p className="text-sm">{p.text}</p>}
+            {p.text && <p className="text-sm text-gray-200">{p.text}</p>}
             {p.media &&
               (p.media.type === "video" ? (
                 <video
@@ -341,36 +340,40 @@ export default function CommunityFeed() {
                 <img src={p.media.url} className="w-full rounded-lg" />
               ))}
 
-            <div className="text-sm text-gray-600 border-b pb-2 flex gap-4">
+            <div className="text-sm text-gray-400 border-b border-gray-700 pb-2 flex gap-4">
               <span>{p.likes.length} Likes</span>
               <span>{p.comments.length} Comments</span>
             </div>
 
-            <div className="flex gap-6 pt-2 text-gray-600">
+            <div className="flex gap-6 pt-2 text-gray-400">
               <button
                 onClick={() => toggleLike(p._id)}
                 className={`flex items-center gap-1 ${
-                  liked ? "text-blue-600" : "hover:text-blue-600"
+                  liked ? "text-blue-500" : "hover:text-blue-400"
                 }`}
               >
                 <ThumbsUp className="w-4 h-4" /> Like
               </button>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 hover:text-gray-200 cursor-pointer">
                 <MessageCircle className="w-4 h-4" /> Comment
               </div>
             </div>
 
-            {/* Comments */}
             <div className="space-y-2">
-              {visibleComments.map((c) => (
-                <div key={c.id} className="flex gap-2 items-start relative">
+              {visibleComments.map((c, index) => (
+                <div
+                  key={c._id || c.id || index}
+                  className="flex gap-2 items-start"
+                >
                   <img
                     src={c.user?.avatar || "https://i.pravatar.cc/40"}
                     className="w-8 h-8 rounded-full"
                   />
-                  <div className="bg-gray-100 rounded-2xl px-3 py-1 flex-1">
-                    <p className="text-sm font-semibold">{c.user?.name}</p>
-                    <p className="text-sm">{c.text}</p>
+                  <div className="bg-[#2a2a2a] rounded-2xl px-3 py-1 flex-1">
+                    <p className="text-sm font-semibold text-gray-100">
+                      {c.user?.name}
+                    </p>
+                    <p className="text-sm text-gray-300">{c.text}</p>
                     <p className="text-xs text-gray-500">{timeAgo(c.time)}</p>
                   </div>
                 </div>
@@ -380,7 +383,7 @@ export default function CommunityFeed() {
                   onClick={() =>
                     setShowAllComments({ ...showAllComments, [p._id]: true })
                   }
-                  className="text-blue-600 text-sm"
+                  className="text-blue-500 text-sm"
                 >
                   See more comments
                 </button>
@@ -398,13 +401,13 @@ export default function CommunityFeed() {
                   }
                   onKeyDown={(e) => e.key === "Enter" && addComment(p._id)}
                   placeholder="Write a comment..."
-                  className="flex-1 px-3 py-1 bg-gray-100 rounded-full text-sm"
+                  className="flex-1 px-3 py-1 bg-[#2a2a2a] rounded-full text-sm text-gray-200"
                 />
                 <button
                   onClick={() => addComment(p._id)}
                   disabled={!comments[p._id]?.trim()}
                 >
-                  <Send className="w-4 h-4 text-blue-600" />
+                  <Send className="w-4 h-4 text-blue-500" />
                 </button>
               </div>
             </div>

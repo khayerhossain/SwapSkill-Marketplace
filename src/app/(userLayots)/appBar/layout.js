@@ -80,12 +80,13 @@ export default function AppBarLayout({ children }) {
                 className="flex items-center gap-2 px-2 py-1 rounded-full bg-gray-800 text-gray-200  transition-colors flex-shrink-0"
               >
                 <Image
-                  src={session.user.image}
+                  src={session.user.image || "/default-profile.png"} // fallback
                   alt={session.user.name || "Profile"}
                   width={32}
                   height={32}
                   className="rounded-full object-cover"
                 />
+
                 <span className="hidden lg:block">
                   {session.user.name || "Profile"}
                 </span>

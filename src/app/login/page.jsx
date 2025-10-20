@@ -30,7 +30,7 @@ export default function LoginPage() {
       if (result?.error) toast.error("Invalid credentials");
       else {
         toast.success("Logged in successfully");
-        router.push("/"); // login successful হলে redirect
+        router.push("/appBar"); // login successful হলে redirect
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");
@@ -39,7 +39,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      await signIn("google", { callbackUrl: "/" });
+      await signIn("google", { callbackUrl: "/appBar" });
     } catch {
       toast.error("Google login failed!");
     }

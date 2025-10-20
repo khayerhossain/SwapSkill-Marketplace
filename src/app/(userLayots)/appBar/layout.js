@@ -18,7 +18,7 @@ export default function AppBarLayout({ children }) {
   const { data: session } = useSession();
 
   return (
-    <div className="min-h-screen bg-base-100 text-base-content overflow-x-hidden flex">
+    <div className="min-h-screen bg-[#0d0d0d] text-base-content overflow-x-hidden flex">
       {/* Large Screen Sidebar */}
       <div
         className={`hidden md:flex fixed top-0 left-0 h-screen z-30 flex-col bg-[#111111] text-gray-200 border-r border-gray-800 transition-width duration-300 ${
@@ -81,12 +81,13 @@ export default function AppBarLayout({ children }) {
                 className="flex items-center gap-2 px-2 py-1 rounded-full bg-gray-800 text-gray-200  transition-colors flex-shrink-0"
               >
                 <Image
-                  src={session.user.image}
+                  src={session.user.image || "/default-profile.png"} // fallback
                   alt={session.user.name || "Profile"}
                   width={32}
                   height={32}
                   className="rounded-full object-cover"
                 />
+
                 <span className="hidden lg:block">
                   {session.user.name || "Profile"}
                 </span>

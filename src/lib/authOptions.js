@@ -93,12 +93,27 @@ export const authOptions = {
     },
     async session({ session, token }) {
       if (token) {
+
+        let profileImage = null;
+    if (token.email) {
+      try {
+        const usersCollection = await dbConnect(collectionNamesObj.usersCollection);
+        const dbUser = await usersCollection.findOne({ email: token.email });
+        if (dbUser?.profileImage) {
+          profileImage = dbUser.profileImage; // 
+        }
+      } catch (err) {
+        console.error("Error fetching profileImage for session:", err);
+      }
+    }
+        
         session.user = {
           ...session.user,
           id: token.id,
           name: token.name,
           email: token.email,
           role: token.role,
+          image: profileImage || session.user.image,
         };
       }
       return session;

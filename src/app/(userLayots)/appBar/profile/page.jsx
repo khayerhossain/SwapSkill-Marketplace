@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import {
   FaUser,
@@ -69,7 +70,13 @@ export default function ProfilePage() {
         };
         setProfile(updatedProfile);
         setEditData(updatedProfile);
-        setMessage("✅ Profile image updated successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Profile image updated!",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       } else {
         setMessage(result.error || "❌ Image upload failed");
       }
@@ -183,43 +190,31 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="p-6">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">My Profile</h1>
-
-        {message && (
-          <div
-            className={`alert shadow-lg mb-6 ${
-              message.includes("✅") ? "alert-success" : "alert-error"
-            }`}
-          >
-            <span>{message}</span>
-          </div>
-        )}
+    <div className="min-h-screen text-gray-200 p-6">
+      <div className="max-w-5xl mx-auto space-y-8">
+        {/* Title */}
+        <h1 className="text-3xl font-bold text-red-500">Profile</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Profile Card */}
-          <div className="lg:col-span-1">
-            <div className="bg-white shadow-lg rounded-2xl p-6 hover:shadow-2xl transition">
-              <div className="text-center">
-                {/* Profile Image */}
+          <div className="lg:col-span-1 flex justify-center">
+            <div className="bg-[#121212] border border-gray-800 rounded-xl p-8 w-full max-w-sm shadow-lg text-center">
+              <div className="flex flex-col items-center">
                 <div className="relative inline-block mb-4 group">
-                  <div className="avatar">
-                    <div className="w-28 h-28 rounded-full ring-4 ring-base-200 overflow-hidden shadow-md">
-                      {profile?.profileImage ? (
-                        <img
-                          src={profile.profileImage}
-                          alt="Profile"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-red-100 text-4xl font-bold">
-                          {(profile?.name || session?.user?.name)
-                            ?.charAt(0)
-                            ?.toUpperCase() || "U"}
-                        </div>
-                      )}
-                    </div>
+                  <div className="mb-4">
+                    {session?.user ? (
+                      <Image
+                        src={profile?.profileImage || session.user.image}
+                        alt="User avatar"
+                        width={96}
+                        height={96}
+                        className="w-24 h-24 rounded-full border-2 border-red-600 object-cover"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center w-24 h-24 rounded-full bg-[#1a1a1a] border border-gray-700 text-3xl font-semibold text-gray-300">
+                        {session?.user?.name?.charAt(0).toUpperCase() || "U"}
+                      </div>
+                    )}
                   </div>
 
                   {/* Image Upload */}
@@ -244,25 +239,25 @@ export default function ProfilePage() {
                   />
                 </div>
 
-                {/* Name */}
+                {/* Name & Info */}
                 {isEditing ? (
                   <input
                     type="text"
                     value={editData.name || ""}
                     onChange={(e) => handleInputChange("name", e.target.value)}
-                    className="input input-bordered input-sm w-full text-center font-semibold mb-2"
+                    className="input input-bordered input-sm w-full text-center font-semibold mb-2 bg-gray-800 text-white"
                     placeholder="Your Name"
                   />
                 ) : (
-                  <h2 className="text-xl font-semibold mb-1">
+                  <h2 className="text-xl font-semibold mb-1 text-gray-100">
                     {profile?.name || session?.user?.name || "User"}
                   </h2>
                 )}
 
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-400 text-sm">
                   {session?.user?.email || "user@example.com"}
                 </p>
-                <div className="badge badge-error mt-2 px-3 py-1 text-white">
+                <div className="badge bg-red-600 mt-2 px-3 py-1 text-white">
                   {profile?.role || session?.user?.role || "User"}
                 </div>
               </div>
@@ -271,12 +266,14 @@ export default function ProfilePage() {
 
           {/* Profile Details */}
           <div className="lg:col-span-2">
-            <div className="bg-white shadow-lg rounded-2xl p-6 hover:shadow-2xl transition">
+            <div className="bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900 border border-gray-700 shadow-lg rounded-2xl p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-2xl font-semibold">Profile Information</h3>
+                <h3 className="text-2xl font-semibold text-white  ">
+                  Profile Information
+                </h3>
                 <button
                   onClick={handleEditToggle}
-                  className="btn btn-error btn-sm hover:scale-105 transition"
+                  className="btn text-white rounded-lg bg-red-600 btn-sm hover:scale-105 transition  border-0"
                 >
                   {isEditing ? (
                     <FaTimes className="mr-1" />
@@ -290,19 +287,19 @@ export default function ProfilePage() {
               <div className="space-y-5">
                 {/* Bio */}
                 <div>
-                  <label className="text-sm font-medium text-gray-500">
+                  <label className="text-sm font-medium text-gray-400">
                     Bio
                   </label>
                   {isEditing ? (
                     <textarea
                       value={editData.bio || ""}
                       onChange={(e) => handleInputChange("bio", e.target.value)}
-                      className="textarea textarea-bordered w-full mt-1"
+                      className="textarea textarea-bordered w-full mt-1 bg-gray-800 text-white placeholder-gray-400"
                       rows="2"
                       placeholder="Tell us about yourself..."
                     />
                   ) : (
-                    <p className="text-gray-800 text-lg mt-1">
+                    <p className="text-gray-200 text-lg mt-1">
                       {profile?.bio || "Not provided"}
                     </p>
                   )}
@@ -311,13 +308,13 @@ export default function ProfilePage() {
                 {/* Skills */}
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <label className="text-sm font-medium text-gray-500">
+                    <label className="text-sm font-medium text-gray-400">
                       Skills
                     </label>
                     {isEditing && (
                       <button
                         onClick={addSkill}
-                        className="btn btn-xs btn-outline hover:bg-red-600 hover:text-white"
+                        className="btn bg-red-600 text-stone-50 btn-outline hover:bg-red-600 hover:text-gray-900 border-0"
                       >
                         <FaPlus className="mr-1" />
                         Add
@@ -334,12 +331,12 @@ export default function ProfilePage() {
                             onChange={(e) =>
                               handleSkillChange(index, e.target.value)
                             }
-                            className="input input-bordered input-sm flex-1"
+                            className="input input-bordered input-sm flex-1 bg-gray-800 text-white placeholder-gray-400"
                             placeholder="Skill"
                           />
                           <button
                             onClick={() => removeSkill(index)}
-                            className="btn btn-error btn-sm"
+                            className="btn bg-red-600 text-stone-50 btn-sm border-0"
                           >
                             <FaTrash />
                           </button>
@@ -350,7 +347,10 @@ export default function ProfilePage() {
                     <div className="flex flex-wrap gap-2 mt-1">
                       {profile?.skills?.length > 0 ? (
                         profile.skills.map((skill, i) => (
-                          <span key={i} className="badge badge-outline">
+                          <span
+                            key={i}
+                            className="badge badge-outline text-white border-gray-500"
+                          >
                             {skill}
                           </span>
                         ))
@@ -365,7 +365,7 @@ export default function ProfilePage() {
 
                 {/* Contact Info */}
                 <div>
-                  <label className="text-sm font-medium text-gray-500">
+                  <label className="text-sm font-medium text-gray-400">
                     Phone
                   </label>
                   {isEditing ? (
@@ -375,18 +375,18 @@ export default function ProfilePage() {
                       onChange={(e) =>
                         handleContactInfoChange("phone", e.target.value)
                       }
-                      className="input input-bordered input-sm w-full mt-1"
+                      className="input input-bordered input-sm w-full mt-1 bg-gray-800 text-white placeholder-gray-400"
                       placeholder="Phone number"
                     />
                   ) : (
-                    <p className="text-gray-800 text-lg mt-1">
+                    <p className="text-gray-200 text-lg mt-1">
                       {profile?.contactInfo?.phone || "Not provided"}
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-500">
+                  <label className="text-sm font-medium text-gray-400">
                     Location
                   </label>
                   {isEditing ? (
@@ -396,11 +396,11 @@ export default function ProfilePage() {
                       onChange={(e) =>
                         handleContactInfoChange("location", e.target.value)
                       }
-                      className="input input-bordered input-sm w-full mt-1"
+                      className="input input-bordered input-sm w-full mt-1 bg-gray-800 text-white placeholder-gray-400"
                       placeholder="Your location"
                     />
                   ) : (
-                    <p className="text-gray-800 text-lg mt-1">
+                    <p className="text-gray-200 text-lg mt-1">
                       {profile?.contactInfo?.location || "Not provided"}
                     </p>
                   )}
@@ -408,10 +408,10 @@ export default function ProfilePage() {
 
                 {/* Member Since */}
                 <div>
-                  <label className="text-sm font-medium text-gray-500">
+                  <label className="text-sm font-medium text-gray-400">
                     Member Since
                   </label>
-                  <p className="text-gray-800 text-lg mt-1">
+                  <p className="text-gray-200 text-lg mt-1">
                     {profile?.createdAt
                       ? new Date(profile.createdAt).toLocaleDateString()
                       : "January 2024"}
@@ -424,7 +424,7 @@ export default function ProfilePage() {
                   <button
                     onClick={handleSave}
                     disabled={loading}
-                    className="btn btn-error hover:scale-105 transition"
+                    className="btn bg-red-600 text-stone-50 border-0 hover:scale-105 transition"
                   >
                     {loading ? (
                       <span className="loading loading-spinner"></span>
@@ -438,8 +438,30 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
+        {/* Extra Profile Sections */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-[#121212] border border-gray-800 rounded-xl p-6 shadow-lg">
+            <h3 className="text-lg font-semibold text-gray-100 mb-3">
+              Skills Shared
+            </h3>
+            <p className="text-gray-400">You have shared 0 skills</p>
+            <button className="mt-4 px-4 py-2 border border-red-600 text-red-500 hover:bg-red-600 hover:text-white rounded-lg transition-all">
+              View Skills
+            </button>
+          </div>
+
+          <div className="bg-[#121212] border border-gray-800 rounded-xl p-6 shadow-lg">
+            <h3 className="text-lg font-semibold text-gray-100 mb-3">
+              Skills Learned
+            </h3>
+            <p className="text-gray-400">You have learned 0 skills</p>
+            <button className="mt-4 px-4 py-2 border border-red-600 text-red-500 hover:bg-red-600 hover:text-white rounded-lg transition-all">
+              View Progress
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-

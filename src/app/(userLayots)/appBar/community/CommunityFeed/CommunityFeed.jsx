@@ -22,10 +22,10 @@ import {
 
 const FEELINGS = [
   { icon: Smile, label: "Happy", color: "text-yellow-400" },
-  { icon: Heart, label: "Loved", color: "text-red-400" },
+  { icon: Heart, label: "Loved", color: "text-pink-500" },
   { icon: Zap, label: "Excited", color: "text-orange-400" },
   { icon: Frown, label: "Sad", color: "text-blue-400" },
-  { icon: Angry, label: "Angry", color: "text-red-600" },
+  { icon: Angry, label: "Angry", color: "text-red-500" },
   { icon: Meh, label: "Thoughtful", color: "text-gray-400" },
 ];
 
@@ -51,10 +51,8 @@ export default function CommunityFeed() {
     const fetchPosts = async () => {
       try {
         const res = await axiosInstance.get("/posts");
-        const sortedPosts = res.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-        setPosts(sortedPosts);
+        console.log("Fetched posts:", res.data);
+        setPosts(res.data);
       } catch (error) {
         console.error(error);
       }
@@ -88,6 +86,7 @@ export default function CommunityFeed() {
       comments: [],
       createdAt: new Date(),
     };
+
     try {
       const { data } = await axiosInstance.post("/posts", newPost);
       setPosts((prev) => [data, ...prev]);
@@ -95,7 +94,7 @@ export default function CommunityFeed() {
       setMedia(null);
       setFeeling(null);
     } catch (err) {
-      console.error(err);
+      console.error("Error creating post:", err);
     }
   };
 
@@ -107,13 +106,16 @@ export default function CommunityFeed() {
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
+      background: "#1e1e1e",
+      color: "#fff",
     });
+
     if (result.isConfirmed) {
       try {
         await axiosInstance.delete(`/posts?id=${id}&userId=${currentUser.id}`);
         setPosts((prev) => prev.filter((p) => p._id !== id));
       } catch (err) {
-        console.error(err);
+        console.error("Error deleting post:", err);
       }
     }
   };
@@ -131,27 +133,31 @@ export default function CommunityFeed() {
           : p
       )
     );
+
     try {
       const post = posts.find((p) => p._id === postId);
       const liked = post.likes.includes(currentUser.id);
       const updatedLikes = liked
         ? post.likes.filter((l) => l !== currentUser.id)
         : [...post.likes, currentUser.id];
+
       await axiosInstance.patch(`/posts?id=${postId}`, { likes: updatedLikes });
     } catch (err) {
-      console.error(err);
+      console.error("Error updating likes:", err);
     }
   };
 
   const addComment = async (postId) => {
     const txt = comments[postId]?.trim();
     if (!txt) return;
+
     const newComment = {
       id: Date.now(),
       user: currentUser,
       text: txt,
       time: new Date(),
     };
+
     setPosts((prev) =>
       prev.map((p) =>
         p._id === postId ? { ...p, comments: [...p.comments, newComment] } : p
@@ -159,9 +165,11 @@ export default function CommunityFeed() {
     );
     setComments((prev) => ({ ...prev, [postId]: "" }));
     try {
-      await axiosInstance.patch(`/posts?id=${postId}`, { comment: newComment });
+      await axiosInstance.patch(`/posts?id=${postId}`, {
+        comment: newComment,
+      });
     } catch (err) {
-      console.error(err);
+      console.error("Error adding comment:", err);
     }
   };
 
@@ -174,9 +182,9 @@ export default function CommunityFeed() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black  md:p-8 text-white space-y-6">
-      {/* Create Post */}
-      <div className="bg-black/50 backdrop-blur-md rounded-xl p-4 border border-gray-700 space-y-3">
+    <div className="min-h-screen bg-[#0f0f0f] text-gray-200 space-y-6 p-4">
+      {/* Create Post Section */}
+      <div className="bg-[#1a1a1a] border border-gray-800 rounded-2xl p-4 space-y-3 shadow-lg">
         <div className="flex items-center gap-3">
           <img
             src={currentUser.avatar}
@@ -185,7 +193,7 @@ export default function CommunityFeed() {
           />
           <div>
             <p className="text-sm font-semibold">{currentUser.name}</p>
-            <p className="text-xs text-gray-300">
+            <p className="text-xs text-gray-400">
               Share something with the community
             </p>
           </div>
@@ -195,12 +203,11 @@ export default function CommunityFeed() {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="What's on your mind?"
-          className="w-full resize-none bg-black/30 text-white rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-400 border border-gray-700"
-          rows={2}
+          className="w-full resize-none p-2 bg-[#2a2a2a] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 text-gray-200"
         />
 
         {feeling && (
-          <div className="flex items-center gap-2 bg-gray-800/50 p-2 rounded">
+          <div className="flex items-center gap-2 bg-[#2b2b2b] p-2 rounded">
             <feeling.icon className={`w-5 h-5 ${feeling.color}`} /> Feeling{" "}
             {feeling.label}
             <button onClick={() => setFeeling(null)} className="ml-auto">
@@ -210,7 +217,7 @@ export default function CommunityFeed() {
         )}
 
         {media && (
-          <div className="relative mt-2">
+          <div className="relative">
             {media.type === "video" ? (
               <video src={media.url} controls className="w-full rounded-lg" />
             ) : (
@@ -220,14 +227,14 @@ export default function CommunityFeed() {
               onClick={removeMedia}
               className="absolute top-2 right-2 bg-black/70 p-1 rounded-full"
             >
-              <Trash2 className="w-4 h-4 text-red-600" />
+              <Trash2 className="w-4 h-4 text-red-500" />
             </button>
           </div>
         )}
 
-        <div className="flex justify-between items-center mt-2">
-          <div className="flex gap-4 text-gray-300 text-sm">
-            <label className="flex items-center gap-1 cursor-pointer">
+        <div className="flex justify-between items-center">
+          <div className="flex gap-4 text-sm text-gray-400">
+            <label className="flex items-center gap-1 cursor-pointer hover:text-gray-200">
               <ImageIcon className="w-5 h-5" /> Photo
               <input
                 ref={fileRef}
@@ -239,19 +246,19 @@ export default function CommunityFeed() {
             </label>
             <button
               onClick={() => fileRef.current?.click()}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 hover:text-gray-200"
             >
               <Video className="w-5 h-5" /> Video
             </button>
             <div className="relative">
               <button
                 onClick={() => setShowFeeling(!showFeeling)}
-                className="flex items-center gap-1"
+                className="flex items-center gap-1 hover:text-gray-200"
               >
                 <Smile className="w-5 h-5" /> Feeling
               </button>
               {showFeeling && (
-                <div className="absolute mt-2 bg-black/80 text-white shadow rounded p-2 z-10 w-36">
+                <div className="absolute mt-2 bg-[#1f1f1f] border border-gray-700 shadow rounded p-2 z-10">
                   {FEELINGS.map((f) => (
                     <button
                       key={f.label}
@@ -259,7 +266,7 @@ export default function CommunityFeed() {
                         setFeeling(f);
                         setShowFeeling(false);
                       }}
-                      className="flex items-center gap-2 p-1 hover:bg-gray-700 w-full text-sm rounded"
+                      className="flex items-center gap-2 p-1 hover:bg-[#2b2b2b] w-full text-sm text-gray-200"
                     >
                       <f.icon className={`w-5 h-5 ${f.color}`} /> {f.label}
                     </button>
@@ -268,11 +275,10 @@ export default function CommunityFeed() {
               )}
             </div>
           </div>
-
           <button
             onClick={handlePost}
             disabled={!content.trim() && !media && !feeling}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-lg text-sm"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full text-sm"
           >
             Post
           </button>
@@ -280,138 +286,133 @@ export default function CommunityFeed() {
       </div>
 
       {/* Posts Feed */}
-      <div className="space-y-6">
-        {posts.map((p) => {
-          const liked = p.likes.includes(currentUser.id);
-          const visibleComments = showAllComments[p._id]
-            ? p.comments
-            : p.comments.slice(0, 2);
+      {posts.map((p) => {
+        const liked = p.likes.includes(currentUser.id);
+        const visibleComments = showAllComments[p._id]
+          ? p.comments
+          : p.comments.slice(0, 2);
 
-          return (
-            <div
-              key={p._id}
-              className="bg-black/50 backdrop-blur-md rounded-xl p-4 border border-gray-700 space-y-3"
-            >
-              {/* Post Header */}
-              <div className="flex items-center gap-3">
-                <img
-                  src={p.user?.avatar || "https://i.pravatar.cc/40"}
-                  className="w-10 h-10 rounded-full"
-                />
-                <div>
-                  <p className="text-sm font-semibold">{p.user?.name}</p>
-                  <p className="text-xs text-gray-400">{timeAgo(p.createdAt)}</p>
-                </div>
-                <div className="ml-auto relative">
-                  <button
-                    onClick={() =>
-                      setMenuOpen(menuOpen === p._id ? null : p._id)
-                    }
-                  >
-                    <MoreHorizontal className="text-gray-400 cursor-pointer" />
-                  </button>
-                  {menuOpen === p._id && p.user?.id === currentUser.id && (
-                    <div className="absolute right-0 top-5 bg-black/80 text-white shadow rounded p-2 z-10 text-sm">
-                      <button
-                        onClick={() => deletePost(p._id, p.user.id)}
-                        className="hover:bg-gray-700 px-2 py-1 text-red-500 rounded"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </div>
+        return (
+          <div
+            key={p._id}
+            className="bg-[#1a1a1a] border border-gray-800 rounded-2xl p-4 space-y-3 shadow-md"
+          >
+            <div className="flex gap-3 items-center">
+              <img
+                src={p.user?.avatar || "https://i.pravatar.cc/40"}
+                className="w-10 h-10 rounded-full"
+              />
+              <div>
+                <p className="text-sm font-semibold text-gray-100">
+                  {p.user?.name}
+                </p>
+                <p className="text-xs text-gray-500">{timeAgo(p.createdAt)}</p>
               </div>
-
-              {/* Post Content */}
-              {p.text && <p className="text-sm text-white">{p.text}</p>}
-              {p.media &&
-                (p.media.type === "video" ? (
-                  <video
-                    src={p.media.url}
-                    controls
-                    className="w-full rounded-lg mt-2"
-                  />
-                ) : (
-                  <img
-                    src={p.media.url}
-                    className="w-full rounded-lg mt-2"
-                    alt="post media"
-                  />
-                ))}
-
-              {/* Post Stats */}
-              <div className="text-sm text-gray-300 border-t border-gray-700 pt-2 flex gap-4">
-                <span>{p.likes.length} Likes</span>
-                <span>{p.comments.length} Comments</span>
-              </div>
-
-              {/* Post Actions */}
-              <div className="flex gap-6 pt-2 text-gray-300">
+              <div className="ml-auto relative">
                 <button
-                  onClick={() => toggleLike(p._id)}
-                  className={`flex items-center gap-1 ${
-                    liked ? "text-red-500" : "hover:text-red-500"
-                  }`}
+                  onClick={() => setMenuOpen(menuOpen === p._id ? null : p._id)}
                 >
-                  <ThumbsUp className="w-4 h-4" /> Like
+                  <MoreHorizontal className="text-gray-400 cursor-pointer" />
                 </button>
-                <div className="flex items-center gap-1 hover:text-green-500 cursor-pointer">
-                  <MessageCircle className="w-4 h-4" /> Comment
-                </div>
-              </div>
-
-              {/* Comments */}
-              <div className="space-y-2 mt-2">
-                {visibleComments.map((c) => (
-                  <div key={c.id} className="flex gap-2 items-start">
-                    <img
-                      src={c.user?.avatar || "https://i.pravatar.cc/40"}
-                      className="w-8 h-8 rounded-full"
-                    />
-                    <div className="bg-gray-800/60 px-3 py-1 rounded-2xl flex-1">
-                      <p className="text-sm font-semibold">{c.user?.name}</p>
-                      <p className="text-sm text-white">{c.text}</p>
-                      <p className="text-xs text-gray-400">{timeAgo(c.time)}</p>
-                    </div>
+                {menuOpen === p._id && p.user?.id === currentUser.id && (
+                  <div className="absolute right-0 top-5 bg-[#1f1f1f] border border-gray-700 shadow rounded p-2 z-10 text-sm">
+                    <button
+                      onClick={() => deletePost(p._id, p.user.id)}
+                      className="hover:bg-[#2a2a2a] px-2 py-1 text-red-500"
+                    >
+                      Delete
+                    </button>
                   </div>
-                ))}
-                {p.comments.length > 2 && !showAllComments[p._id] && (
-                  <button
-                    onClick={() =>
-                      setShowAllComments({ ...showAllComments, [p._id]: true })
-                    }
-                    className="text-indigo-400 text-sm"
-                  >
-                    See more comments
-                  </button>
                 )}
-
-                {/* Add Comment */}
-                <div className="flex gap-2 items-center mt-2">
-                  <img src={currentUser.avatar} className="w-8 h-8 rounded-full" />
-                  <input
-                    value={comments[p._id] || ""}
-                    onChange={(e) =>
-                      setComments({ ...comments, [p._id]: e.target.value })
-                    }
-                    onKeyDown={(e) => e.key === "Enter" && addComment(p._id)}
-                    placeholder="Write a comment..."
-                    className="flex-1 px-3 py-1 bg-black/30 text-white rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
-                  />
-                  <button
-                    onClick={() => addComment(p._id)}
-                    disabled={!comments[p._id]?.trim()}
-                  >
-                    <Send className="w-4 h-4 text-indigo-400" />
-                  </button>
-                </div>
               </div>
             </div>
-          );
-        })}
-      </div>
+
+            {p.text && <p className="text-sm text-gray-200">{p.text}</p>}
+            {p.media &&
+              (p.media.type === "video" ? (
+                <video
+                  src={p.media.url}
+                  controls
+                  className="w-full rounded-lg"
+                />
+              ) : (
+                <img src={p.media.url} className="w-full rounded-lg" />
+              ))}
+
+            <div className="text-sm text-gray-400 border-b border-gray-700 pb-2 flex gap-4">
+              <span>{p.likes.length} Likes</span>
+              <span>{p.comments.length} Comments</span>
+            </div>
+
+            <div className="flex gap-6 pt-2 text-gray-400">
+              <button
+                onClick={() => toggleLike(p._id)}
+                className={`flex items-center gap-1 ${
+                  liked ? "text-blue-500" : "hover:text-blue-400"
+                }`}
+              >
+                <ThumbsUp className="w-4 h-4" /> Like
+              </button>
+              <div className="flex items-center gap-1 hover:text-gray-200 cursor-pointer">
+                <MessageCircle className="w-4 h-4" /> Comment
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              {visibleComments.map((c, index) => (
+                <div
+                  key={c._id || c.id || index}
+                  className="flex gap-2 items-start"
+                >
+                  <img
+                    src={c.user?.avatar || "https://i.pravatar.cc/40"}
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <div className="bg-[#2a2a2a] rounded-2xl px-3 py-1 flex-1">
+                    <p className="text-sm font-semibold text-gray-100">
+                      {c.user?.name}
+                    </p>
+                    <p className="text-sm text-gray-300">{c.text}</p>
+                    <p className="text-xs text-gray-500">{timeAgo(c.time)}</p>
+                  </div>
+                </div>
+              ))}
+              {p.comments.length > 2 && !showAllComments[p._id] && (
+                <button
+                  onClick={() =>
+                    setShowAllComments({ ...showAllComments, [p._id]: true })
+                  }
+                  className="text-blue-500 text-sm"
+                >
+                  See more comments
+                </button>
+              )}
+
+              <div className="flex gap-2 items-center">
+                <img
+                  src={currentUser.avatar}
+                  className="w-8 h-8 rounded-full"
+                />
+                <input
+                  value={comments[p._id] || ""}
+                  onChange={(e) =>
+                    setComments({ ...comments, [p._id]: e.target.value })
+                  }
+                  onKeyDown={(e) => e.key === "Enter" && addComment(p._id)}
+                  placeholder="Write a comment..."
+                  className="flex-1 px-3 py-1 bg-[#2a2a2a] rounded-full text-sm text-gray-200"
+                />
+                <button
+                  onClick={() => addComment(p._id)}
+                  disabled={!comments[p._id]?.trim()}
+                >
+                  <Send className="w-4 h-4 text-blue-500" />
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
-

@@ -10,7 +10,7 @@ export default function SignInPage() {
 
   useEffect(() => {
     if (status === "authenticated") {
-      router.replace("/post-login")
+      router.replace("/")
     }
   }, [status, router])
 
@@ -32,7 +32,7 @@ export default function SignInPage() {
           <button type="submit" className="w-full bg-black text-white py-2 rounded">Sign in</button>
         </form>
         <div className="mt-4">
-          <button onClick={() => signIn("google", { callbackUrl: "/post-login" })} className="w-full border py-2 rounded">Continue with Google</button>
+          <button onClick={() => signIn("google", { callbackUrl: "/" })} className="w-full border py-2 rounded">Continue with Google</button>
         </div>
       </div>
     </div>

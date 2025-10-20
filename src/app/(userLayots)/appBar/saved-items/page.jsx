@@ -76,7 +76,7 @@ export default function SavedItems() {
   return (
     <section>
       <Container>
-        <h1 className="text-3xl font-bold mb-6 text-center">My Saved Skills</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center text-white pt-6 ">My Saved Skills</h1>
 
         {loading && <Loading />}
 

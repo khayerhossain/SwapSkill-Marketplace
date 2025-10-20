@@ -7,6 +7,7 @@ import { Eye, Clock, Star, Briefcase, MapPin, Bookmark } from "lucide-react";
 import Container from "@/components/shared/Container";
 import Loading from "@/app/loading";
 import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 // loading function
 function SkeletonCard({ className = "" }) {
@@ -76,6 +77,38 @@ export default function SkillsPage() {
         skillData: skill,
         userEmail,
       });
+      return;
+    }
+
+    const { data } = await axiosInstance.post("/saved-skills", {
+      skillData: skill,
+      userEmail,
+    });
+
+    if (data.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Saved!",
+        text: "Skill saved successfully!",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Failed!",
+        text: "Failed to save skill. Try again.",
+      });
+    }
+  } catch (error) {
+    console.error("Save failed:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error!",
+      text: "Something went wrong while saving skill.",
+    });
+  }
+};
 
       if (data.success) {
         alert("Skill saved successfully!");

@@ -1,15 +1,19 @@
 "use client";
 
+import { UserStatsProvider } from "@/context/UserStatsContext";
 import CommunityFeed from "./CommunityFeed/CommunityFeed";
 import LeftSide from "./LeftSide/LeftSide";
 import RightSide from "./RightSide/RightSide";
 
 export default function AppBarCommunity() {
   return (
-    <div className="flex w-full h-screen bg-gray-100">
+  <UserStatsProvider>
+    <div className="flex w-full h-screen bg-gradient-to-b from-gray-900 to-black text-white">
       {/* Left Sidebar */}
       <div className="w-[25%] sticky top-0 h-screen p-4 hidden lg:block">
-        <LeftSide />
+        <div className="bg-black/50 backdrop-blur-md rounded-xl border border-gray-700 p-4 h-full overflow-y-auto">
+          <LeftSide />
+        </div>
       </div>
 
       {/* Feed (Scrollable only center) */}
@@ -19,8 +23,11 @@ export default function AppBarCommunity() {
 
       {/* Right Sidebar */}
       <div className="w-[22%] sticky top-0 h-screen p-4 hidden lg:block">
-        <RightSide />
+        <div className="bg-black/50 backdrop-blur-md rounded-xl border border-gray-700 p-4 h-full overflow-y-auto">
+          <RightSide />
+        </div>
       </div>
     </div>
+    </UserStatsProvider>
   );
 }

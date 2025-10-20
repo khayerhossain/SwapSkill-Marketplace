@@ -1,25 +1,18 @@
-
 import { MongoClient, ServerApiVersion } from "mongodb";
 
 export const collectionNamesObj = {
   usersCollection: "users",
   skillsDirectoryCollection: "skills-directory",
   newsLatterSubscribersCollection: "subscribers",
-  paymentCollection: 'payment',
+  paymentCollection: "payment",
   testQNACollection: "test-qna",
-  chatMessagesCollection: "chat-messages", // new
-  chatSessionsCollection: "chat-sessions", // new
-
-  notificationsCollection: "notifications",// new
+  chatMessagesCollection: "chat-messages", 
+  chatSessionsCollection: "chat-sessions", 
+  notificationsCollection: "notifications", 
   resourcesCollection: "resources",
-
-  notificationsCollection: "notifications", // new 
-  userEarnCoinCollection: 'earn-coin',
+  userEarnCoinCollection: "earn-coin",
   postsCollection: "posts",
 };
-
-
-
 
 const uri = process.env.MONGODB_URI;
 if (!uri) throw new Error("Please add MONGODB_URI in .env.local");

@@ -6,17 +6,27 @@ import { useParams, useRouter } from "next/navigation";
 import { FaFacebook } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
-
 // find-skills/[id]/page.jsx - Calendar কম্পোনেন্ট
 function Calendar({ onDateSelect, availableDates }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
+
   const today = new Date();
 
   // monthNames কে Calendar কম্পোনেন্টের ভিতরে নিয়ে আসুন
   const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   const daysInMonth = new Date(
@@ -24,7 +34,7 @@ function Calendar({ onDateSelect, availableDates }) {
     currentDate.getMonth() + 1,
     0
   ).getDate();
-  
+
   const firstDayOfMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
@@ -34,9 +44,12 @@ function Calendar({ onDateSelect, availableDates }) {
   // Database থেকে আসা available dates process করা - শুধু backend dates
   const isAvailable = (day, month, year) => {
     if (!availableDates || availableDates.length === 0) return false;
-    
-    const currentDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    
+
+    const currentDateStr = `${year}-${String(month + 1).padStart(
+      2,
+      "0"
+    )}-${String(day).padStart(2, "0")}`;
+
     return availableDates.includes(currentDateStr);
   };
 
@@ -51,7 +64,7 @@ function Calendar({ onDateSelect, availableDates }) {
   const handleDateClick = (day) => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    
+
     if (isAvailable(day, month, year)) {
       const newSelectedDate = new Date(year, month, day);
       setSelectedDate(newSelectedDate);
@@ -88,8 +101,9 @@ function Calendar({ onDateSelect, availableDates }) {
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const available = isAvailable(day, currentMonth, currentYear);
-      const selected = selectedDate && 
-        selectedDate.getDate() === day && 
+      const selected =
+        selectedDate &&
+        selectedDate.getDate() === day &&
         selectedDate.getMonth() === currentMonth &&
         selectedDate.getFullYear() === currentYear;
 
@@ -105,7 +119,7 @@ function Calendar({ onDateSelect, availableDates }) {
               : isToday(day)
               ? "bg-gray-100 text-gray-400 border-gray-300"
               : "bg-gray-50 text-gray-400 border-transparent"
-          } ${available ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+          } ${available ? "cursor-pointer" : "cursor-not-allowed"}`}
         >
           {day}
           {available && !selected && (
@@ -215,10 +229,10 @@ export default function SkillDetailsPage() {
         if (!id) return;
         const { data } = await axiosInstance.get(`/find-skills/${id}`);
         setSkill(data);
-        
+
         // Debug: দেখুন backend থেকে কি data আসছে
-        console.log('Backend data:', data);
-        console.log('Available dates from backend:', data.availabilityDates);
+        console.log("Backend data:", data);
+        console.log("Available dates from backend:", data.availabilityDates);
       } catch (err) {
         console.error(err);
       } finally {
@@ -234,37 +248,37 @@ export default function SkillDetailsPage() {
   };
 
   const handleConnectClick = async () => {
-  if (selectedDate) {
-    try {
-      // Create new chat session
-      const response = await fetch('/api/chats', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          skillId: id,
-          skillOwnerId: skill.userId, //  skill object  userId 
-          selectedDate: selectedDate.toISOString()
-        })
-      });
+    if (selectedDate) {
+      try {
+        // Create new chat session
+        const response = await fetch("/api/chats", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            skillId: id,
+            skillOwnerId: skill.userId, //  skill object  userId
+            selectedDate: selectedDate.toISOString(),
+          }),
+        });
 
-      const chatData = await response.json();
-      
-      if (chatData.success) {
-        // Navigate to chat page
-        router.push(`/appBar/inbox/chat/${chatData.chatId}`);
+        const chatData = await response.json();
+
+        if (chatData.success) {
+          // Navigate to chat page
+          router.push(`/appBar/inbox/chat/${chatData.chatId}`);
+        }
+      } catch (error) {
+        console.error("Error creating chat:", error);
+        alert("Error starting chat. Please try again.");
       }
-    } catch (error) {
-      console.error('Error creating chat:', error);
-      alert('Error starting chat. Please try again.');
+    } else {
+      alert("Please select an available date first");
     }
-  } else {
-    alert('Please select an available date first');
-  }
-};
+  };
 
-  // only backend  availableDates 
+  // only backend  availableDates
   const availableDates = skill?.availabilityDates || [];
 
   // Loading state
@@ -315,7 +329,6 @@ export default function SkillDetailsPage() {
                     className="w-full h-full object-cover"
                   />
                 </div>
-               
               </div>
 
               {/* Rating Card */}
@@ -382,6 +395,12 @@ export default function SkillDetailsPage() {
                     {skill.category}
                   </span>
                 </div>
+                {/* Follow Button */}
+                <div className="inline-block ml-4">
+                  <button className="px-8 py-4 rounded-xl font-bold text-lg shadow-md transition-colors duration-300 bg-gray-300 text-gray-800 hover:bg-gray-400">
+                    Follow
+                  </button>
+                </div>
               </div>
 
               {/* Additional Tags */}
@@ -441,10 +460,10 @@ export default function SkillDetailsPage() {
             </div>
 
             {/* Calendar Section */}
-              <Calendar 
-        onDateSelect={handleDateSelect} 
-        availableDates={availableDates} 
-      />
+            <Calendar
+              onDateSelect={handleDateSelect}
+              availableDates={availableDates}
+            />
 
             {/* Stats Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -610,28 +629,27 @@ export default function SkillDetailsPage() {
             </div>
 
             {/* Action Button */}
-                <div className="bg-red-600 text-white p-8 rounded-2xl shadow-xl text-center hover:bg-red-700 transition-colors duration-300 mt-8">
-        <h3 className="text-2xl font-black mb-4 uppercase tracking-wide">
-          Ready to Connect?
-        </h3>
-        <p className="text-red-100 mb-6">
-          {selectedDate 
-            ? `Selected: ${selectedDate.toDateString()}` 
-            : "Select an available date to schedule your mock interview"
-          }
-        </p>
-        <button 
-          onClick={handleConnectClick}
-          className={`px-8 py-4 rounded-xl font-bold text-lg transition-colors duration-300 w-full ${
-            selectedDate 
-              ? "bg-blue-600 text-white hover:bg-blue-700" 
-              : "bg-gray-400 text-gray-200 cursor-not-allowed"
-          }`}
-          disabled={!selectedDate}
-        >
-          {selectedDate ? "Let's Connect" : "Select a Date First"}
-        </button>
-      </div>
+            <div className="bg-red-600 text-white p-8 rounded-2xl shadow-xl text-center hover:bg-red-700 transition-colors duration-300 mt-8">
+              <h3 className="text-2xl font-black mb-4 uppercase tracking-wide">
+                Ready to Connect?
+              </h3>
+              <p className="text-red-100 mb-6">
+                {selectedDate
+                  ? `Selected: ${selectedDate.toDateString()}`
+                  : "Select an available date to schedule your mock interview"}
+              </p>
+              <button
+                onClick={handleConnectClick}
+                className={`px-8 py-4 rounded-xl font-bold text-lg transition-colors duration-300 w-full ${
+                  selectedDate
+                    ? "bg-blue-600 text-white hover:bg-blue-700"
+                    : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                }`}
+                disabled={!selectedDate}
+              >
+                {selectedDate ? "Let's Connect" : "Select a Date First"}
+              </button>
+            </div>
           </div>
         </div>
       </div>

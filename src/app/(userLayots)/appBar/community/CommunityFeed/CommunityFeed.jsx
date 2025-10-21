@@ -1,4 +1,5 @@
-// "use client";
+
+"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -47,12 +48,16 @@ export default function CommunityFeed() {
   const [menuOpen, setMenuOpen] = useState(null);
   const fileRef = useRef(null);
 
+  // 🔹 Fetch posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await axiosInstance.get("/posts");
-        console.log("Fetched posts:", res.data);
-        setPosts(res.data);
+        // Sort newest posts first (Just now → Older)
+        const sortedPosts = res.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setPosts(sortedPosts);
       } catch (error) {
         console.error(error);
       }
@@ -60,21 +65,28 @@ export default function CommunityFeed() {
     fetchPosts();
   }, []);
 
+  // 🔹 Handle file selection (convert to Base64 for Cloudinary)
   const handleFile = (e) => {
     const f = e.target.files?.[0];
     if (!f) return;
-    setMedia({
-      url: URL.createObjectURL(f),
-      type: f.type.startsWith("video") ? "video" : "image",
-    });
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setMedia({
+        url: reader.result, // Base64 string
+        type: f.type.startsWith("video") ? "video" : "image",
+      });
+    };
+    reader.readAsDataURL(f);
   };
 
+  // 🔹 Remove media before posting
   const removeMedia = () => {
-    if (media?.url) URL.revokeObjectURL(media.url);
     setMedia(null);
     if (fileRef.current) fileRef.current.value = "";
   };
 
+  // 🔹 Create a new post
   const handlePost = async () => {
     if (!content.trim() && !media && !feeling) return;
     const newPost = {
@@ -98,6 +110,7 @@ export default function CommunityFeed() {
     }
   };
 
+  // 🔹 Delete a post
   const deletePost = async (id, postUserId) => {
     if (postUserId !== currentUser.id) return;
     const result = await Swal.fire({
@@ -120,6 +133,7 @@ export default function CommunityFeed() {
     }
   };
 
+  // 🔹 Toggle like/unlike
   const toggleLike = async (postId) => {
     setPosts((prev) =>
       prev.map((p) =>
@@ -147,6 +161,7 @@ export default function CommunityFeed() {
     }
   };
 
+  // 🔹 Add comment
   const addComment = async (postId) => {
     const txt = comments[postId]?.trim();
     if (!txt) return;
@@ -164,6 +179,7 @@ export default function CommunityFeed() {
       )
     );
     setComments((prev) => ({ ...prev, [postId]: "" }));
+
     try {
       await axiosInstance.patch(`/posts?id=${postId}`, {
         comment: newComment,
@@ -173,6 +189,7 @@ export default function CommunityFeed() {
     }
   };
 
+  // 🔹 Format time ago
   const timeAgo = (time) => {
     const diff = Math.floor((new Date() - new Date(time)) / 1000);
     if (diff < 60) return "Just now";
@@ -193,9 +210,7 @@ export default function CommunityFeed() {
           />
           <div>
             <p className="text-sm font-semibold">{currentUser.name}</p>
-            <p className="text-xs text-gray-400">
-              Share something with the community
-            </p>
+            <p className="text-xs text-gray-400">Share something with the community</p>
           </div>
         </div>
 
@@ -208,8 +223,7 @@ export default function CommunityFeed() {
 
         {feeling && (
           <div className="flex items-center gap-2 bg-[#2b2b2b] p-2 rounded">
-            <feeling.icon className={`w-5 h-5 ${feeling.color}`} /> Feeling{" "}
-            {feeling.label}
+            <feeling.icon className={`w-5 h-5 ${feeling.color}`} /> Feeling {feeling.label}
             <button onClick={() => setFeeling(null)} className="ml-auto">
               <Trash2 className="w-4 h-4 text-red-500" />
             </button>
@@ -303,15 +317,11 @@ export default function CommunityFeed() {
                 className="w-10 h-10 rounded-full"
               />
               <div>
-                <p className="text-sm font-semibold text-gray-100">
-                  {p.user?.name}
-                </p>
+                <p className="text-sm font-semibold text-gray-100">{p.user?.name}</p>
                 <p className="text-xs text-gray-500">{timeAgo(p.createdAt)}</p>
               </div>
               <div className="ml-auto relative">
-                <button
-                  onClick={() => setMenuOpen(menuOpen === p._id ? null : p._id)}
-                >
+                <button onClick={() => setMenuOpen(menuOpen === p._id ? null : p._id)}>
                   <MoreHorizontal className="text-gray-400 cursor-pointer" />
                 </button>
                 {menuOpen === p._id && p.user?.id === currentUser.id && (
@@ -330,11 +340,7 @@ export default function CommunityFeed() {
             {p.text && <p className="text-sm text-gray-200">{p.text}</p>}
             {p.media &&
               (p.media.type === "video" ? (
-                <video
-                  src={p.media.url}
-                  controls
-                  className="w-full rounded-lg"
-                />
+                <video src={p.media.url} controls className="w-full rounded-lg" />
               ) : (
                 <img src={p.media.url} className="w-full rounded-lg" />
               ))}
@@ -347,9 +353,7 @@ export default function CommunityFeed() {
             <div className="flex gap-6 pt-2 text-gray-400">
               <button
                 onClick={() => toggleLike(p._id)}
-                className={`flex items-center gap-1 ${
-                  liked ? "text-blue-500" : "hover:text-blue-400"
-                }`}
+                className={`flex items-center gap-1 ${liked ? "text-blue-500" : "hover:text-blue-400"}`}
               >
                 <ThumbsUp className="w-4 h-4" /> Like
               </button>
@@ -360,28 +364,19 @@ export default function CommunityFeed() {
 
             <div className="space-y-2">
               {visibleComments.map((c, index) => (
-                <div
-                  key={c._id || c.id || index}
-                  className="flex gap-2 items-start"
-                >
-                  <img
-                    src={c.user?.avatar || "https://i.pravatar.cc/40"}
-                    className="w-8 h-8 rounded-full"
-                  />
+                <div key={c._id || c.id || index} className="flex gap-2 items-start">
+                  <img src={c.user?.avatar || "https://i.pravatar.cc/40"} className="w-8 h-8 rounded-full" />
                   <div className="bg-[#2a2a2a] rounded-2xl px-3 py-1 flex-1">
-                    <p className="text-sm font-semibold text-gray-100">
-                      {c.user?.name}
-                    </p>
+                    <p className="text-sm font-semibold text-gray-100">{c.user?.name}</p>
                     <p className="text-sm text-gray-300">{c.text}</p>
                     <p className="text-xs text-gray-500">{timeAgo(c.time)}</p>
                   </div>
                 </div>
               ))}
+
               {p.comments.length > 2 && !showAllComments[p._id] && (
                 <button
-                  onClick={() =>
-                    setShowAllComments({ ...showAllComments, [p._id]: true })
-                  }
+                  onClick={() => setShowAllComments({ ...showAllComments, [p._id]: true })}
                   className="text-blue-500 text-sm"
                 >
                   See more comments
@@ -389,23 +384,15 @@ export default function CommunityFeed() {
               )}
 
               <div className="flex gap-2 items-center">
-                <img
-                  src={currentUser.avatar}
-                  className="w-8 h-8 rounded-full"
-                />
+                <img src={currentUser.avatar} className="w-8 h-8 rounded-full" />
                 <input
                   value={comments[p._id] || ""}
-                  onChange={(e) =>
-                    setComments({ ...comments, [p._id]: e.target.value })
-                  }
+                  onChange={(e) => setComments({ ...comments, [p._id]: e.target.value })}
                   onKeyDown={(e) => e.key === "Enter" && addComment(p._id)}
                   placeholder="Write a comment..."
                   className="flex-1 px-3 py-1 bg-[#2a2a2a] rounded-full text-sm text-gray-200"
                 />
-                <button
-                  onClick={() => addComment(p._id)}
-                  disabled={!comments[p._id]?.trim()}
-                >
+                <button onClick={() => addComment(p._id)} disabled={!comments[p._id]?.trim()}>
                   <Send className="w-4 h-4 text-blue-500" />
                 </button>
               </div>

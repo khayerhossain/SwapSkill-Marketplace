@@ -77,47 +77,29 @@ export default function SkillsPage() {
         skillData: skill,
         userEmail,
       });
-      return;
-    }
-
-    const { data } = await axiosInstance.post("/saved-skills", {
-      skillData: skill,
-      userEmail,
-    });
-
-    if (data.success) {
-      Swal.fire({
-        icon: "success",
-        title: "Saved!",
-        text: "Skill saved successfully!",
-        timer: 1500,
-        showConfirmButton: false,
-      });
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Failed!",
-        text: "Failed to save skill. Try again.",
-      });
-    }
-  } catch (error) {
-    console.error("Save failed:", error);
-    Swal.fire({
-      icon: "error",
-      title: "Error!",
-      text: "Something went wrong while saving skill.",
-    });
-  }
-};
 
       if (data.success) {
-        alert("Skill saved successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Saved!",
+          text: "Skill saved successfully!",
+          timer: 1500,
+          showConfirmButton: false,
+        });
       } else {
-        alert("Failed to save skill. Try again.");
+        Swal.fire({
+          icon: "error",
+          title: "Failed!",
+          text: "Failed to save skill. Try again.",
+        });
       }
     } catch (error) {
       console.error("Save failed:", error);
-      alert("Error saving skill!");
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "Something went wrong while saving skill.",
+      });
     }
   };
 
@@ -155,7 +137,7 @@ export default function SkillsPage() {
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="border border-gray-700 px-4 py-2 rounded-md w-80 bg-gray-900 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm"
+                  className=" px-4 py-2 rounded-md w-80 backdrop-blur-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none shadow-sm"
                 />
                 <button
                   onClick={handleSearch}
@@ -217,7 +199,7 @@ export default function SkillsPage() {
                 {skills.map((skill) => (
                   <div
                     key={skill._id}
-                    className="bg-gray-800/20 border border-gray-700 p-6 rounded-xl shadow-lg flex flex-col backdrop-blur-md hover:scale-105 hover:shadow-2xl transition-transform duration-300"
+                    className="bg-[#0f0f0f] border border-gray-800 p-6 rounded-2xl shadow-md flex flex-col hover:scale-[1.02] hover:shadow-2xl transition-transform duration-300"
                   >
                     {/* User Info */}
                     <div className="flex items-center gap-4 mb-4">
@@ -226,15 +208,14 @@ export default function SkillsPage() {
                           skill.userImage || "https://via.placeholder.com/80"
                         }
                         alt={skill.userName}
-                        className="w-20 h-20 rounded-full object-cover ring-2 ring-red-500"
+                        className="w-20 h-20 rounded-full object-cover ring-2 ring-red-600"
                       />
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2">
-                          <h2 className="text-lg font-semibold">
+                          <h2 className="text-lg font-semibold text-white">
                             {skill.userName || "Unknown"}
                           </h2>
-                          {/* Verified badge */}
-                          <span className="text-white bg-blue-500 text-xs px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+                          <span className="text-white bg-blue-600 text-xs px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               className="h-3 w-3"
@@ -252,7 +233,7 @@ export default function SkillsPage() {
                             Verified
                           </span>
                         </div>
-                        <span className="inline-block mt-1 text-xs font-medium px-2 py-1 bg-red-600 text-white rounded-md max-w-max">
+                        <span className="inline-block mt-1 text-xs font-medium p-1 py-1backdrop-blur-xl bg-white/5 border border-white/10text-white rounded-md max-w-max">
                           {skill.category || "Uncategorized"}
                         </span>
                       </div>
@@ -268,7 +249,7 @@ export default function SkillsPage() {
                               key={tag}
                               className={`text-xs px-2 py-1 rounded-full font-medium ${
                                 isHighlight
-                                  ? "bg-red-500 text-white"
+                                  ? "backdrop-blur-xl bg-white/5 border border-white/10 text-white"
                                   : tagColors[i % tagColors.length]
                               }`}
                             >
@@ -279,7 +260,8 @@ export default function SkillsPage() {
                       </div>
                     )}
 
-                    <p className="text-gray-200 flex-1">
+                    {/* Description */}
+                    <p className="text-gray-300 flex-1 leading-relaxed">
                       {skill.description
                         ? skill.description.length > 120
                           ? skill.description.slice(0, 120) + "..."
@@ -288,7 +270,7 @@ export default function SkillsPage() {
                     </p>
 
                     {/* Extra Info */}
-                    <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-gray-400">
+                    <div className="mt-4 grid grid-cols-2 gap-2 text-sm text-gray-400">
                       <span className="flex items-center gap-1">
                         <Briefcase size={16} />{" "}
                         {skill.experience || "Not specified"}
@@ -307,16 +289,16 @@ export default function SkillsPage() {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex mt-5 gap-3">
+                    <div className="flex mt-6 gap-3">
                       <button
                         onClick={() => handleSaveSkill(skill)}
-                        className="flex items-center justify-center gap-2 w-1/2 px-4 py-2 bg-white text-red-600 hover:bg-gray-100 rounded-lg transition shadow"
+                        className="flex items-center justify-center gap-2 w-1/2 bg-[#111111] border border-[#2c2c2c] text-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-[#1e1e1e] hover:border-[#444] hover:text-white transition"
                       >
                         <Bookmark className="w-5 h-5" /> Save
                       </button>
                       <Link
                         href={`/appBar/find-skills/${skill._id}`}
-                        className="flex items-center justify-center gap-2 w-1/2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition shadow"
+                        className="flex items-center justify-center gap-2 w-1/2  bg-[#111111] border border-[#2c2c2c] text-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-[#1e1e1e] hover:border-[#444] hover:text-white transition"
                       >
                         <Eye size={16} /> See Details
                       </Link>

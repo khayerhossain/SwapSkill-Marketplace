@@ -23,6 +23,7 @@ export async function POST(request) {
 
     const newSavedSkill = {
       ...skillData,
+      saveId: skillData._id,
       _id: undefined,
       savedBy: userEmail,
       savedAt: new Date(),

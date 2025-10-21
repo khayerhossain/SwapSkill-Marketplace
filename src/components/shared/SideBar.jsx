@@ -41,6 +41,8 @@ const Sidebar = ({
   const dashboardPath = "/dashboard";
   const resourcesPath = useAppBarPaths ? "/appBar/resources" : "/resources";
   const inboxPath = useAppBarPaths ? "/appBar/inbox" : "/inbox";
+  const savePath = useAppBarPaths ? "/appBar/saved-items" : "/saved-items";
+   const leaderboardPath = useAppBarPaths ? "/appBar/leader-board" : "/leader-board";
 
   const iconByName = (name) => {
     switch (name) {
@@ -90,7 +92,8 @@ const Sidebar = ({
     { name: "Resources", path: resourcesPath },
     { name: "Earn Coin", path: earnCoin },
     { name: "Inbox", path: inboxPath },
-    { name: "Saved", path: "/appBar/saved-items" },
+    { name: "Saved", path: savePath },
+    { name: "Leader-board", path: leaderboardPath },
   ];
 
   const dashboardItems = [

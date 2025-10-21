@@ -1,6 +1,3 @@
-
-
-// src/app/(userLayots)/appBar/LeftSide/LeftSide.jsx
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -12,7 +9,7 @@ import { useUserStats } from "@/context/UserStatsContext";
 export default function LeftSide() {
   const { data: session } = useSession();
   const router = useRouter();
-  const { followingCount } = useUserStats(); // <--- use it here
+  const { followingCount } = useUserStats(); 
 
   const [postCount, setPostCount] = useState(0);
 
@@ -37,7 +34,7 @@ export default function LeftSide() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ">
       <div className="bg-black/50 backdrop-blur-md rounded-xl border border-gray-700 p-6 text-center">
         <img
           src={session?.user?.image || "https://i.pravatar.cc/100?img=12"}

@@ -82,7 +82,7 @@ export default function Chatbot() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-xl bg-red-600 hover:bg-red-700 flex items-center justify-center text-white z-50 transition-all duration-300"
+          className="fixed bottom-5 right-5 h-14 w-14 rounded-full shadow-xl bg-red-600 hover:bg-red-700 flex items-center justify-center text-white z-50 transition-all duration-300"
         >
           <MessageCircle className="h-6 w-6" />
         </button>
@@ -90,12 +90,14 @@ export default function Chatbot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-96 h-[440px] flex flex-col backdrop-blur-2xl bg-gradient-to-br from-[#111]/95 via-[#181818]/90 to-[#222]/80 border border-white/10 shadow-2xl rounded-2xl z-50 overflow-hidden transition-all duration-300">
+        <div className="fixed bottom-5 right-5 w-[90%] sm:w-80 md:w-96 h-[80vh] sm:h-[480px] flex flex-col backdrop-blur-2xl bg-gradient-to-br from-[#111]/95 via-[#181818]/90 to-[#222]/80 border border-white/10 shadow-2xl rounded-2xl z-50 overflow-hidden transition-all duration-300">
           {/* Header */}
           <div className="flex items-center justify-between p-4 bg-gradient-to-r from-red-600 to-red-500 text-white shadow-md">
             <div className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
-              <h3 className="font-semibold">SwapSkill Assistant</h3>
+              <h3 className="font-semibold text-sm sm:text-base">
+                SwapSkill Assistant
+              </h3>
             </div>
             <button
               onClick={() => setIsOpen(false)}
@@ -106,7 +108,7 @@ export default function Chatbot() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 text-gray-100 scrollbar-thin scrollbar-thumb-red-700/30">
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 text-gray-100 scrollbar-thin scrollbar-thumb-red-700/30">
             {messages.map((msg, index) => (
               <div
                 key={index}
@@ -115,7 +117,7 @@ export default function Chatbot() {
                 }`}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl p-3 text-sm transition-all duration-300 ${
+                  className={`max-w-[85%] sm:max-w-[80%] rounded-2xl p-2.5 sm:p-3 text-sm transition-all duration-300 ${
                     msg.role === "user"
                       ? "bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-500/30"
                       : "bg-white/10 text-gray-200 border border-white/10 backdrop-blur-sm"
@@ -137,18 +139,16 @@ export default function Chatbot() {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-white/10 bg-black/40 backdrop-blur-lg">
+          <div className="p-3 sm:p-4 border-t border-white/10 bg-black/40 backdrop-blur-lg">
             <div className="flex gap-2 items-center">
-              <div className="relative flex-1">
-                <input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Type your message..."
-                  disabled={isLoading}
-                  className="w-full px-4 py-2.5 text-sm text-white placeholder-gray-400 bg-white/5 border border-red-500/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/70 focus:border-red-500/60 hover:border-red-400 transition-all duration-300"
-                />
-              </div>
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Type your message..."
+                disabled={isLoading}
+                className="flex-1 px-3 py-2 sm:px-4 sm:py-2.5 text-sm text-white placeholder-gray-400 bg-white/5 border border-red-500/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/70 focus:border-red-500/60 hover:border-red-400 transition-all duration-300"
+              />
               <button
                 onClick={handleSend}
                 disabled={isLoading || !input.trim()}

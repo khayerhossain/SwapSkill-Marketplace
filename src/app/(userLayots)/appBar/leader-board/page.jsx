@@ -71,17 +71,17 @@ export default function LeaderBoard() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0d0d0f] text-gray-900 dark:text-white py-12 px-4 transition-colors duration-500">
-      {/* 🏆 Header */}
+    <div className="min-h-screen   text-gray-900 dark:text-white py-12 px-4 transition-colors duration-500">
+      {/*  Header */}
       <h1 className="text-4xl font-extrabold text-center mb-14 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-sm tracking-wide">
-        🏆 Global Skill Leaderboard
+         Global Skill Leaderboard
       </h1>
 
       <div className="max-w-5xl mx-auto space-y-12">
         {categories.map((category) => (
           <div
             key={category.name}
-            className="backdrop-blur-xl bg-white dark:bg-white/5 border border-gray-200/40 dark:border-white/10 rounded-3xl p-6 shadow-sm"
+            className="backdrop-blur-xl  border border-gray-200/40 dark:border-white/10 rounded-3xl p-6 shadow-sm "
           >
             {/* Category Title */}
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
@@ -94,7 +94,7 @@ export default function LeaderBoard() {
               {category.players.map((player) => (
                 <div
                   key={player.name}
-                  className="flex items-center justify-between bg-gray-50 dark:bg-white/10 backdrop-blur-md border border-gray-200/40 dark:border-gray-700 rounded-2xl p-4 transition-all duration-300"
+                  className="flex items-center justify-between  backdrop-blur-md border border-gray-200/40 dark:border-gray-700 rounded-2xl p-4 transition-all duration-300"
                 >
                   {/* Left */}
                   <div className="flex items-center gap-4">
@@ -117,16 +117,16 @@ export default function LeaderBoard() {
                     />
 
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      <h3 className="text-lg font-semibold  text-white">
                         {player.name}
                       </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                      <p className="text-sm text-gray-500  flex items-center gap-1">
                         <MapPin size={14} />
                         {player.location}
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                      <p className="text-sm text-gray-500  flex items-center gap-1">
                         <Star size={14} /> Level:{" "}
-                        <span className="text-yellow-500 dark:text-yellow-400 font-medium">
+                        <span className="text-yellow-500  font-medium">
                           {player.level}
                         </span>
                       </p>
@@ -160,8 +160,8 @@ export default function LeaderBoard() {
       </div>
 
       {/* Footer */}
-      <p className="text-center text-gray-600 dark:text-gray-500 mt-12 text-sm tracking-wide">
-        Updated daily | Keep grinding for the top spot 🚀
+      <p className="text-center text-gray-600  mt-12 text-sm tracking-wide">
+        Updated daily | Keep grinding for the top spot 
       </p>
     </div>
   );

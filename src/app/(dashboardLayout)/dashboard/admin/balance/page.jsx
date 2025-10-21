@@ -224,11 +224,11 @@ export default function Balance() {
   }
 
   return (
-    <div className="min-h-screen dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6 overflow-x-hidden">
+    <div className="min-h-screen dark:bg-gray-[#111111] text-gray-900 dark:text-gray-100 p-6 overflow-x-hidden">
       <div className="mx-auto overflow-x-hidden">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-            Balance Dashboard
+            <span className="text-red-500">Balance</span> Dashboard
           </h1>
           <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow">
             <TrendingUp className="w-5 h-5 text-green-500" />

@@ -116,14 +116,14 @@ export default function SavedItems() {
 
               <div className="flex gap-2">
                 <Link
-                  href={`/appBar/find-skills/${skill._id}`}
+                  href={`/appBar/find-skills/${skill.saveId}`}
                   className="flex-1 flex items-center justify-center gap-2 bg-[#111111] border border-[#2c2c2c] text-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-[#1e1e1e] hover:border-[#444] hover:text-white transition"
                 >
                   <Eye size={16} /> View
                 </Link>
                 <button
                   onClick={() => handleDelete(skill._id)}
-                  className="flex-1 flex items-center justify-center gap-2 bg-[#111111] border border-[#2c2c2c] text-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-[#2a0f0f] hover:border-[#d33] hover:text-red-400 transition"
+                  className="flex-1 flex items-center justify-center gap-2 bg-[#111111] border border-[#2c2c2c] text-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-[#2a0f0f] hover:border-[#d33] hover:text-red-400 transition cursor-pointer"
                 >
                   <Trash2 size={16} /> Delete
                 </button>

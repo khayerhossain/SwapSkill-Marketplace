@@ -1,4 +1,5 @@
 "use client";
+import Chatbot from "@/app/(landingArea)/chatbot/chat";
 import Container from "@/components/shared/Container";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -108,6 +109,7 @@ export default function HeroSection() {
             />
           ))}
         </div>
+        <Chatbot />
       </Container>
     </section>
   );

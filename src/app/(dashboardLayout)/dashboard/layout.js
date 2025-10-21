@@ -9,6 +9,7 @@ import { FiLogOut } from "react-icons/fi";
 import Link from "next/link";
 import NotificationDropdown from "@/components/shared/NotificationDropdown";
 import Image from "next/image";
+import Chatbot from "@/app/(landingArea)/chatbot/chat";
 
 export default function DashboardLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +53,7 @@ export default function DashboardLayout({ children }) {
         }`}
       >
         {/* Top Bar */}
-        <header className="flex items-center justify-between p-3 border-b border-gray-800 bg-[#111111] sticky top-0 z-40">
+        <header className="flex items-center justify-between p-3 py-1 border-b border-gray-800 bg-[#111111] sticky top-0 z-40">
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(true)}
@@ -132,6 +133,7 @@ export default function DashboardLayout({ children }) {
           </div>
         </>
       )}
+      <Chatbot />
     </div>
   );
 }

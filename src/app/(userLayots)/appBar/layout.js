@@ -11,6 +11,7 @@ import Link from "next/link";
 import { ClipboardList } from "lucide-react";
 import Image from "next/image";
 import { UserStatsProvider } from "@/context/UserStatsContext";
+import Chatbot from "@/app/(landingArea)/chatbot/chat";
 
 export default function AppBarLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -108,10 +109,8 @@ export default function AppBarLayout({ children }) {
 
         {/* Page Content */}
         <main className="flex-1 w-full">
-          <UserStatsProvider>
-            {children}
-          </UserStatsProvider>
-          </main>
+          <UserStatsProvider>{children}</UserStatsProvider>
+        </main>
       </div>
 
       {/* Mobile Drawer */}
@@ -144,6 +143,7 @@ export default function AppBarLayout({ children }) {
           </div>
         </>
       )}
+      <Chatbot />
     </div>
   );
 }

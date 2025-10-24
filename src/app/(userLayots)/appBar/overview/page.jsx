@@ -2,7 +2,7 @@
 
 import Container from "@/components/shared/Container";
 import { ThemeContext } from "@/context/ThemeProvider";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import { useContext, useEffect, useState } from "react";
 import {
   FaBook,
@@ -24,7 +24,7 @@ export default function Overview() {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/user-payment");
+        const res = await axiosInstance.get("/api/user-payment");
         setPayments(res.data?.payments || []);
       } catch (error) {
         console.error("Error fetching payments:", error);
@@ -38,16 +38,15 @@ export default function Overview() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await axios.get("/api/coin-earn");
+        const res = await axiosInstance.get("/api/coin-earn");
         if (res.data.success) setUserData(res.data.data);
       } catch (err) {
         console.error(err);
-      } finally {
-        setLoading(false);
       }
     };
     fetchUserData();
   }, []);
+
 
   return (
     <div

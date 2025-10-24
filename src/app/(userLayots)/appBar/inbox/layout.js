@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import Loading from "@/app/loading";
+import axiosInstance from "@/lib/axiosInstance";
 
 export default function InboxLayout({ children }) {
   const [skills, setSkills] = useState([]);
@@ -39,9 +40,9 @@ export default function InboxLayout({ children }) {
   const loadData = async () => {
     setLoading(true);
     try {
-      await fetch(`/api/chats?userId=${session.user.id}`);
-      const skillsResponse = await fetch("/api/find-skills?limit=50");
-      const skillsData = await skillsResponse.json();
+      await axiosInstance.get(`/api/chats?userId=${session.user.id}`);
+      const skillsResponse = await axiosInstance.get("/api/find-skills?limit=50");
+      const skillsData = skillsResponse.data;
       if (skillsData.success) setSkills(skillsData.skills || []);
     } catch (error) {
       console.error("Error loading data:", error);
@@ -52,17 +53,13 @@ export default function InboxLayout({ children }) {
 
   const handleSkillClick = async (skill) => {
     try {
-      const response = await fetch("/api/chats", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          skillId: skill._id,
-          skillOwnerId: skill.userId,
-          selectedDate: new Date().toISOString(),
-        }),
+      const response = await axiosInstance.post("/api/chats", {
+        skillId: skill._id,
+        skillOwnerId: skill.userId,
+        selectedDate: new Date().toISOString(),
       });
 
-      const chatData = await response.json();
+      const chatData = response.data;
 
       if (chatData.success) {
         const chatUrl = `/appBar/inbox/chat/${chatData.chatId}`;

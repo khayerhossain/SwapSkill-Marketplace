@@ -66,7 +66,7 @@ export default function CurrentSkillsPage() {
         <div className="relative z-10 text-center space-y-4 mb-16">
           <h1 className="text-4xl md:text-5xl font-extrabold text-white">
             Discover{" "}
-            <span className="bg-gradient-to-r from-red-500 to-indigo-400 bg-clip-text text-transparent">
+            <span className="bg-red-500 bg-clip-text text-transparent">
               Skill Categories
             </span>
           </h1>

@@ -235,7 +235,7 @@ export default function SkillDetailsPage() {
 
     setStartingChat(true);
     try {
-      const res = await fetch("/api/chats", {
+      const res = await axiosInstance("/chats", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

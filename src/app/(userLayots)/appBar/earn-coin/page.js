@@ -1,6 +1,6 @@
 "use client";
 
-
+import axiosInstance from "@/lib/axiosInstance";
 import axios from "axios";
 import { Coins, RefreshCw, Trophy, Zap } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -72,7 +72,7 @@ export default function EarnCoinQuizPage() {
     setTimerActive(true); // start timer
 
     try {
-      const response = await fetch("/quiz.json");
+      const response = await axiosInstance("/quiz.json");
       if (!response.ok) {
         throw new Error("Failed to load quiz data.");
       }
@@ -115,7 +115,7 @@ export default function EarnCoinQuizPage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await axios.get("/api/coin-earn");
+        const res = await axiosInstance("/coin-earn");
         if (res.data.success) setUserData(res.data.data);
       } catch (err) {
         console.error(err);

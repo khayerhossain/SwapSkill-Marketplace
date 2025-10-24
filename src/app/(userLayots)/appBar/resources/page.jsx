@@ -16,6 +16,7 @@ import EmojiPicker from "emoji-picker-react";
 import axiosInstance from "@/lib/axiosInstance";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
+import Loading from "@/app/loading";
 
 export default function Resources() {
   const [resources, setResources] = useState([]);
@@ -31,14 +32,19 @@ export default function Resources() {
 
   const { data: session } = useSession();
 
+   const [loading, setLoading] = useState(true);
+
   // Fetch resources
   const fetchResources = async () => {
     try {
+      setLoading(true);
       const res = await axiosInstance.get("/resources");
       setResources(res.data);
       setFilteredResources(res.data);
     } catch (error) {
       console.error("Error fetching resources:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -276,6 +282,17 @@ export default function Resources() {
     }));
   };
 
+  if (loading) {
+    return (
+       <div className="min-h-screen">
+         <Loading />
+     </div>
+   );
+  }
+
+
+
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black p-4 md:p-8 text-white">
       {/* Hero */}
@@ -487,12 +504,14 @@ export default function Resources() {
                       <MessageCircle className="w-5 h-5" />{" "}
                       {res.comments?.length || 0}
                     </button>
-                    <button
+
+                    {/*<button
                       onClick={() => handleSave(res._id)}
                       className="flex items-center gap-1 hover:text-yellow-500 cursor-pointer"
                     >
                       <Bookmark className="w-5 h-5" />
-                    </button>
+                    </button>*/}
+
                   </div>
                   <button
                     onClick={() => handleShare(res._id)}

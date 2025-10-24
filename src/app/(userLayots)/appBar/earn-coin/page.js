@@ -167,6 +167,7 @@ export default function EarnCoinQuizPage() {
     // 2. Prepare payload and send to MongoDB API
     const payload = {
       userEmail: session?.user?.email || MOCK_USER_EMAIL,
+      userName: session?.user?.name || MOCK_USER_NAME,
       score: score,
       coinsEarned: coinsEarned,
       date: new Date().toISOString(),

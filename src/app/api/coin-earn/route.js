@@ -73,41 +73,49 @@ export async function POST(req) {
 
 export async function GET() {
   try {
-    // ✅ Get logged-in user info
     const session = await getServerSession(authOptions);
-
-    if (!session || !session.user?.email) {
-      return Response.json(
-        { success: false, message: "Unauthorized access" },
+    
+    if (!session?.user?.email) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Unauthorized" }),
         { status: 401 }
       );
     }
 
-    const userEmail = session.user.email;
-
-    // ✅ Connect to MongoDB collection
+    // Mongo collection connect
     const userEarnCoinCollection = await dbConnect(
       collectionNamesObj.userEarnCoinCollection
     );
 
-    // ✅ Find only the logged-in user's data
-    const userData = await userEarnCoinCollection.findOne({ userEmail });
+    // Find user by email
+    const user = await userEarnCoinCollection.findOne({ 
+      userEmail: session.user.email 
+    });
 
-    if (!userData) {
-      return Response.json(
-        { success: false, message: "No data found for this user" },
-        { status: 404 }
+    if (!user) {
+      // Return default values if user doesn't exist
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          data: { 
+            userEmail: session.user.email,
+            score: 0,
+            coinsEarned: 0,
+            createdAt: new Date()
+          } 
+        }),
+        { status: 200 }
       );
     }
 
-    return Response.json(
-      { success: true, data: userData },
+    return new Response(
+      JSON.stringify({ success: true, data: user }),
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error fetching user data:", error);
-    return Response.json(
-      { success: false, message: "Internal server error" },
+    console.error("Error:", error);
+    return new Response(
+      JSON.stringify({ success: false, error: error.message }),
       { status: 500 }
     );
   }

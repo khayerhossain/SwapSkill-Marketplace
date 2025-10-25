@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { io } from "socket.io-client";
+import axiosInstance from "@/lib/axiosInstance";
 import {
   ArrowLeft,
   Send,
@@ -123,12 +124,12 @@ export default function ChatPage() {
     try {
       setLoading(true);
 
-      const chatResponse = await fetch(`/api/chats/${chatId}`);
-      const chatData = await chatResponse.json();
+      const chatResponse = await axiosInstance.get(`/api/chats/${chatId}`);
+      const chatData = chatResponse.data;
       if (chatData.success) setChat(chatData.chat);
 
-      const messagesResponse = await fetch(`/api/chats/${chatId}/messages`);
-      const messagesData = await messagesResponse.json();
+      const messagesResponse = await axiosInstance.get(`/api/chats/${chatId}/messages`);
+      const messagesData = messagesResponse.data;
       if (messagesData.success) {
         setMessages(messagesData.messages);        
         
@@ -184,14 +185,10 @@ export default function ChatPage() {
     }
 
     try {
-      await fetch(`/api/chats/${chatId}/messages`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          senderId: session.user.id,
-          senderName: session.user.name,
-          text: newMessage.trim(),
-        }),
+      await axiosInstance.post(`/api/chats/${chatId}/messages`, {
+        senderId: session.user.id,
+        senderName: session.user.name,
+        text: newMessage.trim(),
       });
     } catch (error) {
       console.error("Error saving message via API:", error);

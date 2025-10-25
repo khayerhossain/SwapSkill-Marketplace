@@ -1,447 +1,426 @@
 "use client";
 
-import Loading from "@/app/loading";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import { Coins, RefreshCw, Trophy, Zap } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import { RxStopwatch } from "react-icons/rx";
+// --- Type Definitions (for clarity) ---
 
-// --- Constants ---
-const COINS_PER_CORRECT_ANSWER = 10;
-const NUMBER_OF_QUESTIONS = 10;
-const MOCK_USER_EMAIL = "user@example.com";
+/**
+ * @typedef {object} Question
+ * @property {number} id
+ * @property {string} question
+ * @property {string[]} options
+ * @property {number} correctAnswerIndex
+ */
 
-const shuffleArray = (array) => {
-  let newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-  return newArray;
-};
+/**
+ * @typedef {object} ResultData
+ * @property {number} score
+ * @property {number} coinsEarned
+ * @property {string} date
+ */
+
+// --- Quiz Data ---
+const quizData = [
+  {
+    id: 1,
+    question: "What is the primary purpose of React?",
+    options: [
+      "To build user interfaces",
+      "To manage databases",
+      "To handle server requests",
+      "To create animations",
+    ],
+    correctAnswerIndex: 0,
+  },
+  {
+    id: 2,
+    question: "Which hook is used to manage state in functional components?",
+    options: ["useEffect", "useState", "useContext", "useReducer"],
+    correctAnswerIndex: 1,
+  },
+  {
+    id: 3,
+    question: "What does JSX stand for?",
+    options: [
+      "JavaScript XML",
+      "Java Syntax Extension",
+      "JSON XML",
+      "JavaScript Extension",
+    ],
+    correctAnswerIndex: 0,
+  },
+  {
+    id: 4,
+    question: "Which method is used to update state in React?",
+    options: ["setState", "updateState", "changeState", "modifyState"],
+    correctAnswerIndex: 0,
+  },
+  {
+    id: 5,
+    question: "What is the virtual DOM?",
+    options: [
+      "A real DOM element",
+      "A JavaScript representation of the DOM",
+      "A CSS framework",
+      "A database",
+    ],
+    correctAnswerIndex: 1,
+  },
+];
 
 export default function EarnCoinQuizPage() {
-  const [userData, setUserData] = useState(null);
-  const [quizStage, setQuizStage] = useState("welcome");
-  const [questions, setQuestions] = useState([]);
-  const [userAnswers, setUserAnswers] = useState({});
-  const [resultData, setResultData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
   const { data: session } = useSession();
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [userCoins, setUserCoins] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const [resultData, setResultData] = useState(null);
 
-  const [timeLeft, setTimeLeft] = useState(300);
-  const [timerActive, setTimerActive] = useState(false);
+  const currentQuestion = quizData[currentQuestionIndex];
+  const totalQuestions = quizData.length;
 
+  // Timer effect
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch("/api/quizzes");
-        const result = await response.json();
+    let timer;
+    if (quizStarted && timeLeft > 0 && !quizCompleted) {
+      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+    } else if (timeLeft === 0 && !quizCompleted) {
+      handleNextQuestion();
+    }
+    return () => clearTimeout(timer);
+  }, [timeLeft, quizStarted, quizCompleted]);
 
-        if (result.success) {
-          setCategories(result.data);
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
-
+  // Fetch user coins on component mount
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const res = await axios.get("/api/coin-earn");
-        if (res.data.success) setUserData(res.data.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
+    if (session?.user?.email) {
+      fetchUserCoins();
+    }
+  }, [session]);
 
-    fetchUserData();
-    const interval = setInterval(fetchUserData, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const loadQuiz = async (category) => {
-    setIsLoading(true);
-    setError(null);
-    setUserAnswers({});
-    setResultData(null);
-    setQuizStage("quiz");
-    setSelectedCategory(category);
-
-    setTimeLeft(300);
-    setTimerActive(true);
-
+  const fetchUserCoins = async () => {
     try {
-      const response = await fetch(`/api/quizzes/${encodeURIComponent(category)}`);
-      if (!response.ok) throw new Error("Failed to load quiz data.");
-      const result = await response.json();
-
-      if (!result.success) throw new Error(result.error || "Failed to load quiz data.");
-
-      const quizData = result.data;
-      const transformedQuestions = quizData.questions.map((q, index) => ({
-        id: index + 1,
-        question: q.question,
-        options: q.options,
-        correctAnswerIndex: q.correctAnswer,
-      }));
-
-      const selectedQuestions = shuffleArray(transformedQuestions).slice(0, NUMBER_OF_QUESTIONS);
-      setQuestions(selectedQuestions);
-    } catch (err) {
-      console.error(err);
-      setError("Could not load quiz questions. Please try again.");
-      setQuizStage("welcome");
-    } finally {
-      setIsLoading(false);
+      const response = await axiosInstance.get("/api/coin-earn");
+      if (response.data.success) {
+        setUserCoins(response.data.data?.coinsEarned || 0);
+      }
+    } catch (error) {
+      console.error("Error fetching user coins:", error);
     }
   };
 
-  useEffect(() => {
-    if (!timerActive) return;
-
-    if (timeLeft <= 0) {
-      handleSubmitQuiz(new Event("submit"));
-      setTimerActive(false);
-      return;
-    }
-
-    const interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-    return () => clearInterval(interval);
-  }, [timeLeft, timerActive]);
-
-  const handleAnswerChange = (questionId, optionIndex) => {
-    setUserAnswers((prev) => ({
-      ...prev,
-      [questionId]: optionIndex,
-    }));
+  const startQuiz = () => {
+    setQuizStarted(true);
+    setTimeLeft(30);
+    setCurrentQuestionIndex(0);
+    setScore(0);
+    setSelectedAnswer(null);
+    setQuizCompleted(false);
+    setShowResult(false);
   };
 
-  const handleSubmitQuiz = async (e) => {
-    e.preventDefault?.();
+  const handleAnswerSelect = (answerIndex) => {
+    setSelectedAnswer(answerIndex);
+  };
+
+  const handleNextQuestion = () => {
+    if (selectedAnswer === currentQuestion.correctAnswerIndex) {
+      setScore(score + 1);
+    }
+
+    if (currentQuestionIndex < totalQuestions - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedAnswer(null);
+      setTimeLeft(30);
+    } else {
+      completeQuiz();
+    }
+  };
+
+  const completeQuiz = async () => {
+    setQuizCompleted(true);
+    setQuizStarted(false);
+
+    // Calculate coins earned based on score
+    const coinsEarned = Math.floor((score / totalQuestions) * 10);
+    const finalScore = selectedAnswer === currentQuestion.correctAnswerIndex ? score + 1 : score;
+
+    const result = {
+      score: finalScore,
+      coinsEarned: coinsEarned,
+      date: new Date().toISOString(),
+    };
+
+    setResultData(result);
+    setShowResult(true);
+
+    // Save result to database
+    await saveQuizResult(finalScore, coinsEarned);
+  };
+
+  const saveQuizResult = async (finalScore, coinsEarned) => {
+    if (!session?.user?.email) return;
+
     setIsLoading(true);
-    setError(null);
-    setTimerActive(false);
-
-    let correctCount = 0;
-    questions.forEach((q) => {
-      if (userAnswers[q.id] === q.correctAnswerIndex) correctCount++;
-    });
-
-    const score = correctCount;
-    const coinsEarned = score * COINS_PER_CORRECT_ANSWER;
-
     const payload = {
-      userEmail: session?.user?.email || MOCK_USER_EMAIL,
-      score,
-      coinsEarned,
+      userEmail: session.user.email,
+      score: finalScore,
+      coinsEarned: coinsEarned,
       date: new Date().toISOString(),
     };
 
     try {
-      const response = await axios.post("/api/coin-earn", payload, {
+      const response = await axiosInstance.post("/api/coin-earn", payload, {
         headers: { "Content-Type": "application/json" },
       });
 
       if (!response?.data?.success)
         throw new Error("Failed to save quiz result to the database.");
 
-      setResultData({ score, coinsEarned });
-      setQuizStage("result");
-    } catch (err) {
-      console.error("Submission Error:", err);
-      setError("Quiz submitted, but failed to save results. Your score is: " + score);
-      setResultData({ score, coinsEarned });
-      setQuizStage("result");
+      // Update user coins
+      setUserCoins(prev => prev + coinsEarned);
+    } catch (error) {
+      console.error("Error saving quiz result:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const answeredCount = useMemo(() => Object.keys(userAnswers).length, [userAnswers]);
-  const progress = (answeredCount / NUMBER_OF_QUESTIONS) * 100;
+  const resetQuiz = () => {
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setScore(0);
+    setTimeLeft(30);
+    setQuizStarted(false);
+    setQuizCompleted(false);
+    setShowResult(false);
+    setResultData(null);
+  };
 
-  const renderCategoryScreen = () => (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-gray-50 dark:bg-black transition-colors duration-500">
-      <div className="card w-full max-w-4xl shadow-2xl bg-white dark:bg-black border border-red-500 transition-all">
-        <div className="card-body items-center text-center p-8">
-          <Zap className="w-16 h-16 text-red-500 mb-4 animate-bounce" />
-          <h2 className="card-title text-3xl font-extrabold text-gray-800 dark:text-white mb-2">
-            Choose a Quiz Category
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-            Select a category and answer {NUMBER_OF_QUESTIONS} questions correctly to earn up to{" "}
-            {NUMBER_OF_QUESTIONS * COINS_PER_CORRECT_ANSWER} coins!
-          </p>
-          <p className="flex items-center gap-4 text-gray-800 dark:text-gray-200 mb-6">
-            Your Current Coins:{" "}
-            <Coins className="w-8 h-8 drop-shadow-md text-yellow-500" />{" "}
-            <span className="text-2xl font-black">{userData?.coinsEarned ?? "..."}</span>
-          </p>
+  const getScoreColor = (score) => {
+    const percentage = (score / totalQuestions) * 100;
+    if (percentage >= 80) return "text-green-400";
+    if (percentage >= 60) return "text-yellow-400";
+    return "text-red-400";
+  };
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mt-6">
-            {categories.map((quiz) => (
-              <div
-                key={quiz._id}
-                className="card bg-base-100 shadow-xl border border-gray-200 dark:border-gray-800 hover:border-red-500 transition-all cursor-pointer transform hover:scale-105 dark:bg-black"
-                onClick={() => loadQuiz(quiz.category)}
-              >
-                <div className="card-body text-center p-6">
-                  <h3 className="card-title text-xl font-bold justify-center text-gray-800 dark:text-white">
-                    {quiz.category}
-                  </h3>
-                  <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                    <p>Questions: {quiz.questions?.length || 0}</p>
-                  </div>
-                  <button className="btn mt-4 bg-red-500 hover:bg-red-600 text-white border-none">
-                    Start Quiz
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+  const getScoreMessage = (score) => {
+    const percentage = (score / totalQuestions) * 100;
+    if (percentage >= 80) return "Excellent! 🎉";
+    if (percentage >= 60) return "Good job! 👍";
+    return "Keep practicing! 💪";
+  };
 
-          {error && (
-            <div
-              role="alert"
-              className="alert alert-error my-4 bg-red-100 border-red-400 text-red-700 dark:bg-black dark:text-red-100"
-            >
-              {error}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderWelcomeScreen = () => (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-gray-50 dark:bg-black transition-colors duration-500">
-      <div className="card w-full max-w-lg shadow-2xl bg-white dark:bg-black border border-red-500">
-        <div className="card-body items-center text-center p-8">
-          <Zap className="w-16 h-16 text-red-500 mb-4 animate-bounce" />
-          <h2 className="card-title text-3xl font-extrabold text-gray-800 dark:text-white mb-2">
-            Do You Want to Earn Coins?
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-            Answer {NUMBER_OF_QUESTIONS} questions correctly to earn up to{" "}
-            {NUMBER_OF_QUESTIONS * COINS_PER_CORRECT_ANSWER} coins!
-          </p>
-          <p className="flex items-center gap-4 text-gray-800 dark:text-gray-200">
-            Your Current Coins:{" "}
-            <Coins className="w-8 h-8 drop-shadow-md text-yellow-500" />{" "}
-            <span className="text-2xl font-black">{userData?.coinsEarned ?? "..."}</span>
-          </p>
-
-          {error && (
-            <div
-              role="alert"
-              className="alert alert-error my-4 bg-red-100 border-red-400 text-red-700 dark:bg-black dark:text-red-100"
-            >
-              {error}
-            </div>
-          )}
-          <div className="card-actions mt-4">
-            <button
-              onClick={() => setQuizStage("category")}
-              className="btn btn-lg shadow-xl bg-red-500 hover:bg-red-600 text-white border-none flex items-center gap-2"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  
-                  <Loading></Loading>
-                </>
-              ) : (
-                <>
-                  Start Quiz
-                  <RefreshCw className="w-5 h-5" />
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderQuiz = () => (
-    <div className="w-full mx-auto p-4 md:p-8 dark:bg-black text-gray-50 transition-colors duration-500">
-      <h1 className="text-4xl font-extrabold text-center text-red-500 mb-6">
-        {selectedCategory} Quiz Challenge
-      </h1>
-
-      <div className="sticky top-0 z-10 dark:bg-black/95 backdrop-blur-sm p-4 rounded-xl mb-8 border border-red-500 transition-all duration-300">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-lg font-medium text-gray-700 dark:text-gray-300">Progress</span>
-          <span className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-3">
-            <RxStopwatch size={50} /> <span className="text-5xl font-extrabold"> {String(Math.floor(timeLeft / 60)).padStart(2, "0")}:
-  {String(timeLeft % 60).padStart(2, "0")}</span>
-          </span>
-          <div className="flex gap-4 items-center">
-            <span className="text-xl font-bold text-red-500 dark:text-red-400">
-              {answeredCount} / {NUMBER_OF_QUESTIONS}
-            </span>
-          </div>
-        </div>
-        <progress
-          className="progress w-full h-3 transition-all duration-500 bg-gray-300 dark:bg-gray-800"
-          value={progress}
-          max="100"
-          style={{
-            backgroundImage: `linear-gradient(to right, #ef4444, #dc2626)`,
-            borderRadius: "0.5rem",
-            overflow: "hidden",
-          }}
-        />
-      </div>
-
-      <form onSubmit={handleSubmitQuiz}>
-        {questions.map((q, index) => {
-          const isAnswered = userAnswers[q.id] !== undefined;
-          const selectedIndex = userAnswers[q.id];
-          return (
-            <div
-              key={q.id}
-              className={`card mb-8 bg-white dark:bg-black transition-all border duration-500 ${
-                isAnswered
-                  ? "border-green-500 shadow-green-500/20"
-                  : "border-gray-300 dark:border-gray-800"
-              } rounded-xl`}
-            >
-              <div className="card-body p-6">
-                <h3 className="card-title text-xl font-bold text-gray-800 dark:text-white mb-4">
-                  <span className="text-red-500 mr-2">{index + 1}.</span> {q.question}
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {q.options.map((option, optionIndex) => (
-                    <label
-                      key={optionIndex}
-                      className={`label cursor-pointer p-4 rounded-lg border-2 transition-all duration-300 hover:text-black hover:bg-gray-300 ${
-                        selectedIndex === optionIndex
-                          ? "bg-red-500/10 dark:bg-red-500/20 border-red-500 shadow-red-500/20"
-                          : "border-gray-200 dark:border-gray-800"
-                      }`}
-                    >
-                      <span className="label-text font-bold flex-1 text-left">{option}</span>
-                      <input
-                        type="radio"
-                        name={`question-${q.id}`}
-                        checked={selectedIndex === optionIndex}
-                        onChange={() => handleAnswerChange(q.id, optionIndex)}
-                        className="radio radio-error ml-4"
-                        disabled={isLoading}
-                      />
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-
-        <div className="text-center mt-10 mb-20">
-          {error && (
-            <div
-              role="alert"
-              className="alert alert-error mb-4 bg-red-100 border-red-400 text-red-700 dark:bg-black dark:text-red-100"
-            >
-              {error}
-            </div>
-          )}
-          <button
-            type="submit"
-            className="btn btn-lg w-full bg-red-600 hover:bg-red-700 text-white border-2 border-transparent hover:border-red-300 transition-all duration-300"
-            disabled={isLoading || answeredCount < NUMBER_OF_QUESTIONS}
-          >
-            {isLoading ? (
-              <>
-                
-                <Loading></Loading>
-              </>
-            ) : (
-              <>
-                Submit Quiz and Claim Coins <Trophy className="w-6 h-6" />
-              </>
-            )}
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-
-  const renderResultScreen = () => {
-    if (!resultData) return null;
-    const { score, coinsEarned } = resultData;
-    const isPerfect = score === NUMBER_OF_QUESTIONS;
-
+  if (showResult && resultData) {
     return (
-      <div className="flex items-center justify-center min-h-screen p-4 bg-gray-50 dark:bg-black transition-colors duration-500">
-        <div className="card w-full max-w-lg shadow-2xl bg-white dark:bg-black border border-red-500">
-          <div className="card-body items-center text-center p-8">
-            <Trophy
-              className={`w-20 h-20 mb-4 ${
-                isPerfect ? "text-yellow-500 animate-pulse" : "text-red-500"
-              }`}
-            />
-            <h2 className="card-title text-4xl font-extrabold text-gray-800 dark:text-white mb-2">
-              {isPerfect ? "🌟 Perfect Score! 🌟" : "Quiz Completed!"}
-            </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
-              You correctly answered
-              <span className="font-extrabold text-red-500 mx-1 text-3xl">{score}</span>
-              out of {NUMBER_OF_QUESTIONS} questions.
-            </p>
+      <div className="min-h-screen bg-[#111111] text-white p-6">
+        <div className="max-w-2xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold mb-2">Quiz Completed! 🎉</h1>
+            <p className="text-gray-400">Here are your results</p>
+          </div>
 
-            <div className="stats shadow-lg bg-gray-100 dark:bg-black mb-6">
-              <div className="stat place-items-center p-6">
-                <div className="stat-title text-gray-600 dark:text-gray-300">Coins Earned</div>
-                <div className="stat-value text-red-600 dark:text-red-400 flex items-center gap-2 text-5xl font-black">
-                  {coinsEarned}
-                  <Coins className="w-8 h-8 text-yellow-500" />
+          {/* Result Card */}
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 mb-6">
+            <div className="text-center">
+              <div className="mb-6">
+                <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
+                <h2 className="text-2xl font-bold mb-2">
+                  {getScoreMessage(resultData.score)}
+                </h2>
+                <p className={`text-3xl font-bold ${getScoreColor(resultData.score)}`}>
+                  {resultData.score}/{totalQuestions}
+                </p>
+                <p className="text-gray-400 mt-2">Correct Answers</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-gray-800 rounded-lg p-4">
+                  <Coins className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
+                  <p className="text-2xl font-bold text-yellow-400">
+                    +{resultData.coinsEarned}
+                  </p>
+                  <p className="text-gray-400 text-sm">Coins Earned</p>
                 </div>
-                <div className="stat-desc text-sm text-gray-500 dark:text-gray-400">
-                  @{COINS_PER_CORRECT_ANSWER} coins per correct answer
+                <div className="bg-gray-800 rounded-lg p-4">
+                  <Zap className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+                  <p className="text-2xl font-bold text-blue-400">
+                    {userCoins + resultData.coinsEarned}
+                  </p>
+                  <p className="text-gray-400 text-sm">Total Coins</p>
                 </div>
               </div>
-            </div>
 
-            <div className="card-actions justify-center">
-              <button
-                onClick={() => setQuizStage("category")}
-                className="btn btn-lg bg-red-500 hover:bg-red-600 text-white border-none flex items-center gap-2"
-              >
-                Try Another Quiz
-                <RefreshCw className="w-4 h-4" />
-              </button>
-            </div>
-
-            {error && (
-              <div
-                role="alert"
-                className="alert alert-warning mt-4 bg-yellow-100 border-yellow-400 text-yellow-700 dark:bg-black dark:text-yellow-100"
-              >
-                {error}
+              <div className="flex gap-4 justify-center">
+                <button
+                  onClick={resetQuiz}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+                >
+                  Try Again
+                </button>
+                <button
+                  onClick={() => window.location.href = "/appBar/overview"}
+                  className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+                >
+                  Go to Overview
+                </button>
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
     );
-  };
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-black font-sans transition-colors duration-500">
-      {quizStage === "welcome" && renderWelcomeScreen()}
-      {quizStage === "category" && renderCategoryScreen()}
-      {quizStage === "quiz" && renderQuiz()}
-      {quizStage === "result" && renderResultScreen()}
+    <div className="min-h-screen bg-[#111111] text-white p-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold mb-2">Earn Coins Quiz 🪙</h1>
+          <p className="text-gray-400">Test your knowledge and earn coins!</p>
+        </div>
+
+        {/* User Coins Display */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 mb-6">
+          <div className="flex items-center justify-center gap-2">
+            <Coins className="w-6 h-6 text-yellow-400" />
+            <span className="text-xl font-bold text-yellow-400">
+              {userCoins} Coins
+            </span>
+          </div>
+        </div>
+
+        {!quizStarted && !quizCompleted ? (
+          /* Quiz Start Screen */
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center">
+            <div className="mb-6">
+              <Zap className="w-16 h-16 text-blue-400 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold mb-2">Ready to Test Your Skills?</h2>
+              <p className="text-gray-400 mb-4">
+                Answer {totalQuestions} questions correctly to earn coins!
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="bg-gray-800 rounded-lg p-4">
+                <RxStopwatch className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                <p className="font-semibold">30 seconds</p>
+                <p className="text-gray-400 text-sm">per question</p>
+              </div>
+              <div className="bg-gray-800 rounded-lg p-4">
+                <Trophy className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
+                <p className="font-semibold">Up to 10 coins</p>
+                <p className="text-gray-400 text-sm">based on score</p>
+              </div>
+              <div className="bg-gray-800 rounded-lg p-4">
+                <RefreshCw className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+                <p className="font-semibold">Unlimited tries</p>
+                <p className="text-gray-400 text-sm">practice anytime</p>
+              </div>
+            </div>
+
+            <button
+              onClick={startQuiz}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors"
+            >
+              Start Quiz
+            </button>
+          </div>
+        ) : (
+          /* Quiz Questions */
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+            {/* Progress Bar */}
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm text-gray-400">
+                  Question {currentQuestionIndex + 1} of {totalQuestions}
+                </span>
+                <span className="text-sm text-gray-400">
+                  {Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100)}%
+                </span>
+              </div>
+              <div className="w-full bg-gray-800 rounded-full h-2">
+                <div
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  style={{
+                    width: `${((currentQuestionIndex + 1) / totalQuestions) * 100}%`,
+                  }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Timer */}
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center gap-2 bg-gray-800 rounded-full px-4 py-2">
+                <RxStopwatch className="w-5 h-5 text-green-400" />
+                <span
+                  className={`text-lg font-bold ${
+                    timeLeft <= 10 ? "text-red-400" : "text-green-400"
+                  }`}
+                >
+                  {timeLeft}s
+                </span>
+              </div>
+            </div>
+
+            {/* Question */}
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold mb-6">
+                {currentQuestion.question}
+              </h2>
+              <div className="space-y-3">
+                {currentQuestion.options.map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleAnswerSelect(index)}
+                    className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                      selectedAnswer === index
+                        ? "border-blue-500 bg-blue-500/10"
+                        : "border-gray-700 bg-gray-800 hover:border-gray-600"
+                    }`}
+                  >
+                    <span className="font-medium">{option}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Next Button */}
+            <div className="text-center">
+              <button
+                onClick={handleNextQuestion}
+                disabled={selectedAnswer === null}
+                className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
+                  selectedAnswer === null
+                    ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700 text-white"
+                }`}
+              >
+                {currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "Finish Quiz"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {isLoading && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-gray-900 rounded-lg p-6 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+              <p className="text-white">Saving your results...</p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+

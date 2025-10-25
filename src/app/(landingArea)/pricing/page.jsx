@@ -4,7 +4,7 @@ import Container from "@/components/shared/Container";
 import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 import { BsCreditCard2Back } from "react-icons/bs";
-import { FaCoins, FaStripe } from "react-icons/fa";
+import { FaStripe } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
 export default function Pricing() {
@@ -99,7 +99,6 @@ export default function Pricing() {
     let path = "";
     if (method === "sslcommerz") path = `/checkout?${params.toString()}`;
     else if (method === "stripe") path = `/checkoutStripe?${params.toString()}`;
-    else if (method === "coin") path = `/coin-payment?${params.toString()}`;
 
     setIsModalOpen(false);
     router.push(path);
@@ -225,15 +224,6 @@ export default function Pricing() {
                 </span>
               </div>
 
-              <div
-                onClick={() => handlePayment("coin")}
-                className="flex flex-col items-center justify-center p-4 w-full md:w-1/3 bg-gray-900 border-2 border-yellow-400 rounded-lg shadow-lg hover:shadow-xl cursor-pointer transition-all"
-              >
-                <FaCoins className="text-4xl text-yellow-400 mb-2" />
-                <span className="font-semibold text-gray-200 text-center">
-                  Pay with Coin
-                </span>
-              </div>
             </div>
 
             <div className="modal-action">

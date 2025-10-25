@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Send, X, MessageCircle, Loader2 } from "lucide-react";
+import axiosInstance from "@/lib/axiosInstance";
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,13 +34,11 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+      const response = await axiosInstance.post("/api/ai", {
+        message: input
       });
 
-      const data = await response.json();
+      const data = response.data;
 
       if (data.reply) {
         setMessages((prev) => [

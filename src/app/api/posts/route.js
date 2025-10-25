@@ -1,5 +1,3 @@
-
-
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import dbConnect, { collectionNamesObj } from "@/lib/db.connect";

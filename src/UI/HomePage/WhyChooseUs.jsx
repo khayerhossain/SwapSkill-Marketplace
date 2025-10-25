@@ -46,10 +46,10 @@ export default function WhyChooseUs() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
-            Why <span className="text-indigo-400">Skill Swap</span> Stands Out
+            Why <span className="text-red-500">Skill Swap</span> Stands Out
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Not just a platform — it’s a movement where skills meet passion and
+            Not just a platform it’s a movement where skills meet passion and
             learners become teachers.npm
           </p>
         </motion.div>

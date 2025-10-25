@@ -199,7 +199,7 @@ export default function CommunityFeed() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-gray-200 space-y-6 p-4">
+    <div className="min-h-screen bg-[#0f0f0f] text-gray-200 space-y-6 p-4 rounded-2xl">
       {/* Create Post Section */}
       <div className="bg-[#1a1a1a] border border-gray-800 rounded-2xl p-4 space-y-3 shadow-lg">
         <div className="flex items-center gap-3">

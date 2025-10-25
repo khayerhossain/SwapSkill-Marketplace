@@ -50,7 +50,7 @@ const PopularSkills = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
-            Popular <span className="text-indigo-400">Skills</span>
+            Popular <span className="text-red-500">Skills</span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Explore trending skills that are shaping the world — level up, share
@@ -90,7 +90,7 @@ const PopularSkills = () => {
               </p>
 
               {/* Button */}
-              <button className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium px-6 py-2 rounded-full hover:from-indigo-600 hover:to-purple-600 transition-all">
+              <button className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium px-12 py-2 rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all">
                 View Details
               </button>
             </motion.div>

@@ -2,7 +2,7 @@
 
 import Container from "@/components/shared/Container";
 import { ThemeContext } from "@/context/ThemeProvider";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import { useContext, useEffect, useState } from "react";
 import {
   FaBook,
@@ -24,7 +24,7 @@ export default function Overview() {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/user-payment");
+        const res = await axiosInstance.get("/api/user-payment");
         setPayments(res.data?.payments || []);
       } catch (error) {
         console.error("Error fetching payments:", error);
@@ -38,21 +38,20 @@ export default function Overview() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await axios.get("/api/coin-earn");
+        const res = await axiosInstance.get("/api/coin-earn");
         if (res.data.success) setUserData(res.data.data);
       } catch (err) {
         console.error(err);
-      } finally {
-        setLoading(false);
       }
     };
     fetchUserData();
   }, []);
 
+
   return (
     <div
       className={`min-h-screen p-6 transition-colors duration-300 ${
-        isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+        isDark ? "bg-[#111111] text-white" : ""
       }`}
     >
       {/* 🌟 Header */}
@@ -101,25 +100,25 @@ export default function Overview() {
         ))}
       </div>
 
-      {/* 🏅 Badges Section */}
+      {/* Badges Section */}
       <div className="rounded-2xl p-6 mb-10 border border-gray-700 bg-black/50 backdrop-blur-md text-white">
         <h2 className="text-lg font-semibold mb-5 text-center">
           Your Achievements
         </h2>
         <div className="flex flex-wrap justify-center gap-4">
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-600/70 font-semibold text-sm">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500 font-semibold text-sm">
             <FaTrophy /> Pro Learner
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-600/70 font-semibold text-sm">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500 font-semibold text-sm">
             <FaTrophy /> Master Mentor
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-700/50 text-gray-300 font-semibold text-sm">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-700 backdrop-blur-md  text-gray-300 font-semibold text-sm">
             <FaLock /> Top Contributor
           </div>
         </div>
       </div>
 
-      {/* 💳 Subscription Details */}
+      {/* Subscription Details */}
       <div className="rounded-2xl p-6 border border-gray-700 bg-black/50 backdrop-blur-md text-white">
         <h2 className="text-xl font-bold text-center mb-6">
           Subscription Details

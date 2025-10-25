@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 import Swal from "sweetalert2";
 
 export default function SubscribersPage() {
@@ -10,7 +10,7 @@ export default function SubscribersPage() {
   const fetchSubscribers = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("/api/subscribers");
+      const res = await axiosInstance.get("/api/subscribers");
       if (res.data.success) setSubscribers(res.data.subscribers);
     } catch (err) {
       console.error("Error fetching subscribers:", err);
@@ -34,7 +34,7 @@ export default function SubscribersPage() {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.delete("/api/subscribers", { data: { id } });
+        await axiosInstance.delete("/api/subscribers", { data: { id } });
         setSubscribers((prev) => prev.filter((s) => s._id !== id));
         Swal.fire({
           title: "Removed!",

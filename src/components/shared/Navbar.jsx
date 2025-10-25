@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, use } from "react";
 import logo from "../../assets/logo.png";
 import Container from "./Container";
-import ThemeToggle from "./ThemeToggle";
 
 export default function NavbarPage() {
   const { data: session } = useSession();
@@ -141,8 +140,6 @@ export default function NavbarPage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <ThemeToggle />
-
               {session?.user ? <button
                aria-label="Logout"
                 onClick={() => signOut({ callbackUrl: "/login" })}

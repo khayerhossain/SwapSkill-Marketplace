@@ -9,13 +9,14 @@ import {
   Settings,
   Box,
   MessageSquare,
-  Coins,
   Briefcase,
   LayoutDashboard,
   FileText,
   UserCheck,
   Wallet,
   Search,
+  BarChart3,
+  Coins,
 } from "lucide-react";
 
 const Sidebar = ({
@@ -60,8 +61,6 @@ const Sidebar = ({
         return <LayoutDashboard size={20} />;
       case "Resources":
         return <FileText size={20} />;
-      case "Earn Coin":
-        return <Coins size={20} />;
       case "Inbox":
         return <MessageSquare size={20} />;
       case "Settings":
@@ -76,6 +75,10 @@ const Sidebar = ({
         return <Users size={20} />;
       case "Balance":
         return <Wallet size={20} />;
+      case "Analytics":
+        return <BarChart3 size={20} />;
+      case "Earn Coin":
+        return <Coins size={20} />;
       case "Dashboard":
         return <LayoutDashboard size={20} />;
       default:
@@ -100,6 +103,11 @@ const Sidebar = ({
     { name: "Profile", path: "/dashboard/profile", role: "all" },
     { name: "Settings", path: "/dashboard/settings", role: "all" },
     { name: "Dashboard", path: dashboardPath, role: "all" },
+    {
+      name: "Analytics",
+      path: "/dashboard/admin/analytics",
+      role: "admin",
+    },
     {
       name: "Subscribers",
       path: "/dashboard/admin/subscribers",

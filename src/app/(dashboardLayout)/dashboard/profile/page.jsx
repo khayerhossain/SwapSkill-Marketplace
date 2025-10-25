@@ -2,6 +2,7 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+import axiosInstance from "@/lib/axiosInstance";
 import {
   FaEdit,
   FaSave,
@@ -31,9 +32,9 @@ export default function ProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch("/api/profile/update");
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axiosInstance.get("/api/profile/update");
+      if (response.status === 200) {
+        const data = response.data;
         setProfile(data);
         setEditData(data);
       }
@@ -52,14 +53,13 @@ export default function ProfilePage() {
     formData.append("profileImage", file);
 
     try {
-      const response = await fetch("/api/profile/update", {
-        method: "POST",
-        body: formData,
+      const response = await axiosInstance.post("/api/profile/update", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
       });
 
-      const result = await response.json();
+      const result = response.data;
 
-      if (response.ok) {
+      if (response.status === 200) {
         const updatedProfile = {
           ...profile,
           profileImage: result.imageUrl,
@@ -141,22 +141,16 @@ export default function ProfilePage() {
 
     setLoading(true);
     try {
-      const response = await fetch("/api/profile/update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: editData.name,
-          bio: editData.bio,
-          skills: (editData.skills || []).filter((s) => s.trim() !== ""),
-          contactInfo: editData.contactInfo || {},
-        }),
+      const response = await axiosInstance.put("/api/profile/update", {
+        name: editData.name,
+        bio: editData.bio,
+        skills: (editData.skills || []).filter((s) => s.trim() !== ""),
+        contactInfo: editData.contactInfo || {},
       });
 
-      const result = await response.json();
+      const result = response.data;
 
-      if (response.ok) {
+      if (response.status === 200) {
         setProfile(editData);
         setIsEditing(false);
         setMessage("Profile updated successfully!");

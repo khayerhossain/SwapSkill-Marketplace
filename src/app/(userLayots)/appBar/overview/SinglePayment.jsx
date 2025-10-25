@@ -73,8 +73,8 @@ export function SinglePaymentCard({ payment }) {
 
   return (
    <motion.div
-  className={`rounded-xl p-4 md:p-6 hover:shadow-lg flex flex-col md:flex-row items-center justify-between transition-all duration-300 hover:border-red-500 ${
-    isDark ? "bg-gray-800 text-white border border-gray-700" : "bg-white text-gray-900 border"
+  className={`rounded-xl p-4 md:p-6 hover:shadow-lg flex flex-col md:flex-row items-center justify-between transition-all duration-300 ${
+    isDark ? "bg-[#11111] text-white border border-gray-700" : ""
   } ${getGlowClass(percentageRemaining)}`}
   whileHover={{ scale: 1.01 }}
   initial={{ opacity: 0, y: 20 }}

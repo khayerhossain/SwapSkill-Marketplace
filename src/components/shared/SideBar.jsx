@@ -101,8 +101,8 @@ const Sidebar = ({
 
   const dashboardItems = [
     { name: "Profile", path: "/dashboard/profile", role: "all" },
-    { name: "Settings", path: "/dashboard/settings", role: "all" },
-    { name: "Dashboard", path: dashboardPath, role: "all" },
+    { name: "Settings", path: "/dashboard/settings", role: "admin" },
+    // { name: "Dashboard", path: dashboardPath, role: "all" },
     {
       name: "Analytics",
       path: "/dashboard/admin/analytics",

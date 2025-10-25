@@ -353,7 +353,7 @@ export default function Balance() {
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Bar Chart */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-lg">
+          <div className="bg-[#111111] backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-lg">
             <h3 className="text-lg font-semibold text-gray-100 mb-4">
               Weekly Payment Activity
             </h3>
@@ -391,7 +391,7 @@ export default function Balance() {
           </div>
 
           {/* Pie Chart */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-lg">
+          <div className="bg-[#111111] backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-lg">
             <h3 className="text-lg font-semibold text-gray-100 mb-4">
               Payment Gateway Distribution
             </h3>
@@ -433,7 +433,7 @@ export default function Balance() {
               {pieData.map((item, index) => (
                 <div
                   key={item.name}
-                  className="bg-white/10 backdrop-blur-md border border-white/10 rounded-xl p-4"
+                  className="bg-[#111111] backdrop-blur-md border border-white/10 rounded-xl p-4"
                 >
                   <div className="flex items-center mb-2">
                     <div
@@ -455,7 +455,7 @@ export default function Balance() {
         </div>
 
         {/* Payment History Table */}
-        <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl shadow max-w-7xl mx-auto my-10 overflow-hidden">
+        <div className="bg-[#111111] backdrop-blur-md border border-white/10 rounded-2xl shadow max-w-7xl mx-auto my-10 overflow-hidden">
           <div className="p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold text-gray-100">
@@ -528,8 +528,8 @@ export default function Balance() {
                           "Unknown"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">
-                      {row.paymentMethod === "coin" ? "💰" : "$"}{" "}
+                    <td className="px-6 py-2 whitespace-nowrap text-sm font-bold">
+                      {row.paymentMethod === "coin" ? "" : "$"}{" "}
                       {row.paymentMethod === "coin"
                         ? row.price * 10
                         : row.price}

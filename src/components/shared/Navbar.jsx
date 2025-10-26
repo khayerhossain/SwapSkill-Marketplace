@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, use } from "react";
-// import logo from "../../assets/logo.png";
 import logo from "../../assets/logo1.png";
 import Container from "./Container";
 
@@ -23,7 +22,22 @@ export default function NavbarPage() {
 
   const baseLinks = [
     { name: "Home", path: "/" },
-    { name: "About Us", path: "#about" },
+    {
+      name: "About Us",
+      dropdown: true,
+      items: [
+        {
+          name: "About Us",
+          path: "#about",
+          newTab: false,
+        },
+        {
+          name: "More About Us",
+          path: "/moreAboutUs",
+          newTab: true, // opens in new tab
+        },
+      ],
+    },
     { name: "Current Skills", path: "#current-skills" },
     { name: "Features", path: "/features" },
     { name: "Pricing", path: "/pricing" },
@@ -80,18 +94,53 @@ export default function NavbarPage() {
                 className="menu menu-sm dropdown-content bg-black/90 rounded-box z-[100] mt-3 w-56 p-2 shadow-lg text-white"
               >
                 {navLinks.map((link) => (
-                  <li key={link.path}>
-                    <Link
-                      href={link.path}
-                      scroll={true}
-                      className={`${
-                        pathname === link.path
-                          ? "font-semibold text-white underline underline-offset-4"
-                          : "text-gray-300 hover:text-white"
-                      }`}
-                    >
-                      {link.name}
-                    </Link>
+                  <li key={link.name}>
+                    {link.dropdown ? (
+                      <details>
+                        <summary className="cursor-pointer text-gray-300 hover:text-white">
+                          {link.name}
+                        </summary>
+                        <ul className="p-2 bg-black/90 rounded-lg mt-1">
+                          {link.items.map((item) => (
+                            <li key={item.path}>
+                              {item.newTab ? (
+                                <a
+                                  href={item.path}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-gray-300 hover:text-white"
+                                >
+                                  {item.name}
+                                </a>
+                              ) : (
+                                <Link
+                                  href={item.path}
+                                  className={`${
+                                    pathname === item.path
+                                      ? "font-semibold text-white underline underline-offset-4"
+                                      : "text-gray-300 hover:text-white"
+                                  }`}
+                                >
+                                  {item.name}
+                                </Link>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    ) : (
+                      <Link
+                        href={link.path}
+                        scroll={true}
+                        className={`${
+                          pathname === link.path
+                            ? "font-semibold text-white underline underline-offset-4"
+                            : "text-gray-300 hover:text-white"
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
 
@@ -123,46 +172,99 @@ export default function NavbarPage() {
             <div className="flex-1 flex justify-center">
               <ul className="menu menu-horizontal px-1 gap-6">
                 {navLinks.map((link) => (
-                  <li key={link.path}>
-                    <Link
-                      href={link.path}
-                      scroll={true}
-                      className={`transition ${
-                        pathname === link.path
-                          ? "font-semibold text-white underline underline-offset-4"
-                          : "text-gray-300 hover:text-white"
-                      }`}
-                    >
-                      {link.name}
-                    </Link>
+                  <li key={link.name} className="relative group">
+                    {link.dropdown ? (
+                      <>
+                        <button className="transition text-gray-300 hover:text-white flex items-center gap-1">
+                          {link.name}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-4 h-4"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                            />
+                          </svg>
+                        </button>
+
+                        {/* Dropdown menu */}
+                        <ul className="absolute left-0 mt-2 hidden group-hover:block bg-black/90 rounded-lg p-2 shadow-lg min-w-[180px]">
+                          {link.items.map((item) => (
+                            <li key={item.path}>
+                              {item.newTab ? (
+                                <a
+                                  href={item.path}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="block px-3 py-1 text-gray-300 hover:text-white"
+                                >
+                                  {item.name}
+                                </a>
+                              ) : (
+                                <Link
+                                  href={item.path}
+                                  className={`block px-3 py-1 text-gray-300 hover:text-white ${
+                                    pathname === item.path
+                                      ? "font-semibold underline underline-offset-4"
+                                      : ""
+                                  }`}
+                                >
+                                  {item.name}
+                                </Link>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    ) : (
+                      <Link
+                        href={link.path}
+                        scroll={true}
+                        className={`transition ${
+                          pathname === link.path
+                            ? "font-semibold text-white underline underline-offset-4"
+                            : "text-gray-300 hover:text-white"
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
             </div>
 
             <div className="flex items-center gap-4">
-              {session?.user ? <button
-               aria-label="Logout"
-                onClick={() => signOut({ callbackUrl: "/login" })}
-                className="btn bg-red-600 hover:bg-red-500 text-white rounded-lg border-none shadow-none"
-              >
-                Sign Out
-              </button> 
-              :                
-             <div>
-                <Link
-                href="/login"
-                className="btn bg-gray-900 hover:bg-gray-800 text-white rounded-lg border-none shadow-none mr-3"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/register"
-                className="btn bg-red-600 hover:bg-red-500 text-white rounded-lg border-none shadow-none"
-              >
-                Sign Up
-              </Link>
-             </div>} 
+              {session?.user ? (
+                <button
+                  aria-label="Logout"
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                  className="btn bg-red-600 hover:bg-red-500 text-white rounded-lg border-none shadow-none"
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <div>
+                  <Link
+                    href="/login"
+                    className="btn bg-gray-900 hover:bg-gray-800 text-white rounded-lg border-none shadow-none mr-3"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="btn bg-red-600 hover:bg-red-500 text-white rounded-lg border-none shadow-none"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>

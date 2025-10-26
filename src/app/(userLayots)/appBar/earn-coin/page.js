@@ -1,427 +1,515 @@
 "use client";
 
-import axiosInstance from "@/lib/axiosInstance";
+import Loading from "@/app/loading";
+import axios from "axios";
 import { Coins, RefreshCw, Trophy, Zap } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { use, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RxStopwatch } from "react-icons/rx";
-// --- Type Definitions (for clarity) ---
 
-/**
- * @typedef {object} Question
- * @property {number} id
- * @property {string} question
- * @property {string[]} options
- * @property {number} correctAnswerIndex
- */
+// --- Constants ---
+const COINS_PER_CORRECT_ANSWER = 10;
+const NUMBER_OF_QUESTIONS = 10;
+const MOCK_USER_EMAIL = "user@example.com";
 
-/**
- * @typedef {object} ResultData
- * @property {number} score
- * @property {number} coinsEarned
- * @property {string} date
- */
-
-// --- Quiz Data ---
-const quizData = [
-  {
-    id: 1,
-    question: "What is the primary purpose of React?",
-    options: [
-      "To build user interfaces",
-      "To manage databases",
-      "To handle server requests",
-      "To create animations",
-    ],
-    correctAnswerIndex: 0,
-  },
-  {
-    id: 2,
-    question: "Which hook is used to manage state in functional components?",
-    options: ["useEffect", "useState", "useContext", "useReducer"],
-    correctAnswerIndex: 1,
-  },
-  {
-    id: 3,
-    question: "What does JSX stand for?",
-    options: [
-      "JavaScript XML",
-      "Java Syntax Extension",
-      "JSON XML",
-      "JavaScript Extension",
-    ],
-    correctAnswerIndex: 0,
-  },
-  {
-    id: 4,
-    question: "Which method is used to update state in React?",
-    options: ["setState", "updateState", "changeState", "modifyState"],
-    correctAnswerIndex: 0,
-  },
-  {
-    id: 5,
-    question: "What is the virtual DOM?",
-    options: [
-      "A real DOM element",
-      "A JavaScript representation of the DOM",
-      "A CSS framework",
-      "A database",
-    ],
-    correctAnswerIndex: 1,
-  },
-];
+const shuffleArray = (array) => {
+  let newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+};
 
 export default function EarnCoinQuizPage() {
-  const { data: session } = useSession();
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(30);
-  const [quizStarted, setQuizStarted] = useState(false);
-  const [quizCompleted, setQuizCompleted] = useState(false);
-  const [userCoins, setUserCoins] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showResult, setShowResult] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [quizStage, setQuizStage] = useState("welcome");
+  const [questions, setQuestions] = useState([]);
+  const [userAnswers, setUserAnswers] = useState({});
   const [resultData, setResultData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const { data: session } = useSession();
 
-  const currentQuestion = quizData[currentQuestionIndex];
-  const totalQuestions = quizData.length;
+  const [timeLeft, setTimeLeft] = useState(300);
+  const [timerActive, setTimerActive] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  // Timer effect
   useEffect(() => {
-    let timer;
-    if (quizStarted && timeLeft > 0 && !quizCompleted) {
-      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-    } else if (timeLeft === 0 && !quizCompleted) {
-      handleNextQuestion();
-    }
-    return () => clearTimeout(timer);
-  }, [timeLeft, quizStarted, quizCompleted]);
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/quizzes");
+        const result = await response.json();
 
-  // Fetch user coins on component mount
-  useEffect(() => {
-    if (session?.user?.email) {
-      fetchUserCoins();
-    }
-  }, [session]);
-
-  const fetchUserCoins = async () => {
-    try {
-      const response = await axiosInstance.get("/api/coin-earn");
-      if (response.data.success) {
-        setUserCoins(response.data.data?.coinsEarned || 0);
+        if (result.success) {
+          setCategories(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
       }
-    } catch (error) {
-      console.error("Error fetching user coins:", error);
-    }
-  };
+    };
+    fetchCategories();
+  }, []);
 
-  const startQuiz = () => {
-    setQuizStarted(true);
-    setTimeLeft(30);
-    setCurrentQuestionIndex(0);
-    setScore(0);
-    setSelectedAnswer(null);
-    setQuizCompleted(false);
-    setShowResult(false);
-  };
-
-  const handleAnswerSelect = (answerIndex) => {
-    setSelectedAnswer(answerIndex);
-  };
-
-  const handleNextQuestion = () => {
-    if (selectedAnswer === currentQuestion.correctAnswerIndex) {
-      setScore(score + 1);
-    }
-
-    if (currentQuestionIndex < totalQuestions - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(null);
-      setTimeLeft(30);
-    } else {
-      completeQuiz();
-    }
-  };
-
-  const completeQuiz = async () => {
-    setQuizCompleted(true);
-    setQuizStarted(false);
-
-    // Calculate coins earned based on score
-    const coinsEarned = Math.floor((score / totalQuestions) * 10);
-    const finalScore = selectedAnswer === currentQuestion.correctAnswerIndex ? score + 1 : score;
-
-    const result = {
-      score: finalScore,
-      coinsEarned: coinsEarned,
-      date: new Date().toISOString(),
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await axios.get("/api/coin-earn");
+        if (res.data.success) setUserData(res.data.data);
+      } catch (err) {
+        console.error(err);
+      }
     };
 
-    setResultData(result);
-    setShowResult(true);
+    fetchUserData();
+    const interval = setInterval(fetchUserData, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-    // Save result to database
-    await saveQuizResult(finalScore, coinsEarned);
-  };
-
-  const saveQuizResult = async (finalScore, coinsEarned) => {
-    if (!session?.user?.email) return;
-
+  const loadQuiz = async (category) => {
     setIsLoading(true);
-    const payload = {
-      userEmail: session.user.email,
-      score: finalScore,
-      coinsEarned: coinsEarned,
-      date: new Date().toISOString(),
-    };
+    setError(null);
+    setUserAnswers({});
+    setResultData(null);
+    setQuizStage("quiz");
+    setSelectedCategory(category);
+    setCurrentQuestionIndex(0);
+
+    setTimeLeft(300);
+    setTimerActive(true);
 
     try {
-      const response = await axiosInstance.post("/api/coin-earn", payload, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(`/api/quizzes/${encodeURIComponent(category)}`);
+      if (!response.ok) throw new Error("Failed to load quiz data.");
+      const result = await response.json();
 
-      if (!response?.data?.success) {
-        throw new Error("Failed to save quiz result to the database.");
-      }
+      if (!result.success) throw new Error(result.error || "Failed to load quiz data.");
 
-      // Update user coins
-      setUserCoins(prev => prev + coinsEarned);
-    } catch (error) {
-      console.error("Error saving quiz result:", error);
+      const quizData = result.data;
+      const transformedQuestions = quizData.questions.map((q, index) => ({
+        id: index + 1,
+        question: q.question,
+        options: q.options,
+        correctAnswerIndex: q.correctAnswer,
+      }));
+
+      const selectedQuestions = shuffleArray(transformedQuestions).slice(0, NUMBER_OF_QUESTIONS);
+      setQuestions(selectedQuestions);
+    } catch (err) {
+      console.error(err);
+      setError("Could not load quiz questions. Please try again.");
+      setQuizStage("welcome");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const resetQuiz = () => {
-    setCurrentQuestionIndex(0);
-    setSelectedAnswer(null);
-    setScore(0);
-    setTimeLeft(30);
-    setQuizStarted(false);
-    setQuizCompleted(false);
-    setShowResult(false);
-    setResultData(null);
+  useEffect(() => {
+    if (!timerActive) return;
+
+    if (timeLeft <= 0) {
+      handleSubmitQuiz(new Event("submit"));
+      setTimerActive(false);
+      return;
+    }
+
+    const interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+    return () => clearInterval(interval);
+  }, [timeLeft, timerActive]);
+
+  const handleAnswerChange = (questionId, optionIndex) => {
+    setUserAnswers((prev) => ({
+      ...prev,
+      [questionId]: optionIndex,
+    }));
   };
 
-  const getScoreColor = (score) => {
-    const percentage = (score / totalQuestions) * 100;
-    if (percentage >= 80) return "text-green-400";
-    if (percentage >= 60) return "text-yellow-400";
-    return "text-red-400";
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
   };
 
-  const getScoreMessage = (score) => {
-    const percentage = (score / totalQuestions) * 100;
-    if (percentage >= 80) return "Excellent! 🎉";
-    if (percentage >= 60) return "Good job! 👍";
-    return "Keep practicing! 💪";
+  const handleSubmitQuiz = async (e) => {
+    e.preventDefault?.();
+    setIsLoading(true);
+    setError(null);
+    setTimerActive(false);
+
+    let correctCount = 0;
+    questions.forEach((q) => {
+      if (userAnswers[q.id] === q.correctAnswerIndex) correctCount++;
+    });
+
+    const score = correctCount;
+    const coinsEarned = score * COINS_PER_CORRECT_ANSWER;
+
+    const payload = {
+      userEmail: session?.user?.email || MOCK_USER_EMAIL,
+      score,
+      coinsEarned,
+      date: new Date().toISOString(),
+    };
+
+    try {
+      const response = await axios.post("/api/coin-earn", payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response?.data?.success)
+        throw new Error("Failed to save quiz result to the database.");
+
+      setResultData({ score, coinsEarned });
+      setQuizStage("result");
+    } catch (err) {
+      console.error("Submission Error:", err);
+      setError("Quiz submitted, but failed to save results. Your score is: " + score);
+      setResultData({ score, coinsEarned });
+      setQuizStage("result");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  if (showResult && resultData) {
-    return (
-      <div className="min-h-screen bg-[#111111] text-white p-6">
-        <div className="max-w-2xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2">Quiz Completed! 🎉</h1>
-            <p className="text-gray-400">Here are your results</p>
-          </div>
+  const answeredCount = useMemo(() => Object.keys(userAnswers).length, [userAnswers]);
+  const progress = (answeredCount / NUMBER_OF_QUESTIONS) * 100;
 
-          {/* Result Card */}
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 mb-6">
-            <div className="text-center">
-              <div className="mb-6">
-                <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold mb-2">
-                  {getScoreMessage(resultData.score)}
-                </h2>
-                <p className={`text-3xl font-bold ${getScoreColor(resultData.score)}`}>
-                  {resultData.score}/{totalQuestions}
-                </p>
-                <p className="text-gray-400 mt-2">Correct Answers</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-gray-800 rounded-lg p-4">
-                  <Coins className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
-                  <p className="text-2xl font-bold text-yellow-400">
-                    +{resultData.coinsEarned}
-                  </p>
-                  <p className="text-gray-400 text-sm">Coins Earned</p>
-                </div>
-                <div className="bg-gray-800 rounded-lg p-4">
-                  <Zap className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-                  <p className="text-2xl font-bold text-blue-400">
-                    {userCoins + resultData.coinsEarned}
-                  </p>
-                  <p className="text-gray-400 text-sm">Total Coins</p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 justify-center">
-                <button
-                  onClick={resetQuiz}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-                >
-                  Try Again
-                </button>
-                <button
-                  onClick={() => window.location.href = "/appBar/overview"}
-                  className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-                >
-                  Go to Overview
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-[#111111] text-white p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
+  const renderCategoryScreen = () => (
+    <div className="flex items-center justify-center min-h-screen p-4 bg-black">
+      <div className="w-full max-w-6xl">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Earn Coins Quiz 🪙</h1>
-          <p className="text-gray-400">Test your knowledge and earn coins!</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
+            Earn Coins Quiz 🪙
+          </h1>
+          <p className="text-gray-400 text-lg">Test your knowledge and earn coins!</p>
         </div>
 
-        {/* User Coins Display */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 mb-6">
-          <div className="flex items-center justify-center gap-2">
-            <Coins className="w-6 h-6 text-yellow-400" />
-            <span className="text-xl font-bold text-yellow-400">
-              {userCoins} Coins
+        <div className="bg-gradient-to-r from-red-950/30 to-black border border-red-600/50 rounded-2xl p-6 mb-8">
+          <div className="flex items-center justify-center gap-3">
+            <Coins className="w-8 h-8 text-yellow-500" />
+            <span className="text-3xl font-bold text-yellow-500">
+              {userData?.coinsEarned ?? "0"} Coins
             </span>
           </div>
         </div>
 
-        {!quizStarted && !quizCompleted ? (
-          /* Quiz Start Screen */
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center">
-            <div className="mb-6">
-              <Zap className="w-16 h-16 text-blue-400 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold mb-2">Ready to Test Your Skills?</h2>
-              <p className="text-gray-400 mb-4">
-                Answer {totalQuestions} questions correctly to earn coins!
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-gray-800 rounded-lg p-4">
-                <RxStopwatch className="w-8 h-8 text-green-400 mx-auto mb-2" />
-                <p className="font-semibold">30 seconds</p>
-                <p className="text-gray-400 text-sm">per question</p>
-              </div>
-              <div className="bg-gray-800 rounded-lg p-4">
-                <Trophy className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
-                <p className="font-semibold">Up to 10 coins</p>
-                <p className="text-gray-400 text-sm">based on score</p>
-              </div>
-              <div className="bg-gray-800 rounded-lg p-4">
-                <RefreshCw className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-                <p className="font-semibold">Unlimited tries</p>
-                <p className="text-gray-400 text-sm">practice anytime</p>
-              </div>
-            </div>
-
-            <button
-              onClick={startQuiz}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors"
-            >
-              Start Quiz
-            </button>
-          </div>
-        ) : (
-          /* Quiz Questions */
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
-            {/* Progress Bar */}
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-gray-400">
-                  Question {currentQuestionIndex + 1} of {totalQuestions}
-                </span>
-                <span className="text-sm text-gray-400">
-                  {Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100)}%
-                </span>
-              </div>
-              <div className="w-full bg-gray-800 rounded-full h-2">
-                <div
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                  style={{
-                    width: `${((currentQuestionIndex + 1) / totalQuestions) * 100}%`,
-                  }}
-                ></div>
-              </div>
-            </div>
-
-            {/* Timer */}
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center gap-2 bg-gray-800 rounded-full px-4 py-2">
-                <RxStopwatch className="w-5 h-5 text-green-400" />
-                <span
-                  className={`text-lg font-bold ${
-                    timeLeft <= 10 ? "text-red-400" : "text-green-400"
-                  }`}
-                >
-                  {timeLeft}s
-                </span>
-              </div>
-            </div>
-
-            {/* Question */}
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold mb-6">
-                {currentQuestion.question}
-              </h2>
-              <div className="space-y-3">
-                {currentQuestion.options.map((option, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-                      selectedAnswer === index
-                        ? "border-blue-500 bg-blue-500/10"
-                        : "border-gray-700 bg-gray-800 hover:border-gray-600"
+        <div className="bg-gradient-to-br from-gray-900 to-black border border-red-600/50 rounded-2xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-red-950/30 border-b border-red-600/50">
+                  <th className="text-left px-6 py-4 text-white font-bold text-lg">Category</th>
+                  <th className="text-center px-6 py-4 text-white font-bold text-lg">Questions</th>
+                  <th className="text-center px-6 py-4 text-white font-bold text-lg">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {categories.map((quiz, index) => (
+                  <tr
+                    key={quiz._id}
+                    className={`border-b border-red-600/20 hover:bg-red-950/20 transition-colors ${
+                      index % 2 === 0 ? 'bg-black/30' : 'bg-black/10'
                     }`}
                   >
-                    <span className="font-medium">{option}</span>
-                  </button>
+                    <td className="px-6 py-5 text-white font-semibold text-lg">
+                      {quiz.category}
+                    </td>
+                    <td className="px-6 py-5 text-center text-gray-400">
+                      {quiz.questions?.length || 0}
+                    </td>
+                    <td className="px-6 py-5 text-center">
+                      <button
+                        onClick={() => loadQuiz(quiz.category)}
+                        className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg transition-colors shadow-lg shadow-red-500/30 inline-flex items-center gap-2"
+                      >
+                        Start Quiz
+                        <Zap className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </tr>
                 ))}
-              </div>
-            </div>
-
-            {/* Next Button */}
-            <div className="text-center">
-              <button
-                onClick={handleNextQuestion}
-                disabled={selectedAnswer === null}
-                className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
-                  selectedAnswer === null
-                    ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 text-white"
-                }`}
-              >
-                {currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "Finish Quiz"}
-              </button>
-            </div>
+              </tbody>
+            </table>
           </div>
-        )}
+        </div>
 
-        {isLoading && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-gray-900 rounded-lg p-6 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-              <p className="text-white">Saving your results...</p>
-            </div>
+        {error && (
+          <div className="mt-6 bg-red-950/30 border border-red-500 text-red-400 p-4 rounded-lg">
+            {error}
           </div>
         )}
       </div>
     </div>
   );
-}
 
+  const renderWelcomeScreen = () => (
+    <div className="flex items-center justify-center min-h-screen p-4 bg-black">
+      <div className="w-full max-w-3xl">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
+            Earn Coins Quiz 🪙
+          </h1>
+          <p className="text-gray-400 text-lg">Test your knowledge and earn coins!</p>
+        </div>
+
+        <div className="bg-gradient-to-r from-red-950/30 to-black border border-red-600/50 rounded-2xl p-6 mb-8">
+          <div className="flex items-center justify-center gap-3">
+            <Coins className="w-8 h-8 text-yellow-500" />
+            <span className="text-3xl font-bold text-yellow-500">
+              {userData?.coinsEarned ?? "0"} Coins
+            </span>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-gray-900 to-black border border-red-600/50 rounded-3xl p-8 md:p-12">
+          <div className="flex justify-center mb-6">
+            <Zap className="w-20 h-20 text-red-500" />
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+            Ready to Test Your Skills?
+          </h2>
+          <p className="text-gray-400 text-center mb-10 text-lg">
+            Answer 5 questions correctly to earn coins!
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div className="bg-black border border-red-600/30 rounded-2xl p-6 text-center">
+              <RxStopwatch className="w-12 h-12 text-red-500 mx-auto mb-3" />
+              <p className="text-xl font-bold text-white mb-1">30 seconds</p>
+              <p className="text-gray-400 text-sm">per question</p>
+            </div>
+
+            <div className="bg-black border border-red-600/30 rounded-2xl p-6 text-center">
+              <Trophy className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
+              <p className="text-xl font-bold text-white mb-1">Up to 10 coins</p>
+              <p className="text-gray-400 text-sm">based on score</p>
+            </div>
+
+            <div className="bg-black border border-red-600/30 rounded-2xl p-6 text-center">
+              <RefreshCw className="w-12 h-12 text-red-500 mx-auto mb-3" />
+              <p className="text-xl font-bold text-white mb-1">Unlimited tries</p>
+              <p className="text-gray-400 text-sm">practice anytime</p>
+            </div>
+          </div>
+
+          {error && (
+            <div className="mb-6 bg-red-950/30 border border-red-500 text-red-400 p-4 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          <div className="flex justify-center">
+            <button
+              onClick={() => setQuizStage("category")}
+              className="bg-red-600 hover:bg-red-700 text-white font-bold text-lg px-12 py-4 rounded-xl transition-colors shadow-lg shadow-red-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <Loading />
+              ) : (
+                "Start Quiz"
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderQuiz = () => {
+    const currentQuestion = questions[currentQuestionIndex];
+    if (!currentQuestion) return null;
+
+    const isAnswered = userAnswers[currentQuestion.id] !== undefined;
+    const selectedIndex = userAnswers[currentQuestion.id];
+
+    return (
+      <div className="min-h-screen bg-black p-4 md:p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
+              Earn Coins Quiz 🪙
+            </h1>
+            <p className="text-gray-400 text-lg">Test your knowledge and earn coins!</p>
+          </div>
+
+          <div className="bg-gradient-to-r from-red-950/30 to-black border border-red-600/50 rounded-2xl p-6 mb-8">
+            <div className="flex items-center justify-center gap-3">
+              <Coins className="w-8 h-8 text-yellow-500" />
+              <span className="text-3xl font-bold text-yellow-500">
+                {userData?.coinsEarned ?? "0"} Coins
+              </span>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-gray-900 to-black border border-red-600/50 rounded-3xl p-6 md:p-8 mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-gray-400 text-lg">
+                Question {currentQuestionIndex + 1} of {NUMBER_OF_QUESTIONS}
+              </span>
+              <span className="text-red-500 text-xl font-bold">
+                {Math.round(progress)}%
+              </span>
+            </div>
+
+            <div className="w-full bg-black rounded-full h-3 mb-6">
+              <div
+                className="bg-red-600 h-3 rounded-full transition-all duration-300 shadow-lg shadow-red-500/50"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+
+            <div className="flex justify-center mb-8">
+              <div className="bg-black border border-red-500 rounded-full px-6 py-3 flex items-center gap-2 shadow-lg shadow-red-500/30">
+                <RxStopwatch className="w-6 h-6 text-red-500" />
+                <span className="text-red-500 font-bold text-2xl">
+                  {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, "0")}s
+                </span>
+              </div>
+            </div>
+
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">
+              {currentQuestion.question}
+            </h2>
+
+            <div className="space-y-4">
+              {currentQuestion.options.map((option, optionIndex) => (
+                <label
+                  key={optionIndex}
+                  className={`block bg-black border-2 rounded-xl p-5 cursor-pointer transition-all hover:bg-gray-900 ${
+                    selectedIndex === optionIndex
+                      ? "border-red-500 bg-red-950/20 shadow-lg shadow-red-500/20"
+                      : "border-red-600/30"
+                  }`}
+                  onClick={() => handleAnswerChange(currentQuestion.id, optionIndex)}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-white text-lg font-medium">{option}</span>
+                    <input
+                      type="radio"
+                      name={`question-${currentQuestion.id}`}
+                      checked={selectedIndex === optionIndex}
+                      onChange={() => {}}
+                      className="w-5 h-5 accent-red-600"
+                      disabled={isLoading}
+                    />
+                  </div>
+                </label>
+              ))}
+            </div>
+
+            <div className="flex justify-center mt-8">
+              {currentQuestionIndex < questions.length - 1 ? (
+                <button
+                  onClick={handleNextQuestion}
+                  className="bg-gray-700 hover:bg-gray-600 text-white font-bold text-lg px-8 py-3 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                  disabled={!isAnswered}
+                >
+                  Next Question
+                </button>
+              ) : (
+                <button
+                  onClick={handleSubmitQuiz}
+                  className="bg-red-600 hover:bg-red-700 text-white font-bold text-lg px-8 py-3 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-500/30"
+                  disabled={isLoading || answeredCount < NUMBER_OF_QUESTIONS}
+                >
+                  {isLoading ? <Loading /> : "Submit Quiz"}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {error && (
+            <div className="bg-red-950/30 border border-red-500 text-red-400 p-4 rounded-lg">
+              {error}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderResultScreen = () => {
+    if (!resultData) return null;
+    const { score, coinsEarned } = resultData;
+    const isPerfect = score === NUMBER_OF_QUESTIONS;
+
+    return (
+      <div className="flex items-center justify-center min-h-screen p-4 bg-black">
+        <div className="w-full max-w-2xl">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
+              Quiz Completed! 🎉
+            </h1>
+            <p className="text-gray-400 text-lg">Here are your results</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-gray-900 to-black border border-red-600/50 rounded-3xl p-8 md:p-12">
+            <div className="flex justify-center mb-6">
+              <Trophy className="w-24 h-24 text-yellow-500" />
+            </div>
+
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+              {isPerfect ? "Perfect Score! 🎉" : "Keep practicing! 💪"}
+            </h2>
+
+            <p className="text-center mb-8">
+              <span className="text-5xl md:text-6xl font-black text-red-500">
+                {score}/{NUMBER_OF_QUESTIONS}
+              </span>
+              <br />
+              <span className="text-gray-400 text-lg">Correct Answers</span>
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+              <div className="bg-black border border-red-600/30 rounded-2xl p-6 text-center">
+                <Coins className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
+                <p className="text-4xl font-bold text-yellow-500 mb-1">+{coinsEarned}</p>
+                <p className="text-gray-400 text-sm">Coins Earned</p>
+              </div>
+
+              <div className="bg-black border border-red-600/30 rounded-2xl p-6 text-center">
+                <Zap className="w-12 h-12 text-red-500 mx-auto mb-3" />
+                <p className="text-4xl font-bold text-white mb-1">{userData?.coinsEarned ?? 0}</p>
+                <p className="text-gray-400 text-sm">Total Coins</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => setQuizStage("category")}
+                className="bg-red-600 hover:bg-red-700 text-white font-bold text-lg px-8 py-3 rounded-xl transition-colors shadow-lg shadow-red-500/30"
+              >
+                Try Again
+              </button>
+              <button
+                onClick={() => setQuizStage("welcome")}
+                className="bg-gray-700 hover:bg-gray-600 text-white font-bold text-lg px-8 py-3 rounded-xl transition-colors shadow-lg"
+              >
+                Go to Overview
+              </button>
+            </div>
+
+            {error && (
+              <div className="mt-6 bg-red-950/30 border border-red-500 text-red-400 p-4 rounded-lg">
+                {error}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-black font-sans">
+      {quizStage === "welcome" && renderWelcomeScreen()}
+      {quizStage === "category" && renderCategoryScreen()}
+      {quizStage === "quiz" && renderQuiz()}
+      {quizStage === "result" && renderResultScreen()}
+    </div>
+  );
+}

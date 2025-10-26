@@ -15,6 +15,8 @@ export const collectionNamesObj = {
 
   savedSkills: "saved",
 
+  faqsms: "faq-massage"
+
 };
 
 const uri = process.env.MONGODB_URI;

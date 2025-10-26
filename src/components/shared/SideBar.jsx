@@ -93,7 +93,7 @@ const Sidebar = ({
     { name: "Share Skills", path: shareSkillsPath },
     { name: "Overview", path: userPayment },
     { name: "Resources", path: resourcesPath },
-    { name: "Earn Coin", path: earnCoin },
+    { name: "Q-Field", path: earnCoin },
     { name: "Inbox", path: inboxPath },
     { name: "Saved", path: savePath },
     { name: "Leader-board", path: leaderboardPath },

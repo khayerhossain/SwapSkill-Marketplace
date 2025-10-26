@@ -181,7 +181,7 @@ export default function EarnCoinQuizPage() {
       <div className="w-full max-w-6xl">
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
-            Earn Coins Quiz 🪙
+            Earn Coins Quiz 
           </h1>
           <p className="text-gray-400 text-lg">Test your knowledge and earn coins!</p>
         </div>
@@ -249,7 +249,7 @@ export default function EarnCoinQuizPage() {
       <div className="w-full max-w-3xl">
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
-            Earn Coins Quiz 🪙
+            Earn Coins Quiz 
           </h1>
           <p className="text-gray-400 text-lg">Test your knowledge and earn coins!</p>
         </div>
@@ -331,7 +331,7 @@ export default function EarnCoinQuizPage() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
-              Earn Coins Quiz 🪙
+              Earn Coins Quiz 
             </h1>
             <p className="text-gray-400 text-lg">Test your knowledge and earn coins!</p>
           </div>
@@ -453,7 +453,7 @@ export default function EarnCoinQuizPage() {
             </div>
 
             <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
-              {isPerfect ? "Perfect Score! 🎉" : "Keep practicing! 💪"}
+              {isPerfect ? "Perfect Score! " : "Keep practicing! "}
             </h2>
 
             <p className="text-center mb-8">

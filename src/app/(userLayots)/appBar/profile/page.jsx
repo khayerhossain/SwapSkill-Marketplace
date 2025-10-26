@@ -78,10 +78,10 @@ export default function ProfilePage() {
           showConfirmButton: false,
         });
       } else {
-        setMessage(result.error || "❌ Image upload failed");
+        setMessage(result.error || " Image upload failed");
       }
     } catch (error) {
-      setMessage("⚠️ Error uploading image");
+      setMessage(" Error uploading image");
       console.error("Image upload error:", error);
     } finally {
       setImageLoading(false);

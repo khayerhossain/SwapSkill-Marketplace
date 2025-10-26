@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, use } from "react";
-// import logo from "../../assets/logo.png";
 import logo from "../../assets/logo1.png";
 import Container from "./Container";
 
@@ -35,7 +34,7 @@ export default function NavbarPage() {
         {
           name: "More About Us",
           path: "/moreAboutUs",
-          newTab: true, // will open in new tab
+          newTab: true, // opens in new tab
         },
       ],
     },
@@ -104,16 +103,27 @@ export default function NavbarPage() {
                         <ul className="p-2 bg-black/90 rounded-lg mt-1">
                           {link.items.map((item) => (
                             <li key={item.path}>
-                              <Link
-                                href={item.path}
-                                className={`${
-                                  pathname === item.path
-                                    ? "font-semibold text-white underline underline-offset-4"
-                                    : "text-gray-300 hover:text-white"
-                                }`}
-                              >
-                                {item.name}
-                              </Link>
+                              {item.newTab ? (
+                                <a
+                                  href={item.path}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-gray-300 hover:text-white"
+                                >
+                                  {item.name}
+                                </a>
+                              ) : (
+                                <Link
+                                  href={item.path}
+                                  className={`${
+                                    pathname === item.path
+                                      ? "font-semibold text-white underline underline-offset-4"
+                                      : "text-gray-300 hover:text-white"
+                                  }`}
+                                >
+                                  {item.name}
+                                </Link>
+                              )}
                             </li>
                           ))}
                         </ul>
@@ -182,20 +192,32 @@ export default function NavbarPage() {
                             />
                           </svg>
                         </button>
+
                         {/* Dropdown menu */}
                         <ul className="absolute left-0 mt-2 hidden group-hover:block bg-black/90 rounded-lg p-2 shadow-lg min-w-[180px]">
                           {link.items.map((item) => (
                             <li key={item.path}>
-                              <Link
-                                href={item.path}
-                                className={`block px-3 py-1 text-gray-300 hover:text-white ${
-                                  pathname === item.path
-                                    ? "font-semibold underline underline-offset-4"
-                                    : ""
-                                }`}
-                              >
-                                {item.name}
-                              </Link>
+                              {item.newTab ? (
+                                <a
+                                  href={item.path}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="block px-3 py-1 text-gray-300 hover:text-white"
+                                >
+                                  {item.name}
+                                </a>
+                              ) : (
+                                <Link
+                                  href={item.path}
+                                  className={`block px-3 py-1 text-gray-300 hover:text-white ${
+                                    pathname === item.path
+                                      ? "font-semibold underline underline-offset-4"
+                                      : ""
+                                  }`}
+                                >
+                                  {item.name}
+                                </Link>
+                              )}
                             </li>
                           ))}
                         </ul>

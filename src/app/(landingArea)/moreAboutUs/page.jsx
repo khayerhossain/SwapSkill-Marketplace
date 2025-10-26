@@ -84,17 +84,12 @@ const MoreAboutUs = () => {
       <Container>
         <div className=" mx-auto relative z-10">
           {/* Header Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-20"
-          >
+          <motion.div className="text-center mb-20">
             <div className="inline-block mb-4">
               <Sparkles className="w-8 h-8 text-red-500 animate-pulse" />
             </div>
             <h2 className="text-5xl md:text-6xl font-extrabold text-red-500">
-             <span className="text-white">More</span> About Us
+              <span className="text-white">More</span> About Us
             </h2>
             <p className="text-gray-400 mt-6 max-w-3xl mx-auto text-lg leading-relaxed">
               We’re a dynamic platform built for growth, collaboration, and

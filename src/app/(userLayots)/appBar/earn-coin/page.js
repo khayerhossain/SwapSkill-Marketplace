@@ -3,7 +3,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { Coins, RefreshCw, Trophy, Zap } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { use, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RxStopwatch } from "react-icons/rx";
 // --- Type Definitions (for clarity) ---
 
@@ -181,9 +181,8 @@ export default function EarnCoinQuizPage() {
         headers: { "Content-Type": "application/json" },
       });
 
-      if (!response?.data?.success) {
+      if (!response?.data?.success)
         throw new Error("Failed to save quiz result to the database.");
-      }
 
       // Update user coins
       setUserCoins(prev => prev + coinsEarned);
@@ -424,4 +423,3 @@ export default function EarnCoinQuizPage() {
     </div>
   );
 }
-

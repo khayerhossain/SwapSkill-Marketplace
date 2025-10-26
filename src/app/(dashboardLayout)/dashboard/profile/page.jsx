@@ -53,9 +53,13 @@ export default function ProfilePage() {
     formData.append("profileImage", file);
 
     try {
-      const response = await axiosInstance.post("/api/profile/update", formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
+      const response = await axiosInstance.post(
+        "/api/profile/update",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       const result = response.data;
 
@@ -198,7 +202,7 @@ export default function ProfilePage() {
                         alt="User avatar"
                         width={96}
                         height={96}
-                        className="w-24 h-24 rounded-full border-2 border-red-600 object-cover"
+                        className="w-24 h-24 rounded-full border-2 border-[#111111] object-cover"
                       />
                     ) : (
                       <div className="flex items-center justify-center w-24 h-24 rounded-full bg-[#1a1a1a] border border-gray-700 text-3xl font-semibold text-gray-300">
@@ -426,29 +430,6 @@ export default function ProfilePage() {
                 </div>
               )}
             </div>
-          </div>
-        </div>
-
-        {/* Extra Profile Sections */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-[#121212] border border-gray-800 rounded-xl p-6 shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-100 mb-3">
-              Skills Shared
-            </h3>
-            <p className="text-gray-400">You have shared 0 skills</p>
-            <button className="mt-4 px-4 py-2 border border-red-600 text-red-500 hover:bg-red-600 hover:text-white rounded-lg transition-all">
-              View Skills
-            </button>
-          </div>
-
-          <div className="bg-[#121212] border border-gray-800 rounded-xl p-6 shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-100 mb-3">
-              Skills Learned
-            </h3>
-            <p className="text-gray-400">You have learned 0 skills</p>
-            <button className="mt-4 px-4 py-2 border border-red-600 text-red-500 hover:bg-red-600 hover:text-white rounded-lg transition-all">
-              View Progress
-            </button>
           </div>
         </div>
       </div>

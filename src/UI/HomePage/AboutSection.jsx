@@ -3,6 +3,9 @@ import Container from "@/components/shared/Container";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import AboutImage from "../../assets/about-image.png";
+import Loading from "@/app/loading";
+import { useEffect, useState } from "react";
+import axiosInstance from "@/lib/axiosInstance";
 
 const textVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -14,14 +17,65 @@ const textVariants = {
 };
 
 export default function AboutSection() {
+
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [skills, setSkills] = useState([]);  
+  const [loading, setLoading] = useState(true);
+
+
+  // total users
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axiosInstance.get("/users");
+      setTotalUsers(data.length);
+    } catch (error) {
+      console.error("Failed to fetch users", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  //total skills
+  useEffect(() => {
+    fetchSkills();
+  }, []);  
+
+  const fetchSkills = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axiosInstance.get("/current-skills");
+      setSkills(data);
+    } catch (error) {
+      console.error(" Failed to fetch skills", error);
+      Swal.fire("Error", "Failed to load skills", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <Loading />
+      </div>
+    );
+  }  
+
+
+
   return (
     <section className="relative w-full py-24 flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#0a0a0a] via-[#111111] to-[#1a1a1a] text-gray-200">
-      {/* ✨ Subtle glow overlay for extra depth */}
+      {/*  Subtle glow overlay for extra depth */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-indigo-500/5 pointer-events-none" />
 
       <Container>
         <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full z-10">
-          {/* 🖼 Left Side - Image */}
+          {/*  Left Side - Image */}
           <div className="flex justify-center lg:justify-start px-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -38,7 +92,7 @@ export default function AboutSection() {
             </motion.div>
           </div>
 
-          {/* 📝 Right Side - Text Content */}
+          {/*  Right Side - Text Content */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -84,7 +138,7 @@ export default function AboutSection() {
               . Together, we’re shaping a community where growth is unlimited.
             </motion.p>
 
-            {/* 💫 Stats Section */}
+            {/*  Stats Section */}
             <motion.div
               custom={4}
               variants={textVariants}
@@ -92,14 +146,14 @@ export default function AboutSection() {
             >
               <div className="text-center">
                 <div className="text-3xl font-extrabold text-red-500">
-                  10K+
+                  {totalUsers}+
                 </div>
                 <div className="text-sm text-gray-400">Active Users</div>
               </div>
               <div className="w-px h-12 bg-gray-600/30 hidden sm:block"></div>
               <div className="text-center">
                 <div className="text-3xl font-extrabold text-red-500">
-                  500+
+                  {skills.length}+
                 </div>
                 <div className="text-sm text-gray-400">Skills Available</div>
               </div>

@@ -54,7 +54,7 @@ export default function ProfilePage() {
 
     try {
       const response = await axiosInstance.post(
-        "/api/profile/update",
+        "/profile/update",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

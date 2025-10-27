@@ -34,7 +34,7 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
-      const response = await axiosInstance.post("/api/ai", {
+      const response = await axiosInstance.post("/ai", {
         message: input
       });
 

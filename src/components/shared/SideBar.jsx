@@ -43,7 +43,9 @@ const Sidebar = ({
   const resourcesPath = useAppBarPaths ? "/appBar/resources" : "/resources";
   const inboxPath = useAppBarPaths ? "/appBar/inbox" : "/inbox";
   const savePath = useAppBarPaths ? "/appBar/saved-items" : "/saved-items";
-   const leaderboardPath = useAppBarPaths ? "/appBar/leader-board" : "/leader-board";
+  const leaderboardPath = useAppBarPaths
+    ? "/appBar/leader-board"
+    : "/leader-board";
 
   const iconByName = (name) => {
     switch (name) {
@@ -87,40 +89,38 @@ const Sidebar = ({
   };
 
   const appBarItems = [
+    { name: "Overview", path: userPayment },
+    { name: "Profile", path: profilePath },
     { name: "Community", path: communityPath },
     { name: "Find Skills", path: findSkillsPath },
-    { name: "Profile", path: profilePath },
     { name: "Share Skills", path: shareSkillsPath },
-    { name: "Overview", path: userPayment },
+    { name: "Inbox", path: inboxPath },
     { name: "Resources", path: resourcesPath },
     { name: "Q-Field", path: earnCoin },
-    { name: "Inbox", path: inboxPath },
     { name: "Saved", path: savePath },
-    { name: "Leader-board", path: leaderboardPath },
   ];
 
   const dashboardItems = [
-    { name: "Profile", path: "/dashboard/profile", role: "all" },
-    { name: "Settings", path: "/dashboard/settings", role: "admin" },
-    // { name: "Dashboard", path: dashboardPath, role: "all" },
     {
       name: "Analytics",
       path: "/dashboard/admin/analytics",
       role: "admin",
     },
+    { name: "Management", path: "/dashboard/manageSkills", role: "admin" },
     {
       name: "Subscribers",
       path: "/dashboard/admin/subscribers",
       role: "admin",
     },
-    { name: "Users", path: "/dashboard/admin/users", role: "admin" },
     {
       name: "Current Skills",
       path: "/dashboard/admin/current-skills",
       role: "admin",
     },
-    { name: "Management", path: "/dashboard/manageSkills", role: "admin" },
+    { name: "Users", path: "/dashboard/admin/users", role: "admin" },
     { name: "Balance", path: "/dashboard/admin/balance", role: "admin" },
+    { name: "Profile", path: "/dashboard/profile", role: "all" },
+    { name: "Settings", path: "/dashboard/settings", role: "admin" },
   ];
 
   const menuItems = isDashboard

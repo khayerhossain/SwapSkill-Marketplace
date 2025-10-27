@@ -6,6 +6,93 @@ import { useRouter } from "next/navigation";
 import { useNotification } from "@/context/NotificationContext";
 import { useSession } from "next-auth/react";
 
+// Helper components moved outside SkillForm to prevent re-creation on render
+const FloatingInput = ({
+  label,
+  type = "text",
+  name,
+  value,
+  onChange,
+  className = "",
+  autoComplete,
+  ...props
+}) => (
+  <div className={`relative ${className}`}>
+    <input
+      id={name}
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      autoComplete={autoComplete}
+      className="peer w-full p-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-md text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-white/50"
+      placeholder={label}
+      {...props}
+    />
+    <label
+      htmlFor={name}
+      className="absolute left-3 -top-2.5 bg-transparent px-1 text-sm text-gray-300 transition-all 
+      peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
+      peer-placeholder-shown:text-base peer-focus:-top-2.5 
+      peer-focus:text-sm peer-focus:text-white"
+    >
+      {label}
+    </label>
+  </div>
+);
+
+const FloatingTextarea = ({ label, name, defaultValue, className = "" }) => (
+  <div className={`relative ${className}`}>
+    <textarea
+      id={name}
+      name={name}
+      defaultValue={defaultValue}
+      className="peer w-full p-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-md text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-white/50 resize-none h-32 lg:h-[200px]"
+      placeholder={label}
+    />
+    <label
+      htmlFor={name}
+      className="absolute left-3 -top-2.5 bg-transparent px-1 text-sm text-gray-300 transition-all 
+      peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
+      peer-placeholder-shown:text-base peer-focus:-top-2.5 
+      peer-focus:text-sm peer-focus:text-white"
+    >
+      {label}
+    </label>
+  </div>
+);
+
+const FloatingSelect = ({
+  label,
+  name,
+  defaultValue,
+  options,
+  className = "",
+}) => (
+  <div className={`relative ${className}`}>
+    <select
+      id={name}
+      name={name}
+      defaultValue={defaultValue}
+      className="peer w-full p-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-md text-white focus:outline-none focus:ring-2 focus:ring-white/50"
+    >
+      <option value="" disabled hidden></option>
+      {options.map((opt, i) => (
+        <option key={i} value={opt} className="bg-black text-white">
+          {opt}
+        </option>
+      ))}
+    </select>
+    <label
+      htmlFor={name}
+      className="absolute left-3 -top-2.5 px-1 text-sm text-gray-300"
+    >
+      {label}
+    </label>
+  </div>
+);
+
+// Main component
 export default function SkillForm() {
   const { data: session } = useSession();
   const [userImageData, setUserImageData] = useState("");
@@ -120,91 +207,6 @@ export default function SkillForm() {
       });
     }
   };
-
-  const FloatingInput = ({
-    label,
-    type = "text",
-    name,
-    value,
-    onChange,
-    className = "",
-    autoComplete,
-    ...props
-  }) => (
-    <div className={`relative ${className}`}>
-      <input
-        id={name}
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        autoComplete={autoComplete}
-        className="peer w-full p-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-md text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-white/50"
-        placeholder={label}
-        {...props}
-      />
-      <label
-        htmlFor={name}
-        className="absolute left-3 -top-2.5 bg-transparent px-1 text-sm text-gray-300 transition-all 
-        peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
-        peer-placeholder-shown:text-base peer-focus:-top-2.5 
-        peer-focus:text-sm peer-focus:text-white"
-      >
-        {label}
-      </label>
-    </div>
-  );
-
-  const FloatingTextarea = ({ label, name, defaultValue, className = "" }) => (
-    <div className={`relative ${className}`}>
-      <textarea
-        id={name}
-        name={name}
-        defaultValue={defaultValue}
-        className="peer w-full p-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-md text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-white/50 resize-none h-32 lg:h-[200px]"
-        placeholder={label}
-      />
-      <label
-        htmlFor={name}
-        className="absolute left-3 -top-2.5 bg-transparent px-1 text-sm text-gray-300 transition-all 
-        peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
-        peer-placeholder-shown:text-base peer-focus:-top-2.5 
-        peer-focus:text-sm peer-focus:text-white"
-      >
-        {label}
-      </label>
-    </div>
-  );
-
-  const FloatingSelect = ({
-    label,
-    name,
-    defaultValue,
-    options,
-    className = "",
-  }) => (
-    <div className={`relative ${className}`}>
-      <select
-        id={name}
-        name={name}
-        defaultValue={defaultValue}
-        className="peer w-full p-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-md text-white focus:outline-none focus:ring-2 focus:ring-white/50"
-      >
-        <option value="" disabled hidden></option>
-        {options.map((opt, i) => (
-          <option key={i} value={opt} className="bg-black text-white">
-            {opt}
-          </option>
-        ))}
-      </select>
-      <label
-        htmlFor={name}
-        className="absolute left-3 -top-2.5 px-1 text-sm text-gray-300"
-      >
-        {label}
-      </label>
-    </div>
-  );
 
   return (
     <section className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black py-8 flex items-center justify-center ">
@@ -340,10 +342,12 @@ export default function SkillForm() {
             <div className="flex gap-2">
               <FloatingInput
                 type="text"
+                name="tag_input" // Added name for clarity, though not strictly needed by FormData
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 placeholder="Enter tag"
                 className="flex-1"
+                label="Enter tag" // Pass label for floating effect
               />
               <button
                 type="button"
@@ -387,9 +391,11 @@ export default function SkillForm() {
             <div className="flex gap-2">
               <FloatingInput
                 type="date"
+                name="date_input" // Added name for clarity
                 value={dateInput}
                 onChange={(e) => setDateInput(e.target.value)}
                 className="flex-1"
+                label="Select date" // Pass label for floating effect
               />
               <button
                 type="button"

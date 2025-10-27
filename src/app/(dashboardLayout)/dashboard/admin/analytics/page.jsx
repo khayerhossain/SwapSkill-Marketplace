@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axiosInstance from "@/lib/axiosInstance";
 import {
   Users,
   TrendingUp,
@@ -16,6 +15,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react";
+import axiosInstance from "@/lib/axiosInstance";
 
 export default function AdminAnalytics() {
   const [analytics, setAnalytics] = useState({
@@ -40,42 +40,23 @@ export default function AdminAnalytics() {
   const fetchAnalytics = async () => {
     try {
       setLoading(true);
-      
-      // Fetch all analytics data in parallel
-      const [
-        usersRes,
-        subscribersRes,
-        paymentsRes,
-        skillsRes,
-        postsRes,
-        balanceRes,
-      ] = await Promise.all([
-        axiosInstance.get("/api/users"),
-        axiosInstance.get("/api/subscribers"),
-        axiosInstance.get("/api/admin/allpayment"),
-        axiosInstance.get("/api/current-skills"),
-        axiosInstance.get("/api/posts"),
-        axiosInstance.get("/api/admin/balance"),
-      ]);
 
-      const users = usersRes.data?.users || [];
-      const subscribers = subscribersRes.data?.subscribers || [];
-      const payments = paymentsRes.data?.payments || [];
-      const skills = skillsRes.data?.skills || [];
-      const posts = postsRes.data?.posts || [];
-      const balance = balanceRes.data?.balance || 0;
+      // Fetch analytics data from the analytics API
+      const analyticsRes = await fetch("/api/analytics");
+      const analyticsResData = await analyticsRes.json();
+      const analyticsData = analyticsResData?.analytics || {};
 
-      // Calculate analytics
-      const totalUsers = users.length;
-      const totalSubscribers = subscribers.length;
-      const totalRevenue = payments.reduce((sum, payment) => sum + (payment.price || 0), 0);
-      const totalSkills = skills.length;
-      const totalPosts = posts.length;
+      // Extract the main analytics data
+      const totalUsers = analyticsData.totalUsers || 0;
+      const totalSubscribers = analyticsData.totalSubscribers || 0;
+      const totalRevenue = analyticsData.totalRevenue || 0;
+      const totalSkills = analyticsData.totalSkills || 0;
+      const totalPosts = 0; // Keep as 0 for now
+      const totalMessages = 0; // Keep as 0 for now
 
-      // Calculate monthly growth (mock data for now)
-      const monthlyGrowth = 12.5; // This would be calculated from historical data
+      const monthlyGrowth = 12.5; // mock growth
 
-      // Mock data for charts (in real app, this would come from API)
+      // Mock chart data
       const userGrowth = [
         { month: "Jan", users: 120 },
         { month: "Feb", users: 150 },
@@ -108,7 +89,7 @@ export default function AdminAnalytics() {
         totalRevenue,
         totalSkills,
         totalPosts,
-        totalMessages: 0, // Would need to implement message counting
+        totalMessages,
         monthlyGrowth,
         userGrowth,
         revenueData,
@@ -167,18 +148,22 @@ export default function AdminAnalytics() {
   }
 
   return (
-    <div className="min-h-screen bg-[#111111] text-white p-6">
+    <div className="min-h-screen text-white p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Analytics Dashboard</h1>
-        <p className="text-gray-400">Monitor your platform's performance and growth</p>
-        
+        <h1 className="text-3xl font-bold mb-2">
+          <span className="text-red-500">Analytics</span> Dashboard
+        </h1>
+        <p className="text-gray-400">
+          Monitor your platform's performance and growth
+        </p>
+
         {/* Time Range Selector */}
         <div className="mt-4">
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value)}
-            className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white"
+            className="bg-[#111111] border border-gray-700 rounded-lg px-4 py-2 text-white"
           >
             <option value="7d">Last 7 days</option>
             <option value="30d">Last 30 days</option>
@@ -193,12 +178,10 @@ export default function AdminAnalytics() {
         {statsCards.map((stat, index) => (
           <div
             key={index}
-            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-gray-700 transition-colors"
+            className="bg-[#111111] border border-gray-800 rounded-xl p-6 hover:border-gray-700 transition-colors"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className={`p-3 rounded-lg ${stat.color}`}>
-                {stat.icon}
-              </div>
+              <div className={`p-3 rounded-lg ${stat.color}`}>{stat.icon}</div>
               <div className="flex items-center text-sm">
                 {stat.changeType === "positive" ? (
                   <ArrowUpRight className="w-4 h-4 text-green-400 mr-1" />
@@ -224,8 +207,8 @@ export default function AdminAnalytics() {
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* User Growth Chart */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        {/* User Growth */}
+        <div className="bg-[#111111] border border-gray-800 rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold">User Growth</h3>
             <BarChart3 className="w-5 h-5 text-gray-400" />
@@ -247,7 +230,7 @@ export default function AdminAnalytics() {
         </div>
 
         {/* Revenue Chart */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="bg-[#111111] border border-gray-800 rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold">Revenue Growth</h3>
             <TrendingUp className="w-5 h-5 text-gray-400" />
@@ -269,9 +252,10 @@ export default function AdminAnalytics() {
         </div>
       </div>
 
-      {/* Skill Categories */}
+      {/* Skill Categories + Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        {/* Skill Categories */}
+        <div className="bg-[#111111] border border-gray-800 rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold">Skill Categories</h3>
             <PieChart className="w-5 h-5 text-gray-400" />
@@ -295,8 +279,12 @@ export default function AdminAnalytics() {
                   <span className="text-gray-300">{category.name}</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-white font-medium">{category.count}</span>
-                  <span className="text-gray-400 text-sm">({category.percentage}%)</span>
+                  <span className="text-white font-medium">
+                    {category.count}
+                  </span>
+                  <span className="text-gray-400 text-sm">
+                    ({category.percentage}%)
+                  </span>
                 </div>
               </div>
             ))}
@@ -304,18 +292,38 @@ export default function AdminAnalytics() {
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="bg-[#111111] border border-gray-800 rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold">Recent Activity</h3>
             <Activity className="w-5 h-5 text-gray-400" />
           </div>
           <div className="space-y-4">
             {[
-              { action: "New user registered", time: "2 minutes ago", type: "user" },
-              { action: "Skill shared: React Development", time: "15 minutes ago", type: "skill" },
-              { action: "Payment received: $29.99", time: "1 hour ago", type: "payment" },
-              { action: "New subscription activated", time: "2 hours ago", type: "subscription" },
-              { action: "User completed profile", time: "3 hours ago", type: "profile" },
+              {
+                action: "New user registered",
+                time: "2 minutes ago",
+                type: "user",
+              },
+              {
+                action: "Skill shared: React Development",
+                time: "15 minutes ago",
+                type: "skill",
+              },
+              {
+                action: "Payment received: $29.99",
+                time: "1 hour ago",
+                type: "payment",
+              },
+              {
+                action: "New subscription activated",
+                time: "2 hours ago",
+                type: "subscription",
+              },
+              {
+                action: "User completed profile",
+                time: "3 hours ago",
+                type: "profile",
+              },
             ].map((activity, index) => (
               <div key={index} className="flex items-center space-x-3">
                 <div
@@ -343,3 +351,4 @@ export default function AdminAnalytics() {
     </div>
   );
 }
+

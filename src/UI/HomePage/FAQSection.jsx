@@ -1,8 +1,11 @@
 "use client";
 import Container from "@/components/shared/Container";
+import axiosInstance from "@/lib/axiosInstance";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { FaChevronDown, FaRegCircle } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const faqs = [
   {
@@ -29,6 +32,36 @@ const faqs = [
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(0);
+
+  const { data: session } = useSession();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [messageText, setMessageText] = useState("");
+
+  const handleSendMessage = async () => {
+  if (!session) {
+    return Swal.fire("Login Required", "Please login to send message.", "warning");
+  }
+
+  if (!messageText.trim()) {
+    return Swal.fire("Write something", "Message cannot be empty.", "error");
+  }
+
+  try {
+    await axiosInstance.post("/messages", {
+      name: session.user.name,
+      email: session.user.email,
+      message: messageText,
+    });
+
+    Swal.fire("Sent!", "Your message has been delivered.", "success");
+    setMessageText("");
+    setIsModalOpen(false);
+  } catch (error) {
+    Swal.fire("Error", "Failed to send message.", "error");
+  }
+};
+
+
 
   return (
     <section className="relative py-24 bg-gradient-to-b from-[#0a0a0a] via-[#111111] to-[#1a1a1a] text-gray-200 overflow-hidden">
@@ -67,7 +100,8 @@ export default function FAQSection() {
                     boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className="text-white w-full sm:w-auto px-6 py-3 rounded-lg bg-gradient-to-r from-red-500 to-red-700 font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                  onClick={() => setIsModalOpen(true)}
+                  className="text-white w-full sm:w-auto px-6 py-3 rounded-lg bg-gradient-to-r from-red-500 to-red-700 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
                 >
                   Send email
                 </motion.button>
@@ -120,6 +154,43 @@ export default function FAQSection() {
           </div>
         </div>
       </Container>
+
+
+      {/*sms modal*/}
+      {isModalOpen && (
+  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
+    <div className="bg-[#111] border border-white/10 p-6 rounded-xl w-[90%] max-w-md">
+      <h3 className="text-lg text-white font-semibold mb-3">Send us a Message</h3>
+
+      <textarea
+        value={messageText}
+        onChange={(e) => setMessageText(e.target.value)}
+        className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-gray-200 outline-none"
+        placeholder="Write your message..."
+        rows={5}
+      ></textarea>
+
+      <div className="flex justify-end gap-3 mt-4">
+        <button
+          onClick={() => setIsModalOpen(false)}
+          className="px-4 py-2 bg-gray-700 text-white rounded-lg cursor-pointer hover:bg-red-900"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleSendMessage}
+          className="px-4 py-2 bg-red-600 text-white rounded-lg cursor-pointer hover:bg-green-700"
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
     </section>
   );
 }

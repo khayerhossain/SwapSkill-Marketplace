@@ -124,11 +124,11 @@ export default function ChatPage() {
     try {
       setLoading(true);
 
-      const chatResponse = await axiosInstance.get(`/api/chats/${chatId}`);
+      const chatResponse = await axiosInstance.get(`/chats/${chatId}`);
       const chatData = chatResponse.data;
       if (chatData.success) setChat(chatData.chat);
 
-      const messagesResponse = await axiosInstance.get(`/api/chats/${chatId}/messages`);
+      const messagesResponse = await axiosInstance.get(`/chats/${chatId}/messages`);
       const messagesData = messagesResponse.data;
       if (messagesData.success) {
         setMessages(messagesData.messages);        
@@ -185,7 +185,7 @@ export default function ChatPage() {
     }
 
     try {
-      await axiosInstance.post(`/api/chats/${chatId}/messages`, {
+      await axiosInstance.post(`/chats/${chatId}/messages`, {
         senderId: session.user.id,
         senderName: session.user.name,
         text: newMessage.trim(),

@@ -10,8 +10,8 @@ export default function AppBarCommunity() {
   <UserStatsProvider>
     <div className="flex w-full h-screen text-white">
       {/* Left Sidebar */}
-      <div className="w-[25%] sticky top-0 h-screen p-4 hidden lg:block">
-        <div className="backdrop-blur-md rounded-xl border border-gray-700 p-4 h-full overflow-y-auto">
+      <div className="w-[25%] sticky top-0 h-screen hidden lg:block">
+        <div className="backdrop-blur-md rounded-xl p-4 h-full">
           <LeftSide />
         </div>
       </div>
@@ -23,7 +23,7 @@ export default function AppBarCommunity() {
 
       {/* Right Sidebar */}
       <div className="w-[22%] sticky top-0 h-screen p-4 hidden lg:block">
-        <div className="backdrop-blur-md rounded-xl border border-gray-700 p-4 h-full overflow-y-auto">
+        <div className="backdrop-blur-md rounded-xl h-full">
           <RightSide />
         </div>
       </div>

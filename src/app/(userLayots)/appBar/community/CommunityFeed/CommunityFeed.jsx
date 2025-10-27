@@ -199,9 +199,9 @@ export default function CommunityFeed() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-gray-200 space-y-6 p-4 rounded-2xl">
+    <div className="min-h-screen text-gray-200 space-y-6 rounded-2xl">
       {/* Create Post Section */}
-      <div className="bg-[#1a1a1a] border border-gray-800 rounded-2xl p-4 space-y-3 shadow-lg">
+      <div className="bg-black/60 border border-gray-800 rounded-2xl p-4 space-y-3 shadow-lg">
         <div className="flex items-center gap-3">
           <img
             src={currentUser.avatar}
@@ -218,7 +218,7 @@ export default function CommunityFeed() {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="What's on your mind?"
-          className="w-full resize-none p-2 bg-[#2a2a2a] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 text-gray-200"
+          className="w-full resize-none p-2 bg-[#111111] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 text-gray-200"
         />
 
         {feeling && (
@@ -309,7 +309,7 @@ export default function CommunityFeed() {
         return (
           <div
             key={p._id}
-            className="bg-[#1a1a1a] border border-gray-800 rounded-2xl p-4 space-y-3 shadow-md"
+            className="bg-black/60 border border-gray-800 rounded-2xl p-4 space-y-3 shadow-md"
           >
             <div className="flex gap-3 items-center">
               <img

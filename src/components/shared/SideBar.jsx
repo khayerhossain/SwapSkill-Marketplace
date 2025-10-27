@@ -93,7 +93,7 @@ const Sidebar = ({
     { name: "Share Skills", path: shareSkillsPath },
     { name: "Overview", path: userPayment },
     { name: "Resources", path: resourcesPath },
-    { name: "Earn Coin", path: earnCoin },
+    { name: "Q-Field", path: earnCoin },
     { name: "Inbox", path: inboxPath },
     { name: "Saved", path: savePath },
     { name: "Leader-board", path: leaderboardPath },
@@ -101,8 +101,8 @@ const Sidebar = ({
 
   const dashboardItems = [
     { name: "Profile", path: "/dashboard/profile", role: "all" },
-    { name: "Settings", path: "/dashboard/settings", role: "all" },
-    { name: "Dashboard", path: dashboardPath, role: "all" },
+    { name: "Settings", path: "/dashboard/settings", role: "admin" },
+    // { name: "Dashboard", path: dashboardPath, role: "all" },
     {
       name: "Analytics",
       path: "/dashboard/admin/analytics",

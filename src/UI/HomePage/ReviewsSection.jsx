@@ -48,7 +48,7 @@ export default function ReviewsSection() {
   ];
 
   return (
-    <section className="relative py-28 px-4 bg-gradient-to-b from-[#0a0a0a] via-[#111111] to-[#1a1a1a] text-gray-200 overflow-hidden">
+    <section className="relative py-28 bg-[#111111]  text-gray-200 overflow-hidden">
       <Container>
         {/* Section Header */}
         <motion.div

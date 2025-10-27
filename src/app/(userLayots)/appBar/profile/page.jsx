@@ -36,7 +36,7 @@ export default function ProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const response = await axiosInstance.get("/api/profile/update");
+      const response = await axiosInstance.get("/profile/update");
       if (response.status === 200) {
         const data = response.data;
         setProfile(data);
@@ -57,7 +57,7 @@ export default function ProfilePage() {
     formData.append("profileImage", file);
 
     try {
-      const response = await axiosInstance.post("/api/profile/update", formData, {
+      const response = await axiosInstance.post("/profile/update", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
 
@@ -78,10 +78,10 @@ export default function ProfilePage() {
           showConfirmButton: false,
         });
       } else {
-        setMessage(result.error || "❌ Image upload failed");
+        setMessage(result.error || " Image upload failed");
       }
     } catch (error) {
-      setMessage("⚠️ Error uploading image");
+      setMessage(" Error uploading image");
       console.error("Image upload error:", error);
     } finally {
       setImageLoading(false);
@@ -145,7 +145,7 @@ export default function ProfilePage() {
 
     setLoading(true);
     try {
-      const response = await axiosInstance.put("/api/profile/update", {
+      const response = await axiosInstance.put("/profile/update", {
         name: editData.name,
         bio: editData.bio,
         skills: (editData.skills || []).filter((s) => s.trim() !== ""),

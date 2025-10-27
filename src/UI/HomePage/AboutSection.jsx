@@ -3,9 +3,7 @@ import Container from "@/components/shared/Container";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import AboutImage from "../../assets/about-image.png";
-import Loading from "@/app/loading";
-import { useEffect, useState } from "react";
-import axiosInstance from "@/lib/axiosInstance";
+import AboutSectionStats from "@/app/(landingArea)/AboutSectionStats/AboutSectionStats";
 
 const textVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -17,57 +15,6 @@ const textVariants = {
 };
 
 export default function AboutSection() {
-
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [skills, setSkills] = useState([]);  
-  const [loading, setLoading] = useState(true);
-
-
-  // total users
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axiosInstance.get("/users");
-      setTotalUsers(data.length);
-    } catch (error) {
-      console.error("Failed to fetch users", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  //total skills
-  useEffect(() => {
-    fetchSkills();
-  }, []);  
-
-  const fetchSkills = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axiosInstance.get("/current-skills");
-      setSkills(data);
-    } catch (error) {
-      console.error(" Failed to fetch skills", error);
-      Swal.fire("Error", "Failed to load skills", "error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen">
-        <Loading />
-      </div>
-    );
-  }  
-
-
-
   return (
     <section className="relative w-full py-24 flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#0a0a0a] via-[#111111] to-[#1a1a1a] text-gray-200">
       {/*  Subtle glow overlay for extra depth */}
@@ -139,32 +86,7 @@ export default function AboutSection() {
             </motion.p>
 
             {/*  Stats Section */}
-            <motion.div
-              custom={4}
-              variants={textVariants}
-              className="flex flex-wrap items-center justify-center lg:justify-center gap-8 py-6 mt-6 bg-white/5 backdrop-blur-md rounded-2xl shadow-md border border-white/10"
-            >
-              <div className="text-center">
-                <div className="text-3xl font-extrabold text-red-500">
-                  {totalUsers}+
-                </div>
-                <div className="text-sm text-gray-400">Active Users</div>
-              </div>
-              <div className="w-px h-12 bg-gray-600/30 hidden sm:block"></div>
-              <div className="text-center">
-                <div className="text-3xl font-extrabold text-red-500">
-                  {skills.length}+
-                </div>
-                <div className="text-sm text-gray-400">Skills Available</div>
-              </div>
-              <div className="w-px h-12 bg-gray-600/30 hidden sm:block"></div>
-              <div className="text-center">
-                <div className="text-3xl font-extrabold text-red-500">
-                  4.9★
-                </div>
-                <div className="text-sm text-gray-400">User Rating</div>
-              </div>
-            </motion.div>
+            <AboutSectionStats />
           </motion.div>
         </div>
       </Container>

@@ -48,7 +48,7 @@ export default function HeroSection() {
   const slide = slides[current];
 
   return (
-    <section className="relative w-full h-screen overflow-hidden bg-white dark:bg-black transition-colors duration-500">
+    <section className="relative w-full h-screen overflow-hidden bg-black transition-colors duration-500">
       <Container>
         {/* Background Image */}
         <AnimatePresence mode="wait">
@@ -68,7 +68,7 @@ export default function HeroSection() {
               className="object-cover"
               priority
             />
-            <div className="absolute inset-0 bg-white/70 dark:bg-black/70 transition-colors duration-500" />
+            <div className="absolute inset-0 bg-black/70 transition-colors duration-500" />
           </motion.div>
         </AnimatePresence>
 
@@ -82,7 +82,7 @@ export default function HeroSection() {
             transition={{ duration: 0.8 }}
             className="max-w-2xl mx-auto md:mx-0"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 text-black dark:text-white transition-colors duration-500">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 text-white transition-colors duration-500">
               {slide.title}
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl mb-2 text-red-600 dark:text-red-500 font-semibold tracking-wide">
@@ -104,7 +104,7 @@ export default function HeroSection() {
               key={i}
               onClick={() => setCurrent(i)}
               className={`w-3 h-3 rounded-full cursor-pointer transition ${
-                i === current ? "bg-red-600" : "bg-black/40 dark:bg-white/40"
+                i === current ? "bg-red-600" : "bg-white/40"
               }`}
             />
           ))}

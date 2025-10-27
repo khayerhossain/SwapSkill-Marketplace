@@ -98,7 +98,7 @@ export default function InboxLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-black via-gray-900 to-black text-white">
+    <div className="min-h-screen flex bg-black/60 text-white">
       {/* Left Sidebar (Skills List) */}
       <div
         className={`${

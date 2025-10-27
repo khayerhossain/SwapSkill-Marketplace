@@ -50,7 +50,7 @@ export default function Overview() {
 
   return (
     <div
-      className={`min-h-screen p-6 transition-colors duration-300 ${
+      className={`min-h-screen p-6 transition-colors duration-300 bg-black/60 ${
         isDark ? "bg-[#111111] text-white" : ""
       }`}
     >
@@ -89,7 +89,7 @@ export default function Overview() {
         ].map((item, idx) => (
           <div
             key={idx}
-            className="relative p-5 flex flex-col items-center justify-center rounded-2xl border border-gray-700 bg-black/50 backdrop-blur-md"
+            className="relative p-5 flex flex-col items-center justify-center rounded-2xl border border-gray-700 bg-black backdrop-blur-md"
           >
             <div className={`z-10 text-3xl mb-2 ${item.color}`}>
               {item.icon}

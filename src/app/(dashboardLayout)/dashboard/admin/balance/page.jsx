@@ -1,9 +1,17 @@
 "use client";
 import axiosInstance from "@/lib/axiosInstance";
-import { CreditCard, TrendingUp } from "lucide-react";
+import {
+  CreditCard,
+  TrendingUp,
+  DollarSign,
+  Activity,
+  ArrowUpRight,
+  ArrowDownRight,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { CiBadgeDollar } from "react-icons/ci";
-import { FaArrowTrendUp } from "react-icons/fa6";
+import { FaArrowTrendUp, FaStripe } from "react-icons/fa6";
+import { SiSsl } from "react-icons/si";
 import {
   Bar,
   BarChart,
@@ -16,28 +24,26 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  Area,
+  AreaChart,
+  Line,
+  LineChart,
+  ComposedChart,
 } from "recharts";
+
 /**
- * Balance Dashboard
- *
- * - Fetches stats from /admin/balance
- * - Fetches payments from /admin/allpayment
- * - Renders cards, bar chart (weekly), pie (gateway share), and a transaction table
- *
- * Notes:
- * - If your backend returns different keys, adjust mapping in fetch handlers.
- * - This component assumes `axiosInstance` is configured with baseURL and auth.
+ * Modern Balance Dashboard
+ * Enhanced with better visuals, animations, and modern UI elements
  */
 
 export default function Balance() {
-  const [stats, setStats] = useState(null); // { totalAmount, stripeCount, sslCount, ... }
-  const [trendData, setTrendData] = useState([]); // e.g. [{ day: 'Mon', payments: 10, amount: 500 }, ...]
-  const [payments, setPayments] = useState([]); // payments array
+  const [stats, setStats] = useState(null);
+  const [trendData, setTrendData] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [loadingStats, setLoadingStats] = useState(true);
   const [loadingPayments, setLoadingPayments] = useState(true);
   const [error, setError] = useState(null);
 
-  // number formatting helper
   const formatNumber = (num) =>
     num === undefined || num === null
       ? "-"
@@ -50,7 +56,6 @@ export default function Balance() {
       setLoadingPayments(true);
       try {
         const res = await axiosInstance.get("/admin/allpayment");
-        // Expected: res.data.payments or res.data
         const data = res.data?.payments ?? res.data ?? [];
         if (mounted) setPayments(Array.isArray(data) ? data : []);
       } catch (err) {
@@ -67,84 +72,67 @@ export default function Balance() {
   }, []);
 
   // Fetch stats / balance
-  useEffect(
-    () => {
-      let mounted = true;
-      const fetchBalance = async () => {
-        setLoadingStats(true);
-        try {
-          const res = await axiosInstance.get("/admin/balance");
-          // Expect structure like:
-          // { totalAmount: 12345, stripeCount: 45, sslCount: 30, trend: [...optional...] }
-          const data = res.data ?? {};
-          // normalize keys — some APIs might use totalAmount or totalBalance
-          const statsObj = {
-            totalAmount: data.totalAmount ?? data.totalBalance ?? 0,
-            stripeCount: data.stripeCount ?? data.stripe ?? 0,
-            sslCount: data.sslCount ?? data.ssl ?? 0,
-            stripePercentage: undefined,
-            sslPercentage: undefined,
-          };
+  useEffect(() => {
+    let mounted = true;
+    const fetchBalance = async () => {
+      setLoadingStats(true);
+      try {
+        const res = await axiosInstance.get("/admin/balance");
+        const data = res.data ?? {};
+        const statsObj = {
+          totalAmount: data.totalAmount ?? data.totalBalance ?? 0,
+          stripeCount: data.stripeCount ?? data.stripe ?? 0,
+          sslCount: data.sslCount ?? data.ssl ?? 0,
+          stripePercentage: undefined,
+          sslPercentage: undefined,
+        };
 
-          const totalPayments =
-            Number(statsObj.stripeCount) + Number(statsObj.sslCount);
-          statsObj.stripePercentage =
-            totalPayments > 0
-              ? ((statsObj.stripeCount / totalPayments) * 100).toFixed(2)
-              : "0.00";
-          statsObj.sslPercentage =
-            totalPayments > 0
-              ? ((statsObj.sslCount / totalPayments) * 100).toFixed(2)
-              : "0.00";
+        const totalPayments =
+          Number(statsObj.stripeCount) + Number(statsObj.sslCount);
+        statsObj.stripePercentage =
+          totalPayments > 0
+            ? ((statsObj.stripeCount / totalPayments) * 100).toFixed(2)
+            : "0.00";
+        statsObj.sslPercentage =
+          totalPayments > 0
+            ? ((statsObj.sslCount / totalPayments) * 100).toFixed(2)
+            : "0.00";
 
-          if (mounted) setStats(statsObj);
+        if (mounted) setStats(statsObj);
 
-          // If backend gives trend data, use it. Otherwise try to compute fallback from payments
-          if (mounted) {
-            if (Array.isArray(data.trend) && data.trend.length > 0) {
-              // expected trend objects: { day: 'Mon', payments: 10, amount: 500 }
-              setTrendData(data.trend);
-            } else {
-              // derive a simple weekly trend from payments (group by date)
-              const derived = deriveTrendFromPayments(payments);
-              setTrendData(derived);
-            }
+        if (mounted) {
+          if (Array.isArray(data.trend) && data.trend.length > 0) {
+            setTrendData(data.trend);
+          } else {
+            const derived = deriveTrendFromPayments(payments);
+            setTrendData(derived);
           }
-        } catch (err) {
-          console.error("Error fetching balance:", err);
-          if (mounted) setError("Unable to load balance");
-        } finally {
-          if (mounted) setLoadingStats(false);
         }
-      };
+      } catch (err) {
+        console.error("Error fetching balance:", err);
+        if (mounted) setError("Unable to load balance");
+      } finally {
+        if (mounted) setLoadingStats(false);
+      }
+    };
 
-      fetchBalance();
+    fetchBalance();
 
-      return () => {
-        mounted = false;
-      };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },
-    [
-      /* no deps, but if you want trend to rederive when payments change, add payments */
-    ]
-  );
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
-  // If payments change later, re-derive trend if no backend trend provided
   useEffect(() => {
     if (!stats) return;
-    // only derive if trendData is empty or seems auto
     if (!trendData || trendData.length === 0) {
       const derived = deriveTrendFromPayments(payments);
       setTrendData(derived);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [payments]);
 
-  // helper: derive weekly trend from payments by weekday
   function deriveTrendFromPayments(paymentsList) {
     if (!Array.isArray(paymentsList) || paymentsList.length === 0) {
-      // fallback: return 7-day placeholders
       return [
         { day: "Mon", payments: 0, amount: 0 },
         { day: "Tue", payments: 0, amount: 0 },
@@ -156,7 +144,6 @@ export default function Balance() {
       ];
     }
 
-    // group by weekday
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const map = new Map();
     days.forEach((d) => map.set(d, { payments: 0, amount: 0 }));
@@ -165,7 +152,7 @@ export default function Balance() {
       const dateStr = p.date || p.createdAt || p.paymentDate || p.paidAt;
       let dt;
       if (dateStr) dt = new Date(dateStr);
-      else dt = new Date(); // unknown => today
+      else dt = new Date();
       const day = days[dt.getDay()];
       const amount = Number(p.price ?? p.amount ?? p.total ?? 0);
       const current = map.get(day) ?? { payments: 0, amount: 0 };
@@ -174,7 +161,6 @@ export default function Balance() {
       map.set(day, current);
     });
 
-    // return Mon-Sun sequence (or custom sequence)
     const order = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     return order.map((d) => ({
       day: d,
@@ -183,7 +169,6 @@ export default function Balance() {
     }));
   }
 
-  // UI data for pie
   const pieData = stats
     ? [
         {
@@ -199,24 +184,28 @@ export default function Balance() {
       ]
     : [];
 
-  const COLORS = ["#635BFF", "#00D924"];
+  const COLORS = ["#6366f1", "#10b981"];
 
-  // loading state
   if (loadingStats || loadingPayments) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex items-center justify-center p-6">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-black flex items-center justify-center p-6">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <DollarSign className="w-6 h-6 text-indigo-500 animate-pulse" />
+          </div>
+        </div>
       </div>
     );
   }
 
-  // error fallback
   if (error) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-black p-6">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-red-50 text-red-700 p-4 rounded-lg">
-            Error: {error}
+          <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 p-6 rounded-2xl shadow-lg">
+            <h3 className="font-bold text-lg mb-2">Error Loading Dashboard</h3>
+            <p>{error}</p>
           </div>
         </div>
       </div>
@@ -224,188 +213,299 @@ export default function Balance() {
   }
 
   return (
-    <div className="min-h-screen dark:bg-gray-[#111111] text-gray-900 dark:text-gray-100 p-6 overflow-x-hidden">
-      <div className="mx-auto overflow-x-hidden">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-            <span className="text-red-500">Balance</span> Dashboard
-          </h1>
-          <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow">
-            <TrendingUp className="w-5 h-5 text-green-500" />
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-              Last 7 Days
-            </span>
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 overflow-x-hidden">
+      <div className="max-w-[1600px] mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-4xl lg:text-5xl font-bold text-red-500 bg-clip-text mb-2">
+              Balance Dashboard
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Overview of your payment activities and transactions
+            </p>
+          </div>
+          <div className="flex items-center gap-3 bg-white dark:bg-gray-800/50 backdrop-blur-sm px-5 py-3 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="p-2 bg-gradient-to-br from-green-400 to-emerald-500 rounded-lg">
+              <TrendingUp className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                Period
+              </p>
+              <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                Last 7 Days
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Cards Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {/* Total Balance Card */}
-          <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 rounded-3xl shadow-2xl p-6 text-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-white opacity-10 rounded-full -mr-20 -mt-20"></div>
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-10 rounded-full -ml-16 -mb-16"></div>
+          <div className="group relative bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl p-6 text-white overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-3xl">
+            {/* Animated Background Elements */}
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white opacity-10 rounded-full -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-10 rounded-full -ml-16 -mb-16 group-hover:scale-150 transition-transform duration-500"></div>
+
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
-                <div className="bg-white bg-opacity-20 p-1 rounded-xl backdrop-blur-sm">
-                  <CiBadgeDollar size={24} className="text-purple-600 " />
+                <div className="p-2.5 bg-white/20 backdrop-blur-md rounded-xl shadow-lg border border-white/30">
+                  <DollarSign
+                    className="w-7 h-7 text-white"
+                    strokeWidth={2.5}
+                  />
                 </div>
-                <div className="bg-green-400 bg-opacity-30 px-3 py-1 rounded-full backdrop-blur-sm ">
-                  <span className="text-sm font-semibold flex items-center justify-center gap-1">
-                    <FaArrowTrendUp /> <p>12.5%</p>
-                  </span>
+                <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/30">
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                  <span className="text-xs font-bold">+12.5%</span>
                 </div>
               </div>
-              <p className="text-purple-100 text-sm font-medium mb-2">
-                Total Balance
-              </p>
-              <p className="text-4xl font-bold mb-1">
-                ${formatNumber(stats?.totalAmount ?? 0)}
-              </p>
-              <p className="text-purple-200 text-xs">
-                From{" "}
-                {Number(stats?.stripeCount ?? 0) + Number(stats?.sslCount ?? 0)}{" "}
-                transactions
-              </p>
+
+              <div className="space-y-1">
+                <p className="text-white/80 text-xs font-semibold uppercase tracking-wider">
+                  Total Balance
+                </p>
+                <p className="text-4xl font-black tracking-tight">
+                  ${formatNumber(stats?.totalAmount ?? 0)}
+                </p>
+                <p className="text-white/70 text-xs flex items-center gap-1.5">
+                  <Activity className="w-3.5 h-3.5" />
+                  <span>
+                    {Number(stats?.stripeCount ?? 0) +
+                      Number(stats?.sslCount ?? 0)}{" "}
+                    transactions
+                  </span>
+                </p>
+              </div>
             </div>
           </div>
 
           {/* Stripe Card */}
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl shadow-2xl p-6 text-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-white opacity-5 rounded-full -mr-20 -mt-20"></div>
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-5 rounded-full -ml-16 -mb-16"></div>
+          <div className="group relative bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 rounded-3xl shadow-2xl p-6 text-white overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-3xl">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white opacity-5 rounded-full -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-5 rounded-full -ml-16 -mb-16 group-hover:scale-150 transition-transform duration-500"></div>
+
             <div className="relative z-10">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                    <svg
-                      className="w-5 h-5 text-blue-600"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.591-7.305z" />
-                    </svg>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 bg-white rounded-xl shadow-xl">
+                    <FaStripe className="w-6 h-6 text-white" />
                   </div>
-                  <span className="text-sm font-medium">Stripe</span>
+                  <div>
+                    <p className="font-bold text-sm">Stripe</p>
+                    <p className="text-xs text-white/70">Payment Gateway</p>
+                  </div>
                 </div>
-                <div className="flex gap-1">
-                  <div className="w-6 h-6 bg-white bg-opacity-20 rounded-full"></div>
-                  <div className="w-6 h-6 bg-white bg-opacity-30 rounded-full -ml-3"></div>
+                <div className="px-3 py-1 bg-green-400/30 backdrop-blur-md rounded-full border border-green-300/50">
+                  <span className="text-xs font-bold">Active</span>
                 </div>
               </div>
-              <div className="mb-4">
-                <p className="text-blue-100 text-xs mb-1">Payments</p>
-                <p className="text-3xl font-bold">
-                  {formatNumber(stats?.stripeCount ?? 0)}
-                </p>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-blue-100 text-xs">Share</p>
-                  <p className="text-lg font-semibold">
-                    {stats?.stripePercentage}%
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
+                  <p className="text-white/70 text-xs mb-0.5 uppercase tracking-wide">
+                    Payments
+                  </p>
+                  <p className="text-2xl font-black">
+                    {formatNumber(stats?.stripeCount ?? 0)}
                   </p>
                 </div>
-                <div className="bg-green-400 bg-opacity-25 px-3 py-1 rounded-full">
-                  <span className="text-sm font-semibold">Active</span>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
+                  <p className="text-white/70 text-xs mb-0.5 uppercase tracking-wide">
+                    Share
+                  </p>
+                  <p className="text-2xl font-black">
+                    {stats?.stripePercentage}%
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* SSLCommerz Card */}
-          <div className="bg-gradient-to-br from-green-600 to-emerald-700 rounded-3xl shadow-2xl p-6 text-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-white opacity-5 rounded-full -mr-20 -mt-20"></div>
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-5 rounded-full -ml-16 -mb-16"></div>
+          <div className="group relative bg-gradient-to-br from-emerald-500 via-green-600 to-teal-600 rounded-3xl shadow-2xl p-6 text-white overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-3xl">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white opacity-5 rounded-full -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-5 rounded-full -ml-16 -mb-16 group-hover:scale-150 transition-transform duration-500"></div>
+
             <div className="relative z-10">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                    <CreditCard className="w-5 h-5 text-green-600" />
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 bg-white rounded-xl shadow-xl">
+                    <CreditCard
+                      className="w-6 h-6 text-black"
+                      strokeWidth={2.5}
+                    />
                   </div>
-                  <span className="text-sm font-medium">SSLCommerz</span>
+                  <div>
+                    <p className="font-bold text-sm">SSLCommerz</p>
+                    <p className="text-xs text-white/70">Payment Gateway</p>
+                  </div>
                 </div>
-                <div className="flex gap-1">
-                  <div className="w-6 h-6 bg-orange-400 rounded-md"></div>
-                  <div className="w-6 h-6 bg-red-400 rounded-md"></div>
+                <div className="px-3 py-1 bg-green-400/30 backdrop-blur-md rounded-full border border-green-300/50">
+                  <span className="text-xs font-bold">Active</span>
                 </div>
               </div>
-              <div className="mb-4">
-                <p className="text-green-100 text-xs mb-1">Payments</p>
-                <p className="text-3xl font-bold">
-                  {formatNumber(stats?.sslCount ?? 0)}
-                </p>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-green-100 text-xs">Share</p>
-                  <p className="text-lg font-semibold">
-                    {stats?.sslPercentage}%
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
+                  <p className="text-white/70 text-xs mb-0.5 uppercase tracking-wide">
+                    Payments
+                  </p>
+                  <p className="text-2xl font-black">
+                    {formatNumber(stats?.sslCount ?? 0)}
                   </p>
                 </div>
-                <div className="bg-green-300 bg-opacity-25 px-3 py-1 rounded-full">
-                  <span className="text-sm font-semibold">Active</span>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
+                  <p className="text-white/70 text-xs mb-0.5 uppercase tracking-wide">
+                    Share
+                  </p>
+                  <p className="text-2xl font-black">{stats?.sslPercentage}%</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Charts Grid */}
+        {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Bar Chart */}
-          <div className="bg-[#111111] backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-100 mb-4">
-              Weekly Payment Activity
-            </h3>
+          {/* Area Chart with Line */}
+          <div className="bg-white dark:bg-gray-800/50 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-3xl p-6 shadow-2xl transform transition-all duration-300 hover:shadow-3xl">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                  Weekly Trend
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  Payment activity over time
+                </p>
+              </div>
+              <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+            </div>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={trendData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-                  <XAxis dataKey="day" stroke="#aaa" fontSize={12} />
-                  <YAxis stroke="#aaa" fontSize={12} />
+                <ComposedChart data={trendData}>
+                  <defs>
+                    <linearGradient
+                      id="colorAmount"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient
+                      id="colorPayments"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="#e5e7eb"
+                    opacity={0.3}
+                  />
+                  <XAxis
+                    dataKey="day"
+                    stroke="#9ca3af"
+                    fontSize={12}
+                    fontWeight={600}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    stroke="#9ca3af"
+                    fontSize={12}
+                    fontWeight={600}
+                    tickLine={false}
+                  />
                   <Tooltip
                     contentStyle={{
-                      background: "rgba(17,17,17,0.8)",
-                      color: "#fff",
-                      borderRadius: "12px",
-                      border: "none",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+                      background: "rgba(255,255,255,0.95)",
+                      color: "#1f2937",
+                      borderRadius: "16px",
+                      border: "1px solid #e5e7eb",
+                      boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
+                      padding: "12px",
                     }}
                   />
-                  <Legend />
-                  <Bar
-                    dataKey="payments"
-                    fill="#635BFF"
-                    radius={[8, 8, 0, 0]}
-                    name="Payments"
+                  <Legend
+                    wrapperStyle={{ paddingTop: "20px" }}
+                    iconType="circle"
                   />
-                  <Bar
+                  <Area
+                    type="monotone"
                     dataKey="amount"
-                    fill="#00D924"
-                    radius={[8, 8, 0, 0]}
+                    stroke="#6366f1"
+                    strokeWidth={3}
+                    fill="url(#colorAmount)"
                     name="Amount ($)"
                   />
-                </BarChart>
+                  <Line
+                    type="monotone"
+                    dataKey="payments"
+                    stroke="#10b981"
+                    strokeWidth={3}
+                    dot={{ fill: "#10b981", strokeWidth: 2, r: 5 }}
+                    activeDot={{ r: 7 }}
+                    name="Payments"
+                  />
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
           </div>
 
           {/* Pie Chart */}
-          <div className="bg-[#111111] backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-100 mb-4">
-              Payment Gateway Distribution
-            </h3>
-            <div className="h-80">
+          <div className="bg-white dark:bg-gray-800/50 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-3xl p-6 shadow-2xl transform transition-all duration-300 hover:shadow-3xl">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                  Gateway Distribution
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  Payment method breakdown
+                </p>
+              </div>
+              <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg">
+                <CreditCard className="w-6 h-6 text-white" />
+              </div>
+            </div>
+            <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
+                  <defs>
+                    <filter
+                      id="shadow"
+                      x="-50%"
+                      y="-50%"
+                      width="200%"
+                      height="200%"
+                    >
+                      <feDropShadow
+                        dx="0"
+                        dy="4"
+                        stdDeviation="4"
+                        floodOpacity="0.2"
+                      />
+                    </filter>
+                  </defs>
                   <Pie
                     data={pieData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={70}
-                    outerRadius={110}
+                    innerRadius={60}
+                    outerRadius={100}
                     paddingAngle={5}
                     dataKey="value"
+                    filter="url(#shadow)"
                   >
                     {pieData.map((entry, index) => (
                       <Cell
@@ -417,44 +517,46 @@ export default function Balance() {
                   <Tooltip
                     formatter={(value, name) => [`${value}%`, name]}
                     contentStyle={{
-                      background: "rgba(17,17,17,0.8)",
-                      color: "#fff",
-                      borderRadius: "12px",
-                      border: "none",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+                      background: "rgba(255,255,255,0.95)",
+                      color: "#1f2937",
+                      borderRadius: "16px",
+                      border: "1px solid #e5e7eb",
+                      boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
+                      padding: "12px",
                     }}
                   />
-                  <Legend />
                 </PieChart>
               </ResponsiveContainer>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-4">
+            <div className="grid grid-cols-2 gap-4 mt-6">
               {pieData.map((item, index) => (
                 <div
                   key={item.name}
-                  className="bg-[#111111] backdrop-blur-md border border-white/10 rounded-xl p-4"
+                  className="group bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-4 transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 >
-                  <div className="flex items-center mb-2">
+                  <div className="flex items-center gap-2 mb-3">
                     <div
-                      className="w-3 h-3 rounded-full mr-2"
+                      className="w-4 h-4 rounded-full shadow-lg"
                       style={{ backgroundColor: COLORS[index] }}
                     />
-                    <span className="font-medium text-gray-200 text-sm">
+                    <span className="font-bold text-gray-900 dark:text-gray-100 text-sm">
                       {item.name}
                     </span>
                   </div>
-                  <p className="text-2xl font-bold text-gray-100">
+                  <p className="text-3xl font-black text-gray-900 dark:text-gray-100">
                     {formatNumber(item.count)}
                   </p>
-                  <p className="text-sm text-gray-400">{item.value}%</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 font-semibold mt-1">
+                    {item.value}% share
+                  </p>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Payment History Table */}
+        {/* Transaction Table - Original Style */}
         <div className="bg-[#111111] backdrop-blur-md border border-white/10 rounded-2xl shadow max-w-7xl mx-auto my-10 overflow-hidden">
           <div className="p-6">
             <div className="flex items-center justify-between">

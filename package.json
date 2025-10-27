@@ -24,6 +24,7 @@
     "emoji-mart": "^5.6.0",
     "emoji-picker-react": "^4.13.3",
     "framer-motion": "^12.23.12",
+    "icons": "^1.0.0",
     "lucide-react": "^0.544.0",
     "mongodb": "^6.19.0",
     "next": "15.5.2",

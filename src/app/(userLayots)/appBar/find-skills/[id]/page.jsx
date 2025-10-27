@@ -6,6 +6,9 @@ import { useParams, useRouter } from "next/navigation";
 import { FaFacebook, FaInstagram, FaTwitter, FaStar } from "react-icons/fa";
 import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
 
+import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
+
 /* ---------------- Skeleton Loader ---------------- */
 function SkeletonCard({ className = "" }) {
   return (
@@ -211,6 +214,10 @@ export default function SkillDetailsPage() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [startingChat, setStartingChat] = useState(false);
 
+    const { data: session } = useSession();
+const [isFollowing, setIsFollowing] = useState(false);
+
+
   useEffect(() => {
     const fetchSkill = async () => {
       setLoading(true);
@@ -288,6 +295,43 @@ export default function SkillDetailsPage() {
   const availableDates = skill.availabilityDates || [];
   const online = skill.isOnline ?? false;
 
+  /////////////tomal-dev////////////////////
+
+const handleFollowToggle = async () => {
+  if (!session?.user?.email) {
+    Swal.fire("Please login first");
+    return;
+  }
+
+  const payload = {
+    userName: session.user.name,
+    userEmail: session.user.email,
+    postId: skill._id,
+  };
+
+  try {
+    if (isFollowing) {
+      // Unfollow
+      await axiosInstance.delete(`/follows?email=${payload.userEmail}&postId=${payload.postId}`);
+      setIsFollowing(false);
+      Swal.fire("Unfollowed!", "", "success");
+    } else {
+      // Follow
+      await axiosInstance.post("/follows", payload);
+      setIsFollowing(true);
+      Swal.fire("Followed!", "", "success");
+    }
+  } catch (err) {
+    console.error(err);
+    Swal.fire("Error", "Something went wrong!", "error");
+  }
+};
+
+
+  /////////////////////////////////////////
+
+
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#050508] to-[#0b0b0f] text-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -305,6 +349,26 @@ export default function SkillDetailsPage() {
                 />
               </div>
               <h1 className="text-2xl font-extrabold">{skill.userName}</h1>
+
+
+              <div className="pb-2">
+
+                <button
+  onClick={handleFollowToggle}
+  className={`mt-3 px-4 py-2 rounded-full text-sm font-semibold transition cursor-pointer  ${
+    isFollowing
+      ? "bg-red-600 hover:bg-red-700"
+      : "bg-blue-600 hover:bg-blue-700"
+  }`}
+>
+  {isFollowing ? "Unfollow" : "Follow"}
+</button>
+
+
+              </div>
+
+
+
               <div className="flex items-center justify-center lg:justify-start gap-2 mt-1">
                 <MdLocationOn className="text-gray-400" />
                 <span className="text-sm text-gray-400">
@@ -314,6 +378,7 @@ export default function SkillDetailsPage() {
               <div className="mt-2">
                 <NeonBadge online={online} />
               </div>
+              
             </div>
 
             {/* Right: Profile Details */}

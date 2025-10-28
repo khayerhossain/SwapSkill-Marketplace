@@ -15,6 +15,7 @@ export default function Overview() {
   const [loading, setLoading] = useState(true);
   const { appliedTheme } = useContext(ThemeContext);
   const [userData, setUserData] = useState(null);
+  const [skills, setSkills] = useState([]);
   const isDark = appliedTheme === "dark";
 
   // Demo analytics data
@@ -40,12 +41,14 @@ export default function Overview() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [paymentRes, userRes] = await Promise.all([
-          axiosInstance.get("/api/user-payment"),
-          axiosInstance.get("/api/coin-earn"),
+        const [paymentRes, userRes, skillsRes] = await Promise.all([
+          axiosInstance.get("/user-payment"),
+          axiosInstance.get("/coin-earn"),
+          axiosInstance.get("/current-skills"),
         ]);
         setPayments(paymentRes.data?.payments || []);
         if (userRes.data.success) setUserData(userRes.data.data);
+        setSkills(skillsRes.data?.skills || skillsRes.data || []);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -60,7 +63,7 @@ export default function Overview() {
       icon: <FaGlobe />,
       color: "from-blue-500 to-blue-700",
       label: "Skills Shared",
-      value: userData?.skillsShared || 0,
+      value: skills?.length || 0,
     },
     {
       icon: <FaBook />,

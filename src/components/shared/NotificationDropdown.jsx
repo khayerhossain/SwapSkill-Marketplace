@@ -50,7 +50,7 @@ const NotificationDropdown = () => {
       {/* Notification Button */}
       <button
         onClick={handleToggleDropdown}
-        className="relative p-4 rounded-2xl transition-all duration-300 hover:scale-105"
+        className="relative p-4 rounded-2xl transition-all duration-300 hover:scale-105 cursor-pointer"
       >
         {unreadCount > 0 ? (
           <IoNotifications className="text-2xl text-blue-500" />

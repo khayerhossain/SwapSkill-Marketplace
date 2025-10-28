@@ -48,7 +48,7 @@ export default function CommunityFeed() {
   const [menuOpen, setMenuOpen] = useState(null);
   const fileRef = useRef(null);
 
-  // 🔹 Fetch posts
+  //  Fetch posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {

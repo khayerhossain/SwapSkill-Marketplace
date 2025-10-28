@@ -1,15 +1,33 @@
-import AppBarCommunity from "./AppBarCmmunityUI";
+"use client";
 
-export const metadata = {
-  title: "Community Feed | Swap Skill",
-  description:
-    "Stay connected with the Swap Skill community — explore posts, share updates, and engage with learners and tutors around the world.",
-  icons: {
-    icon: "/logo1.png",
-  },
-};
+import { UserStatsProvider } from "@/context/UserStatsContext";
+import CommunityFeed from "./CommunityFeed/CommunityFeed";
+import LeftSide from "./LeftSide/LeftSide";
+import RightSide from "./RightSide/RightSide";
 
+export default function AppBarCommunity() {
+  return (
+  <UserStatsProvider>
+    <div className="flex w-full h-screen text-white">
+      {/* Left Sidebar */}
+      <div className="w-[25%] sticky top-0 h-screen hidden lg:block">
+        <div className="backdrop-blur-md rounded-xl p-4 h-full">
+          <LeftSide />
+        </div>
+      </div>
 
-export default function CommunityPage() {
-  return <AppBarCommunity />;
+      {/* Feed (Scrollable only center) */}
+      <div className="w-full lg:w-[53%] overflow-y-auto scrollbar-hide p-4">
+        <CommunityFeed />
+      </div>
+
+      {/* Right Sidebar */}
+      <div className="w-[22%] sticky top-0 h-screen p-4 hidden lg:block">
+        <div className="backdrop-blur-md rounded-xl h-full">
+          <RightSide />
+        </div>
+      </div>
+    </div>
+    </UserStatsProvider>
+  );
 }

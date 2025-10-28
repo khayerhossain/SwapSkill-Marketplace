@@ -15,7 +15,9 @@ export const collectionNamesObj = {
 
   savedSkills: "saved",
 
-  faqsms: "faq-massage"
+  faqsms: "faq-massage",
+
+  followCollection: "follow",
 
 };
 

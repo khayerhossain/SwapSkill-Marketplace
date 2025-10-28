@@ -8,7 +8,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo1.png";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -35,6 +35,14 @@ export default function RegisterPage() {
       } else toast.error(data.error || "Something went wrong!");
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signIn("google", { callbackUrl: "/appBar" });
+    } catch {
+      toast.error("Google login failed!");
     }
   };
 
@@ -137,6 +145,41 @@ export default function RegisterPage() {
                 </motion.button>
               </form>
 
+              <div className="mt-6 text-center">
+                     <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleGoogleLogin}
+                  className="w-full flex items-center justify-center gap-3 bg-[#1a1a1a] text-white py-2.5 rounded-lg border border-[#2e2e2e] transition-all cursor-pointer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 48 48"
+                    width="20"
+                    height="20"
+                  >
+                    <path
+                      fill="#EA4335"
+                      d="M24 9.5c3.5 0 6.3 1.2 8.3 3.2l6.1-6.1C34.8 3.3 29.8 1 24 1 14.7 1 6.7 6.6 3.1 14.4l7.1 5.5C11.9 13.3 17.4 9.5 24 9.5z"
+                    />
+                    <path
+                      fill="#34A853"
+                      d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.5-1.9 4.6-4 6.1l6.2 4.8c3.6-3.4 5.5-8.5 5.5-15.4z"
+                    />
+                    <path
+                      fill="#FBBC05"
+                      d="M10.2 28.8c-.5-1.5-.8-3.1-.8-4.8s.3-3.3.8-4.8l-7.1-5.5C1.1 16.4 0 20.1 0 24s1.1 7.6 3.1 10.3l7.1-5.5z"
+                    />
+                    <path
+                      fill="#4285F4"
+                      d="M24 47c5.8 0 10.6-1.9 14.1-5.1l-6.2-4.8c-1.7 1.2-4 2-7.9 2-6.6 0-12.1-3.8-13.8-9l-7.1 5.5C6.7 41.4 14.7 47 24 47z"
+                    />
+                  </svg>
+                  <span className="font-medium text-sm">
+                    Log in with Google
+                  </span>
+                </motion.button>
+
               <p className="mt-4 text-sm text-center text-gray-400">
                 Already have an account?{" "}
                 <button
@@ -146,6 +189,8 @@ export default function RegisterPage() {
                   Login
                 </button>
               </p>
+              </div>
+              
             </motion.div>
           </motion.div>
         </motion.div>

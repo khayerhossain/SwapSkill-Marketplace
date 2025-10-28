@@ -12,11 +12,23 @@ import { ClipboardList } from "lucide-react";
 import Image from "next/image";
 import { UserStatsProvider } from "@/context/UserStatsContext";
 import Chatbot from "@/app/(landingArea)/chatbot/chat";
+import { usePathname } from "next/navigation";
 
 export default function AppBarLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
+  const pathname = usePathname();
+  // helper to format route names
+  const getPageTitle = (path) => {
+    const map = {
+      "/": "Home",
+      "/appBar/leader-board": "Leader Board",
+      "/dashboard/profile": "Profile",
+      "/dashboard": "Dashboard",
+    };
+    return map[path] || path.split("/").pop()?.replace(/-/g, " ") || "Page";
+  };
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-base-content overflow-x-hidden flex">
@@ -63,12 +75,15 @@ export default function AppBarLayout({ children }) {
             >
               <IoMdMenu />
             </button>
-            <h1 className="text-xl font-bold text-red-500">App Bar</h1>
+
+            <h1 className="text-xl font-bold text-red-500 capitalize">
+              {getPageTitle(pathname)}
+            </h1>
           </div>
 
           <div className="flex items-center gap-4 flex-shrink-0">
             <Link
-              href="appBar/leader-board"
+              href="/appBar/leader-board"
               className="text-gray-200 hover:text-red-500 transition-colors flex-shrink-0"
             >
               <ClipboardList size={20} />
@@ -79,16 +94,15 @@ export default function AppBarLayout({ children }) {
             {session?.user && (
               <Link
                 href="/dashboard/profile"
-                className="flex items-center gap-2 px-2 py-1 rounded-full bg-gray-800 text-gray-200  transition-colors flex-shrink-0"
+                className="flex items-center gap-2 px-2 py-1 rounded-full bg-gray-800 text-gray-200 transition-colors flex-shrink-0"
               >
                 <Image
-                  src={session.user.image || "/default-profile.png"} // fallback
+                  src={session.user.image || "/default-profile.png"}
                   alt={session.user.name || "Profile"}
                   width={32}
                   height={32}
                   className="rounded-full object-cover"
                 />
-
                 <span className="hidden lg:block">
                   {session.user.name || "Profile"}
                 </span>

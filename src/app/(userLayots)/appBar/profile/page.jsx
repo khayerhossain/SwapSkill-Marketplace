@@ -47,6 +47,58 @@ export default function ProfilePage() {
     }
   };
 
+  //post count tomal-dev
+
+  const [postCount, setPostCount] = useState(0);  
+
+    useEffect(() => {
+    if (!session?.user?.email) return;
+
+    const fetchPostCount = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/user-post-count?email=${session.user.email}`
+        );
+
+        if (data.success) {
+          setPostCount(data.totalPosts);
+        }
+      } catch (error) {
+        console.log("Error fetching post count:", error);
+      }
+    };
+
+    fetchPostCount();
+  }, [session]);
+
+
+  // follow count
+
+ const [followCount, setFollowCount] = useState(0);
+
+    useEffect(() => {
+    if (!session?.user?.email) return;
+
+    const fetchFollowCount = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/follows?email=${session.user.email}`
+        );
+
+        if (data.success) {
+          setFollowCount(data.totalPosts);
+        }
+      } catch (error) {
+        console.log("Error fetching post count:", error);
+      }
+    };
+
+    fetchFollowCount();
+  }, [session]);
+
+
+  ///////////// tomal-dev ////////////////////
+
   // Image Upload
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -254,6 +306,25 @@ export default function ProfilePage() {
                 <div className="badge bg-red-600 mt-2 px-3 py-1 text-white">
                   {profile?.role || session?.user?.role || "User"}
                 </div>
+
+
+        <div className="flex justify-around mt-6 text-sm text-gray-300 gap-6">
+          <div className="text-center">
+            <p className="font-bold text-lg text-white">{postCount}</p>
+            <span className="text-gray-400">Posts</span>
+          </div>
+          <div className="text-center">
+            <p className="font-bold text-lg text-white">0</p>
+            <span className="text-gray-400">Followers</span>
+          </div>
+          <div className="text-center">
+            <p className="font-bold text-lg text-white">{followCount}</p>
+            <span className="text-gray-400">Following</span>
+          </div>
+        </div>                
+
+
+
               </div>
             </div>
           </div>

@@ -9,7 +9,7 @@ import {
   FaCcStripe,
 } from "react-icons/fa";
 import Container from "./Container";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo1.png";
 
 export default function FooterPage() {
   return (

@@ -253,7 +253,7 @@ export default function NavbarPage() {
                 <div>
                   <Link
                     href="/login"
-                    className="btn bg-gray-900 hover:bg-gray-800 text-white rounded-lg border-none shadow-none mr-3"
+                    className="btn bg-black/60 hover:bg-gray-800 text-white rounded-lg border-none shadow-none mr-3"
                   >
                     Sign In
                   </Link>

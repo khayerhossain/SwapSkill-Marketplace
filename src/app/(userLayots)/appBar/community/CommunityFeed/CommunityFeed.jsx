@@ -90,6 +90,7 @@ export default function CommunityFeed() {
   const handlePost = async () => {
     if (!content.trim() && !media && !feeling) return;
     const newPost = {
+      userEmail: session?.user?.email,
       user: currentUser,
       text: content,
       media,

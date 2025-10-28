@@ -40,8 +40,8 @@ export default function InboxLayout({ children }) {
   const loadData = async () => {
     setLoading(true);
     try {
-      await axiosInstance.get(`/api/chats?userId=${session.user.id}`);
-      const skillsResponse = await axiosInstance.get("/api/find-skills?limit=50");
+      await axiosInstance.get(`/chats?userId=${session.user.id}`);
+      const skillsResponse = await axiosInstance.get("/find-skills?limit=50");
       const skillsData = skillsResponse.data;
       if (skillsData.success) setSkills(skillsData.skills || []);
     } catch (error) {
@@ -53,7 +53,7 @@ export default function InboxLayout({ children }) {
 
   const handleSkillClick = async (skill) => {
     try {
-      const response = await axiosInstance.post("/api/chats", {
+      const response = await axiosInstance.post("/chats", {
         skillId: skill._id,
         skillOwnerId: skill.userId,
         selectedDate: new Date().toISOString(),
@@ -98,7 +98,7 @@ export default function InboxLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-black via-gray-900 to-black text-white">
+    <div className="min-h-screen flex bg-black/60 text-white">
       {/* Left Sidebar (Skills List) */}
       <div
         className={`${

@@ -90,8 +90,8 @@ const PopularSkills = () => {
               </p>
 
               {/* Button */}
-              <button className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium px-12 py-2 rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all">
-                View Details
+              <button className="bg-black/60 text-white text-sm font-medium px-12 py-2 rounded-xl cursor-pointer">
+                View More
               </button>
             </motion.div>
           ))}

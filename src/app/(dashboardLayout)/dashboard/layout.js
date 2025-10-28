@@ -71,7 +71,7 @@ export default function DashboardLayout({ children }) {
             {session?.user && (
               <Link
                 href="/dashboard/profile"
-                className="flex items-center gap-2 px-2 py-1 rounded-full bg-gray-800 text-gray-200 hover:bg-red-600 transition-colors"
+                className="flex items-center gap-2 px-2 py-1 rounded-full bg-gray-800 text-gray-200 hover:bg-gray-900 transition-colors"
               >
                 <Image
                   src={session.user.image || "/default-profile.png"}
@@ -91,7 +91,7 @@ export default function DashboardLayout({ children }) {
               <button
                 aria-label="Logout"
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="p-2 text-gray-300 hover:text-white hover:bg-red-500 rounded-full transition-colors"
+                className="p-2 text-gray-300 hover:text-white cursor-pointer hover:bg-gray-900 rounded-full transition-colors"
               >
                 <FiLogOut size={20} />
               </button>

@@ -14,10 +14,12 @@ import { UserStatsProvider } from "@/context/UserStatsContext";
 import Chatbot from "@/app/(landingArea)/chatbot/chat";
 import { usePathname } from "next/navigation";
 
+
 export default function AppBarLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
+  
   const pathname = usePathname();
   // helper to format route names
   const getPageTitle = (path) => {
@@ -93,7 +95,7 @@ export default function AppBarLayout({ children }) {
 
             {session?.user && (
               <Link
-                href="/dashboard/profile"
+                href="/appBar/profile"
                 className="flex items-center gap-2 px-2 py-1 rounded-full bg-gray-800 text-gray-200 transition-colors flex-shrink-0"
               >
                 <Image

@@ -9,9 +9,9 @@ import { useUserStats } from "@/context/UserStatsContext";
 export default function LeftSide() {
   const { data: session } = useSession();
   const router = useRouter();
-  const { followingCount } = useUserStats();
+  //const { followingCount } = useUserStats();
 
-  const [postCount, setPostCount] = useState(0);
+  /*const [postCount, setPostCount] = useState(0);
 
   useEffect(() => {
     const fetchUserPosts = async () => {
@@ -26,7 +26,92 @@ export default function LeftSide() {
       }
     };
     fetchUserPosts();
-  }, [session?.user?.email]);
+  }, [session?.user?.email]);*/
+
+
+  ///////////// tomal-dev ////////////////////  
+
+  //post count tomal-dev
+
+  const [postCount, setPostCount] = useState(0);  
+
+    useEffect(() => {
+    if (!session?.user?.email) return;
+
+    const fetchPostCount = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/user-post-count?email=${session.user.email}`
+        );
+
+        if (data.success) {
+          setPostCount(data.totalPosts);
+        }
+      } catch (error) {
+        console.log("Error fetching post count:", error);
+      }
+    };
+
+    fetchPostCount();
+
+      // every 5 second reload
+  const interval = setInterval(fetchPostCount, 5000);
+
+  return () => clearInterval(interval);
+
+  }, [session]);
+
+  // follower count tomal-dev
+
+   const [followerCount, setFollowerCount] = useState(0);
+
+    useEffect(() => {
+    if (!session?.user?.email) return;
+
+    const fetchFollowerCount = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/user-follower-count?email=${session.user.email}`
+        );
+
+        if (data.success) {
+          setFollowerCount(data.totalPosts);
+        }
+      } catch (error) {
+        console.log("Error fetching post count:", error);
+      }
+    };
+
+    fetchFollowerCount();
+  }, [session]);
+
+
+  // following count tomal-dev
+
+ const [followCount, setFollowCount] = useState(0);
+
+    useEffect(() => {
+    if (!session?.user?.email) return;
+
+    const fetchFollowCount = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/user-following-count?email=${session.user.email}`
+        );
+
+        if (data.success) {
+          setFollowCount(data.totalPosts);
+        }
+      } catch (error) {
+        console.log("Error fetching post count:", error);
+      }
+    };
+
+    fetchFollowCount();
+  }, [session]);
+
+
+  ///////////// tomal-dev ////////////////////
 
   const shortcuts = [
     { name: "Art and Drawing", icon: "🎨" },
@@ -57,11 +142,11 @@ export default function LeftSide() {
             <span className="text-gray-400">Posts</span>
           </div>
           <div className="text-center">
-            <p className="font-bold text-lg text-white">2022</p>
+            <p className="font-bold text-lg text-white">{followerCount}</p>
             <span className="text-gray-400">Followers</span>
           </div>
           <div className="text-center">
-            <p className="font-bold text-lg text-white">{followingCount}</p>
+            <p className="font-bold text-lg text-white">{followCount}</p>
             <span className="text-gray-400">Following</span>
           </div>
         </div>

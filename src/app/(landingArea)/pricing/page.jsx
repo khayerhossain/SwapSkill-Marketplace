@@ -1,11 +1,242 @@
-import PricingUI from "./components/PricingUI";
+"use client";
 
-export const metadata = {
-  title: "Pricing | Swap Skill",
-  description: "Simple & transparent pricing plans for learners & tutors.",
-  icons: { icon: "/logo1.png" },
-};
+import Container from "@/components/shared/Container";
+import { useEffect, useState } from "react";
+import { Check } from "lucide-react";
+import { BsCreditCard2Back } from "react-icons/bs";
+import { FaStripe } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
-export default function PricingPage() {
-  return <PricingUI />;
+export default function Pricing() {
+  const [billing, setBilling] = useState("monthly");
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    (async () => {
+      const AOS = (await import("aos")).default;
+      await import("aos/dist/aos.css");
+      AOS.init({ duration: 800, easing: "ease-in-out", once: true });
+    })();
+  }, []);
+
+  const plans = [
+    {
+      name: "Learner",
+      monthly: 25,
+      yearly: 20,
+      description: "Perfect for individuals who want to learn new skills.",
+      features: [
+        "Browse all skill categories",
+        "Book up to 5 sessions per month",
+        "Join community discussions",
+        "Earn gamified points & rewards",
+        "Basic chat support",
+      ],
+      button: "Start Learning",
+    },
+    {
+      name: "Pro Tutor",
+      monthly: 75,
+      yearly: 60,
+      description:
+        "For tutors & learners who want full access and verified features.",
+      features: [
+        "Post unlimited skills to teach",
+        "Unlimited bookings & scheduling",
+        "Take category-based tests for Verified Badge",
+        "Gamified quizzes & reward system",
+        "Real-time chat & messaging",
+        "Secure payments & transaction history",
+      ],
+      button: "Upgrade to Pro",
+    },
+    {
+      name: "Enterprise",
+      monthly: 150,
+      yearly: 120,
+      description: "For organizations managing multiple learners & tutors.",
+      features: [
+        "All Pro Tutor features",
+        "Unlimited learners & teachers",
+        "Team management & advanced analytics",
+        "Custom domain support",
+        "Priority customer support",
+      ],
+      button: "Contact Us",
+    },
+    {
+      name: "Custom",
+      monthly: "175",
+      yearly: "—",
+      description: "Tailored solution for your unique learning needs.",
+      features: [
+        "Fully customizable features",
+        "Dedicated account manager",
+        "Advanced security options",
+        "Integration with external tools",
+      ],
+      button: "Request Quote",
+    },
+  ];
+
+  const handlePrice = (name) => {
+    const plan = plans.find((p) => p.name === name);
+    if (!plan) return;
+    setSelectedPlan(plan);
+    setIsModalOpen(true);
+  };
+
+  const handlePayment = (method) => {
+    if (!selectedPlan) return;
+
+    const params = new URLSearchParams({
+      name: selectedPlan.name ?? "",
+      price: String(selectedPlan.monthly ?? ""),
+    });
+
+    let path = "";
+    if (method === "sslcommerz") path = `/checkout?${params.toString()}`;
+    else if (method === "stripe") path = `/checkoutStripe?${params.toString()}`;
+
+    setIsModalOpen(false);
+    router.push(path);
+  };
+
+  return (
+    <div className="bg-[#111111] min-h-screen py-16 text-gray-200">
+      <div className="text-center mb-12 px-4 md:px-0">
+        <h2 className="text-4xl md:text-5xl font-bold text-white mb-2 mt-5">
+          Pricing
+        </h2>
+        <p className="text-gray-400 text-base md:text-lg">
+          Simple, transparent pricing. No hidden fees.
+        </p>
+
+        {/* Toggle */}
+        <div className="flex items-center justify-center gap-4 mt-6 text-sm md:text-base">
+          <span
+            className={`cursor-pointer ${
+              billing === "monthly" ? "text-red-500 font-bold" : "text-gray-500"
+            }`}
+            onClick={() => setBilling("monthly")}
+          >
+            Monthly
+          </span>
+          <span className="text-gray-600">/</span>
+          <span
+            className={`cursor-pointer ${
+              billing === "yearly" ? "text-red-500 font-bold" : "text-gray-500"
+            }`}
+            onClick={() => setBilling("yearly")}
+          >
+            Yearly <span className="text-green-500">(Save 20%)</span>
+          </span>
+        </div>
+      </div>
+
+      {/* Plans */}
+      <Container>
+        <div className="grid md:grid-cols-4 gap-6">
+          {plans.map((plan, idx) => (
+            <div
+              key={idx}
+              className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-6 flex flex-col hover:border-red-500 hover:shadow-lg transition-all"
+            >
+              <div>
+                <h3 className="text-xl font-bold mb-2 text-red-500">
+                  {plan.name}
+                </h3>
+                <p className="text-gray-400 mb-3 text-sm">{plan.description}</p>
+                <div className="text-2xl font-bold mb-3">
+                  {plan.monthly !== "—" ? (
+                    <>
+                      ${billing === "monthly" ? plan.monthly : plan.yearly}
+                      <span className="text-sm font-medium text-gray-400">
+                        /mo
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-gray-400 text-sm">
+                      Custom Pricing
+                    </span>
+                  )}
+                </div>
+                <ul className="space-y-2 mb-4 text-sm">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-center">
+                      <Check size={16} className="text-red-500 mr-2" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <button
+                onClick={() => handlePrice(plan.name)}
+                className={`mt-auto py-2 px-4 rounded-lg font-semibold text-white text-sm transition-colors ${
+                  plan.button === "Contact Us" ||
+                  plan.button === "Request Quote"
+                    ? "bg-red-700 hover:bg-red-800"
+                    : "bg-red-600 hover:bg-red-700"
+                }`}
+              >
+                {plan.button}
+              </button>
+            </div>
+          ))}
+        </div>
+      </Container>
+
+      {/* Modal */}
+      {isModalOpen && selectedPlan && (
+        <dialog open className="modal">
+          <div
+            data-aos="fade-up"
+            className="modal-box bg-[#1a1a1a] border border-gray-700 text-gray-200 rounded-xl"
+          >
+            <h3 className="font-bold text-lg mb-3 text-red-500">
+              Choose Payment Method
+            </h3>
+            <p className="mb-4 text-sm">
+              Selected Plan:{" "}
+              <span className="font-semibold">{selectedPlan.name}</span>
+            </p>
+
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
+              <div
+                onClick={() => handlePayment("sslcommerz")}
+                className="flex flex-col items-center justify-center p-4 w-full md:w-1/3 bg-gray-900 border-2 border-green-500 rounded-lg shadow-lg hover:shadow-xl cursor-pointer transition-all"
+              >
+                <BsCreditCard2Back className="text-4xl text-green-500 mb-2" />
+                <span className="font-semibold text-gray-200 text-center">
+                  Pay with SSL
+                </span>
+              </div>
+
+              <div
+                onClick={() => handlePayment("stripe")}
+                className="flex flex-col items-center justify-center p-4 w-full md:w-1/3 bg-gray-900 border-2 border-indigo-600 rounded-lg shadow-lg hover:shadow-xl cursor-pointer transition-all"
+              >
+                <FaStripe className="text-4xl text-indigo-500 mb-2" />
+                <span className="font-semibold text-gray-200 text-center">
+                  Pay with Stripe
+                </span>
+              </div>
+
+            </div>
+
+            <div className="modal-action">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="btn bg-gray-800 border-gray-700 hover:bg-red-600 hover:border-red-500 text-white"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
+    </div>
+  );
 }

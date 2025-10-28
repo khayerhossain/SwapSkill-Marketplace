@@ -5,15 +5,8 @@ export const middleware = async (req) => {
   const { nextUrl } = req;
   const pathname = nextUrl.pathname;
 
-  // Static and authless paths
-  const PUBLIC_PATHS = [
-    "/",
-    "/auth/signin",
-    "/login",
-    "/register",
-    "/features",
-    "/pricing",
-  ];
+  // Public paths (no login required)
+  const PUBLIC_PATHS = ["/", "/login", "/register", "/features", "/pricing"];
   const isPublicPath = PUBLIC_PATHS.some((path) => pathname.startsWith(path));
 
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -28,12 +21,7 @@ export const middleware = async (req) => {
   }
 
   // Redirect authenticated users away from login/register
-  if (
-    (pathname === "/auth/signin" ||
-      pathname === "/login" ||
-      pathname === "/register") &&
-    token
-  ) {
+  if ((pathname === "/login" || pathname === "/register") && token) {
     if (role === "admin") {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
@@ -53,7 +41,7 @@ export const middleware = async (req) => {
   // Protect user area
   if (pathname.startsWith("/appBar") || pathname.startsWith("/app")) {
     if (!token) {
-      return NextResponse.redirect(new URL("/auth/signin", req.url));
+      return NextResponse.redirect(new URL("/login", req.url));
     }
     if (role === "admin") {
       return NextResponse.redirect(new URL("/dashboard", req.url));
@@ -62,7 +50,7 @@ export const middleware = async (req) => {
 
   // If not logged in, only allow public paths
   if (!token && !isPublicPath) {
-    return NextResponse.redirect(new URL("/auth/signin", req.url));
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   return NextResponse.next();

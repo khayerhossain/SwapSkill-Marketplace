@@ -8,7 +8,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo1.png";
 import Link from "next/link";
 
 export default function LoginPage() {

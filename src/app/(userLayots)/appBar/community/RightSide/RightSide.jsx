@@ -49,7 +49,7 @@ export default function RightSide() {
                     isFollowing ? "bg-gray-700 text-gray-300 hover:bg-gray-600" : "bg-indigo-600 text-white hover:bg-indigo-700"
                   }`}
                 >
-                  {isFollowing ? "Following" : "Follow"}
+                  {isFollowing ? "Unfollow" : "Follow"}
                 </button>
               </li>
             );

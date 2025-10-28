@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import ProfileUI from "./ProfileUI";
 
 export const metadata = {

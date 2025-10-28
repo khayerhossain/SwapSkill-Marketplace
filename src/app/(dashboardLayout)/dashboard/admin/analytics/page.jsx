@@ -128,7 +128,7 @@ export default function AdminAnalytics() {
       color: "bg-yellow-500",
     },
     {
-      title: "Skills Shared",
+      title: "Total Skills",
       value: analytics.totalSkills.toLocaleString(),
       icon: <BookOpen className="w-6 h-6" />,
       change: "+22.1%",
@@ -148,7 +148,7 @@ export default function AdminAnalytics() {
   }
 
   return (
-    <div className="min-h-screen text-white p-6">
+    <div className="min-h-screen text-white">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">

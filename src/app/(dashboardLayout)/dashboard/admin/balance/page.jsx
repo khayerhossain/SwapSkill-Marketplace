@@ -1,4 +1,5 @@
 "use client";
+import Loading from "@/app/loading";
 import axiosInstance from "@/lib/axiosInstance";
 import {
   CreditCard,
@@ -188,13 +189,8 @@ export default function Balance() {
 
   if (loadingStats || loadingPayments) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-black flex items-center justify-center p-6">
-        <div className="relative">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <DollarSign className="w-6 h-6 text-indigo-500 animate-pulse" />
-          </div>
-        </div>
+      <div className="min-h-screen">
+        <Loading />
       </div>
     );
   }
@@ -213,13 +209,13 @@ export default function Balance() {
   }
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8 overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden">
       <div className="max-w-[1600px] mx-auto space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-4xl lg:text-5xl font-bold text-red-500 bg-clip-text mb-2">
-              Balance Dashboard
+            <h1 className="text-4xl font-bold text-red-500 bg-clip-text mb-2">
+              Balance <span className="text-white">Dashboard</span>
             </h1>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
               Overview of your payment activities and transactions

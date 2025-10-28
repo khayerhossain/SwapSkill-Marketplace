@@ -93,11 +93,11 @@ export default function CurrentSkills() {
   }
 
   return (
-    <section className="min-h-screen text-white px-4 py-8">
+    <section className="min-h-screen text-white">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <h1 className="text-3xl font-bold mb-8 text-center sm:text-left bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-          All Current Skills
+        <h1 className="text-3xl font-bold mb-8 text-white">
+          <span className="text-red-500">Manage</span> Current Skills
         </h1>
 
         {/* Stats Cards */}

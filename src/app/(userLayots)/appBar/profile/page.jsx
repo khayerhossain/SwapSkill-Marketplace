@@ -1,13 +1,22 @@
-import ProfileUI from "./ProfileUI";
+"use client";
 
-export const metadata = {
-  title: "Profile | Swap Skill",
-  description:
-    "View and manage your Swap Skill profile — track your skills, connect with verified tutors, and monitor your learning progress.",
-  icons: {
-    icon: "/logo1.png",
-  },
-};
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
+import axiosInstance from "@/lib/axiosInstance";
+import {
+  FaUser,
+  FaEnvelope,
+  FaCalendarAlt,
+  FaCog,
+  FaEdit,
+  FaSave,
+  FaTimes,
+  FaPlus,
+  FaTrash,
+  FaCamera,
+} from "react-icons/fa";
+
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -39,13 +48,12 @@ export default function ProfilePage() {
     }
   };
 
-  ///////////// tomal-dev ////////////////////  
 
   //post count tomal-dev
 
-  const [postCount, setPostCount] = useState(0);  
+  const [postCount, setPostCount] = useState(0);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!session?.user?.email) return;
 
     const fetchPostCount = async () => {
@@ -67,9 +75,9 @@ export default function ProfilePage() {
 
   // follower count tomal-dev
 
-   const [followerCount, setFollowerCount] = useState(0);
+  const [followerCount, setFollowerCount] = useState(0);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!session?.user?.email) return;
 
     const fetchFollowerCount = async () => {
@@ -89,12 +97,11 @@ export default function ProfilePage() {
     fetchFollowerCount();
   }, [session]);
 
-
   // following count tomal-dev
 
- const [followCount, setFollowCount] = useState(0);
+  const [followCount, setFollowCount] = useState(0);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!session?.user?.email) return;
 
     const fetchFollowCount = async () => {
@@ -114,7 +121,6 @@ export default function ProfilePage() {
     fetchFollowCount();
   }, [session]);
 
-
   ///////////// tomal-dev ////////////////////
 
   // Image Upload
@@ -128,7 +134,7 @@ export default function ProfilePage() {
 
     try {
       const response = await axiosInstance.post("/profile/update", formData, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       const result = response.data;
@@ -325,24 +331,24 @@ export default function ProfilePage() {
                   {profile?.role || session?.user?.role || "User"}
                 </div>
 
-
-        <div className="flex justify-around mt-6 text-sm text-gray-300 gap-6">
-          <div className="text-center">
-            <p className="font-bold text-lg text-white">{postCount}</p>
-            <span className="text-gray-400">Posts</span>
-          </div>
-          <div className="text-center">
-            <p className="font-bold text-lg text-white">{followerCount}</p>
-            <span className="text-gray-400">Followers</span>
-          </div>
-          <div className="text-center">
-            <p className="font-bold text-lg text-white">{followCount}</p>
-            <span className="text-gray-400">Following</span>
-          </div>
-        </div>                
-
-
-
+                <div className="flex justify-around mt-6 text-sm text-gray-300 gap-6">
+                  <div className="text-center">
+                    <p className="font-bold text-lg text-white">{postCount}</p>
+                    <span className="text-gray-400">Posts</span>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-bold text-lg text-white">
+                      {followerCount}
+                    </p>
+                    <span className="text-gray-400">Followers</span>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-bold text-lg text-white">
+                      {followCount}
+                    </p>
+                    <span className="text-gray-400">Following</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

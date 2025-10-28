@@ -234,6 +234,25 @@ const [isFollowing, setIsFollowing] = useState(false);
     if (id) fetchSkill();
   }, [id]);
 
+  /////////////////////////////////
+ useEffect(() => {
+    const checkFollowStatus = async () => {
+      if (session?.user?.email && skill?._id) {
+        try {
+          const { data } = await axiosInstance.get(
+            `/follows?email=${session.user.email}&postId=${skill._id}`
+          );
+          setIsFollowing(data.isFollowing);
+        } catch (err) {
+          console.error("Follow status check failed:", err);
+        }
+      }
+    };
+    checkFollowStatus();
+  }, [session?.user?.email, skill?._id]);
+
+  ///////////////////////////////
+
   const handleDateSelect = (date) => setSelectedDate(date);
 
   const handleConnectClick = async () => {
@@ -297,6 +316,7 @@ const [isFollowing, setIsFollowing] = useState(false);
 
   /////////////tomal-dev////////////////////
 
+/*/following & unfollowing work
 const handleFollowToggle = async () => {
   if (!session?.user?.email) {
     Swal.fire("Please login first");
@@ -307,16 +327,17 @@ const handleFollowToggle = async () => {
     userName: session.user.name,
     userEmail: session.user.email,
     postId: skill._id,
+    postEmail: skill.userEmail,
   };
 
   try {
     if (isFollowing) {
-      // Unfollow
+      // Unfollowing
       await axiosInstance.delete(`/follows?email=${payload.userEmail}&postId=${payload.postId}`);
       setIsFollowing(false);
       Swal.fire("Unfollowed!", "", "success");
     } else {
-      // Follow
+      // Following
       await axiosInstance.post("/follows", payload);
       setIsFollowing(true);
       Swal.fire("Followed!", "", "success");
@@ -325,10 +346,43 @@ const handleFollowToggle = async () => {
     console.error(err);
     Swal.fire("Error", "Something went wrong!", "error");
   }
-};
+};*/
 
 
-  /////////////////////////////////////////
+  //  Follow toggle function
+  const handleFollowToggle = async () => {
+    if (!session?.user?.email) {
+      Swal.fire("Please login first");
+      return;
+    }
+
+    const payload = {
+      userName: session.user.name,
+      followinguserEmail: session.user.email,
+      postId: skill._id,
+      postEmail: skill.userEmail,
+    };
+
+    try {
+      if (isFollowing) {
+        await axiosInstance.delete(`/follows?email=${payload.followinguserEmail}&postId=${payload.postId}`);
+        setIsFollowing(false);
+        Swal.fire("Unfollowed!", "", "success");
+      } else {
+        await axiosInstance.post("/follows", payload);
+        setIsFollowing(true);
+        Swal.fire("Followed!", "", "success");
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", "Something went wrong!", "error");
+    }
+  };
+
+
+
+
+  //////////////////tomal-dev///////////////////////
 
 
 
@@ -349,6 +403,7 @@ const handleFollowToggle = async () => {
                 />
               </div>
               <h1 className="text-2xl font-extrabold">{skill.userName}</h1>
+              
 
 
               <div className="pb-2">

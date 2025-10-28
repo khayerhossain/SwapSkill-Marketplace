@@ -4,9 +4,9 @@ import dbConnect, { collectionNamesObj } from "@/lib/db.connect";
 
 export async function POST(request) {
   try {
-    const { userName, userEmail, postId } = await request.json();
+    const { userName, followinguserEmail, postId, postEmail } = await request.json();
 
-    if (!userName || !userEmail || !postId) {
+    if (!userName || !followinguserEmail || !postId) {
       return new Response(
         JSON.stringify({ success: false, message: "Missing data" }),
         { status: 400, headers: { "Content-Type": "application/json" } }
@@ -15,10 +15,26 @@ export async function POST(request) {
 
     const collection = await dbConnect(collectionNamesObj.followCollection);
 
+    /////// Check if user already followed this post ////////
+    const alreadyFollowed = await collection.findOne({ followinguserEmail, postId });
+    if (alreadyFollowed) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Already followed this post",
+        }),
+        { status: 409, headers: { "Content-Type": "application/json" } } // 409 = Conflict
+      );
+    }
+    /////// Check if user already followed this post ////////
+
+
+
     const newFollow = {
       userName,
-      userEmail,
+      followinguserEmail,
       postId,
+      postEmail,
       followedAt: new Date(),
     };
 
@@ -50,7 +66,7 @@ export async function DELETE(request) {
     }
 
     const collection = await dbConnect(collectionNamesObj.followCollection);
-    const result = await collection.deleteOne({ userEmail: email, postId });
+    const result = await collection.deleteOne({ followinguserEmail: email, postId });
 
     if (result.deletedCount === 0) {
       return new Response(
@@ -75,21 +91,24 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get("email");
+    const postId = searchParams.get("postId");
 
-    if (!email) {
+    if (!email || !postId) {
       return new Response(
-        JSON.stringify({ success: false, message: "Email is required" }),
+        JSON.stringify({ success: false, message: "Missing email or postId" }),
         { status: 400 }
       );
     }
 
     const collection = await dbConnect(collectionNamesObj.followCollection);
+    const isFollowing = await collection.findOne({ followinguserEmail: email, postId });
 
     // Count user posts
-    const count = await collection.countDocuments({ userEmail: email });
+    //const count = await collection.countDocuments({ userEmail: email });
 
     return new Response(
-      JSON.stringify({ success: true, totalPosts: count }),
+      JSON.stringify({ success: true, isFollowing: !!isFollowing, }),
+
       { status: 200 }
     );
   } catch (error) {
@@ -99,3 +118,4 @@ export async function GET(request) {
     );
   }
 }
+

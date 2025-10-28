@@ -47,6 +47,8 @@ export default function ProfilePage() {
     }
   };
 
+  ///////////// tomal-dev ////////////////////  
+
   //post count tomal-dev
 
   const [postCount, setPostCount] = useState(0);  
@@ -71,8 +73,32 @@ export default function ProfilePage() {
     fetchPostCount();
   }, [session]);
 
+  // follower count tomal-dev
 
-  // follow count
+   const [followerCount, setFollowerCount] = useState(0);
+
+    useEffect(() => {
+    if (!session?.user?.email) return;
+
+    const fetchFollowerCount = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/user-follower-count?email=${session.user.email}`
+        );
+
+        if (data.success) {
+          setFollowerCount(data.totalPosts);
+        }
+      } catch (error) {
+        console.log("Error fetching post count:", error);
+      }
+    };
+
+    fetchFollowerCount();
+  }, [session]);
+
+
+  // following count tomal-dev
 
  const [followCount, setFollowCount] = useState(0);
 
@@ -82,7 +108,7 @@ export default function ProfilePage() {
     const fetchFollowCount = async () => {
       try {
         const { data } = await axiosInstance.get(
-          `/follows?email=${session.user.email}`
+          `/user-following-count?email=${session.user.email}`
         );
 
         if (data.success) {
@@ -314,7 +340,7 @@ export default function ProfilePage() {
             <span className="text-gray-400">Posts</span>
           </div>
           <div className="text-center">
-            <p className="font-bold text-lg text-white">0</p>
+            <p className="font-bold text-lg text-white">{followerCount}</p>
             <span className="text-gray-400">Followers</span>
           </div>
           <div className="text-center">

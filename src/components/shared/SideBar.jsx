@@ -3,61 +3,149 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  FaHome,
-  FaUserCheck,
-  FaUserFriends,
-  FaBox,
-  FaDollarSign,
-} from "react-icons/fa";
+  Home,
+  Users,
+  User,
+  Settings,
+  Box,
+  MessageSquare,
+  Briefcase,
+  LayoutDashboard,
+  FileText,
+  UserCheck,
+  Wallet,
+  Search,
+  BarChart3,
+  Coins,
+} from "lucide-react";
 
-const Sidebar = ({ onClick }) => {
+const Sidebar = ({
+  onClick,
+  useAppBarPaths = false,
+  collapsed = false,
+  isDashboard = false,
+  role = "user",
+}) => {
   const pathname = usePathname();
 
-  const menuItems = [
-    { name: "Home", icon: <FaHome />, path: "/" },
-    {
-      name: "All Users",
-      icon: <FaUserFriends />,
-      path: "/dashboard/admin/applied-riders",
-    },
-    {
-      name: "Subscribers",
-      icon: <FaUserCheck />,
-      path: "/dashboard/admin/approved-riders",
-    },
-    {
-      name: "Activity",
-      icon: <FaBox />,
-      path: "/dashboard/admin/total-orders",
-    },
-    {
-      name: "Balance",
-      icon: <FaDollarSign />,
-      path: "/dashboard/admin/balance",
-    },
-    {
-      name: "Support",
-      icon: <FaDollarSign />,
-      path: "/dashboard/rider/support",
-    },
+  // Paths
+  const communityPath = useAppBarPaths ? "/appBar/community" : "/community";
+  const findSkillsPath = useAppBarPaths
+    ? "/appBar/find-skills"
+    : "/find-skills";
+  const profilePath = useAppBarPaths ? "/appBar/profile" : "/profile";
+  const shareSkillsPath = useAppBarPaths
+    ? "/appBar/share-skills"
+    : "/share-skills";
+  const earnCoin = useAppBarPaths ? "/appBar/earn-coin" : "/earn-coin";
+  const userPayment = useAppBarPaths ? "/appBar/overview" : "/overview";
+  const dashboardPath = "/dashboard";
+  const resourcesPath = useAppBarPaths ? "/appBar/resources" : "/resources";
+  const inboxPath = useAppBarPaths ? "/appBar/inbox" : "/inbox";
+  const savePath = useAppBarPaths ? "/appBar/saved-items" : "/saved-items";
+  const leaderboardPath = useAppBarPaths
+    ? "/appBar/leader-board"
+    : "/leader-board";
+
+  const iconByName = (name) => {
+    switch (name) {
+      case "Home":
+        return <Home size={20} />;
+      case "Community":
+        return <Users size={20} />;
+      case "Find Skills":
+        return <Search size={20} />;
+      case "Profile":
+        return <User size={20} />;
+      case "Share Skills":
+        return <Briefcase size={20} />;
+      case "Overview":
+        return <LayoutDashboard size={20} />;
+      case "Resources":
+        return <FileText size={20} />;
+      case "Inbox":
+        return <MessageSquare size={20} />;
+      case "Settings":
+        return <Settings size={20} />;
+      case "Subscribers":
+        return <UserCheck size={20} />;
+      case "Users":
+        return <Users size={20} />;
+      case "Current Skills":
+        return <Briefcase size={20} />;
+      case "Management":
+        return <Users size={20} />;
+      case "Balance":
+        return <Wallet size={20} />;
+      case "Analytics":
+        return <BarChart3 size={20} />;
+      case "Earn Coin":
+        return <Coins size={20} />;
+      case "Dashboard":
+        return <LayoutDashboard size={20} />;
+      default:
+        return <Box size={20} />;
+    }
+  };
+
+  const appBarItems = [
+    { name: "Overview", path: userPayment },
+    { name: "Profile", path: profilePath },
+    { name: "Community", path: communityPath },
+    { name: "Find Skills", path: findSkillsPath },
+    { name: "Share Skills", path: shareSkillsPath },
+    { name: "Inbox", path: inboxPath },
+    { name: "Resources", path: resourcesPath },
+    { name: "Q-Field", path: earnCoin },
+    { name: "Saved", path: savePath },
   ];
 
+  const dashboardItems = [
+    {
+      name: "Analytics",
+      path: "/dashboard/admin/analytics",
+      role: "admin",
+    },
+    { name: "Management", path: "/dashboard/manageSkills", role: "admin" },
+    {
+      name: "Subscribers",
+      path: "/dashboard/admin/subscribers",
+      role: "admin",
+    },
+    {
+      name: "Current Skills",
+      path: "/dashboard/admin/current-skills",
+      role: "admin",
+    },
+    { name: "Users", path: "/dashboard/admin/users", role: "admin" },
+    { name: "Balance", path: "/dashboard/admin/balance", role: "admin" },
+    { name: "Profile", path: "/dashboard/profile", role: "all" },
+    { name: "Settings", path: "/dashboard/settings", role: "admin" },
+  ];
+
+  const menuItems = isDashboard
+    ? dashboardItems.filter((item) => item.role === "all" || role === "admin")
+    : appBarItems;
+
   return (
-    <ul className="space-y-2 px-4 h-screen">
+    <ul
+      className={`h-screen ${
+        collapsed ? "px-2" : "px-4"
+      } bg-[#111111] py-4 space-y-2`}
+    >
       {menuItems.map((item, index) => (
         <li key={index}>
           <Link
             href={item.path}
-            className={`flex items-center gap-3 p-3 rounded-xl transition font-medium
-              ${
-                pathname === item.path
-                  ? "bg-white text-red-600"
-                  : "hover:bg-gray-700"
-              }`}
+            className={`flex items-center gap-3 p-3 rounded-xl transition-all font-medium text-sm ${
+              pathname === item.path
+                ? "bg-red-500 text-white shadow-lg"
+                : "text-gray-400 hover:bg-gray-800 hover:text-red-500"
+            }`}
             onClick={onClick}
           >
-            {item.icon}
-            <span>{item.name}</span>
+            {iconByName(item.name)}
+            <span className={collapsed ? "hidden" : "block"}>{item.name}</span>
           </Link>
         </li>
       ))}

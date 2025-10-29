@@ -1,11 +1,11 @@
-
 SwapSkill Marketplace
 
 A Modern Skill-Sharing Platform Built for the Future of Learning
 
-Live Project: https://swap-skill-marketplace.vercel.app
+Live Project: https://swap-skill-marketplace.vercel.app/
 
-Overview:
+Overview
+
 SwapSkill Marketplace is a web-based skill-sharing platform where users can share, learn, and trade skills in a community-driven environment.
 It includes real-time chat, AI chatbot, gamification, secure payments, and an admin analytics dashboard — making it a complete, real-world learning ecosystem.
 

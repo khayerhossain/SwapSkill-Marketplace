@@ -46,6 +46,8 @@ export default function Profile() {
       console.error("Error fetching profile:", error);
     }
   };
+  
+  //post count tomal-dev
 
   const [postCount, setPostCount] = useState(0);
 

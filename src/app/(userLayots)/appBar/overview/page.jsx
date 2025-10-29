@@ -9,6 +9,7 @@ import { LineChart, Activity } from "lucide-react";
 import { SinglePaymentCard } from "./SinglePayment";
 import Loading from "@/app/loading";
 import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 
 export default function Overview() {
   const [payments, setPayments] = useState([]);
@@ -17,6 +18,7 @@ export default function Overview() {
   const [userData, setUserData] = useState(null);
   const [skills, setSkills] = useState([]);
   const isDark = appliedTheme === "dark";
+  const { data: session } = useSession();
 
   // Demo analytics data
   const analytics = {
@@ -39,6 +41,8 @@ export default function Overview() {
   };
 
   useEffect(() => {
+    if (!session?.user?.email) return; // 
+
     const fetchData = async () => {
       try {
         const [paymentRes, userRes, skillsRes] = await Promise.all([
@@ -46,9 +50,16 @@ export default function Overview() {
           axiosInstance.get("/coin-earn"),
           axiosInstance.get("/current-skills"),
         ]);
+
         setPayments(paymentRes.data?.payments || []);
         if (userRes.data.success) setUserData(userRes.data.data);
-        setSkills(skillsRes.data?.skills || skillsRes.data || []);
+
+       
+        const allSkills = skillsRes.data?.skills || skillsRes.data || [];
+        const userSkills = allSkills.filter(
+          (skill) => skill?.contactInfo?.email === session?.user?.email
+        );
+        setSkills(userSkills);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -56,7 +67,7 @@ export default function Overview() {
       }
     };
     fetchData();
-  }, []);
+  }, [session?.user?.email]);
 
   const stats = [
     {

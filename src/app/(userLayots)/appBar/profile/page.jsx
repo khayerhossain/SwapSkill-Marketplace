@@ -47,11 +47,13 @@ export default function Profile() {
     }
   };
   
+    ///////////// tomal-dev ////////////////////  
+
   //post count tomal-dev
 
-  const [postCount, setPostCount] = useState(0);
+  const [postCount, setPostCount] = useState(0);  
 
-  useEffect(() => {
+    useEffect(() => {
     if (!session?.user?.email) return;
 
     const fetchPostCount = async () => {
@@ -69,19 +71,50 @@ export default function Profile() {
     };
 
     fetchPostCount();
+
+      // every 5 second reload
+  const interval = setInterval(fetchPostCount, 5000);
+
+  return () => clearInterval(interval);
+
   }, [session]);
 
-  // follow count
+  // follower count tomal-dev
 
-  const [followCount, setFollowCount] = useState(0);
+   const [followerCount, setFollowerCount] = useState(0);
 
-  useEffect(() => {
+    useEffect(() => {
+    if (!session?.user?.email) return;
+
+    const fetchFollowerCount = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/user-follower-count?email=${session.user.email}`
+        );
+
+        if (data.success) {
+          setFollowerCount(data.totalPosts);
+        }
+      } catch (error) {
+        console.log("Error fetching post count:", error);
+      }
+    };
+
+    fetchFollowerCount();
+  }, [session]);
+
+
+  // following count tomal-dev
+
+ const [followCount, setFollowCount] = useState(0);
+
+    useEffect(() => {
     if (!session?.user?.email) return;
 
     const fetchFollowCount = async () => {
       try {
         const { data } = await axiosInstance.get(
-          `/follows?email=${session.user.email}`
+          `/user-following-count?email=${session.user.email}`
         );
 
         if (data.success) {
@@ -94,6 +127,9 @@ export default function Profile() {
 
     fetchFollowCount();
   }, [session]);
+
+
+  ///////////// tomal-dev ////////////////////
 
 
   // Image Upload
@@ -310,7 +346,7 @@ export default function Profile() {
                     <span className="text-gray-400">Posts</span>
                   </div>
                   <div className="text-center">
-                    <p className="font-bold text-lg text-white">0</p>
+                    <p className="font-bold text-lg text-white">{followerCount}</p>
                     <span className="text-gray-400">Followers</span>
                   </div>
                   <div className="text-center">

@@ -43,6 +43,7 @@ export default function ProfilePage() {
     }
   };
 
+
   // Image Upload
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -254,6 +255,9 @@ export default function ProfilePage() {
                 <div className="badge bg-red-600 mt-2 px-3 py-1 text-white">
                   {profile?.role || session?.user?.role || "User"}
                 </div>
+
+
+
               </div>
             </div>
           </div>

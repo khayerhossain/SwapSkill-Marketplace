@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-         <link rel="icon" href="/logo1.png" sizes="any" />
+         <link rel="icon" href="/logo.png" sizes="any" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
           <ThemeProvider>
             <NotificationProvider>
               <Suspense fallback={<Loading />}>{children}</Suspense>
-              <Toaster position="top-center" />
+              <Toaster position="top-right" />
             </NotificationProvider>
           </ThemeProvider>
         </NextAuthSessionProvider>

@@ -120,9 +120,6 @@ export default function CurrentSkillsPage() {
               <p className="text-sm text-gray-500">
                 More skills coming soon...
               </p>
-
-              {/* Glow border animation */}
-              <div className="absolute inset-0 rounded-2xl border border-transparent bg-gradient-to-r from-red-500/20 via-transparent to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none" />
             </motion.div>
           ))}
         </div>
@@ -130,5 +127,3 @@ export default function CurrentSkillsPage() {
     </section>
   );
 }
-
-

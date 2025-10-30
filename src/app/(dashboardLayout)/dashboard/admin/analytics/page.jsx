@@ -16,6 +16,7 @@ import {
   ArrowDownRight,
 } from "lucide-react";
 import axiosInstance from "@/lib/axiosInstance";
+import Loading from "@/app/loading";
 
 export default function AdminAnalytics() {
   const [analytics, setAnalytics] = useState({
@@ -139,10 +140,8 @@ export default function AdminAnalytics() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#111111] text-white p-6">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-        </div>
+      <div className="min-h-screen">
+        <Loading />
       </div>
     );
   }
@@ -351,4 +350,3 @@ export default function AdminAnalytics() {
     </div>
   );
 }
-

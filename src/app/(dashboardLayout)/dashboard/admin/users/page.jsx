@@ -8,22 +8,35 @@ import Loading from "@/app/loading";
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+ 
+  //pagination
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [page]);
+
 
   const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axiosInstance.get("/users");
-      setUsers(data);
-    } catch (error) {
-      console.error("Failed to fetch users", error);
-    } finally {
-      setLoading(false);
+  try {
+    setLoading(true);
+    const { data } = await axiosInstance.get(`/users?page=${page}&limit=${limit}`);
+    
+    if (data.success) {
+      setUsers(data.users);
+      setTotalPages(data.pagination.totalPages);
     }
-  };
+  } catch (error) {
+    console.error("Failed to fetch users", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
 
   const handleStatusToggle = async (id, currentStatus) => {
     const newStatus = currentStatus === "active" ? "deactive" : "active";
@@ -250,6 +263,48 @@ export default function UsersPage() {
             </p>
           )}
         </div>
+
+        {/*pagination*/}
+
+      <div className="flex justify-center mt-6 space-x-2 ">
+        <button
+          onClick={() => setPage((prev) => prev - 1)}
+          disabled={page === 1}
+          className={`px-3 py-1 rounded-md text-sm font-medium border cursor-pointer ${
+            page === 1
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-white text-gray-700 hover:bg-gray-100"
+          }`}
+        >
+          Prev
+        </button>
+
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => setPage(index + 1)}
+            className={`px-3 py-1 rounded-md text-sm font-medium border cursor-pointer ${
+              page === index + 1
+                ? "bg-blue-500 text-white border-blue-500"
+                : "bg-white text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={() => setPage((prev) => prev + 1)}
+          disabled={page === totalPages}
+          className={`px-3 py-1 rounded-md text-sm font-medium border cursor-pointer ${
+            page === totalPages
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-white text-gray-700 hover:bg-gray-100"
+          }`}
+        >
+          Next
+        </button>
+      </div>
       </section>
     </div>
   );

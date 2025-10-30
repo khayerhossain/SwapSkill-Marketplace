@@ -4,38 +4,16 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import axiosInstance from "@/lib/axiosInstance";
-import { useUserStats } from "@/context/UserStatsContext";
+import { Code, Zap, Palette, Users, BookOpen, Camera } from "lucide-react"; // 👈 Lucide icons
 
 export default function LeftSide() {
   const { data: session } = useSession();
   const router = useRouter();
-  //const { followingCount } = useUserStats();
-
-  /*const [postCount, setPostCount] = useState(0);
+  const [postCount, setPostCount] = useState(0);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followCount, setFollowCount] = useState(0);
 
   useEffect(() => {
-    const fetchUserPosts = async () => {
-      if (!session?.user?.email) return;
-      try {
-        const res = await axiosInstance.get(
-          `/api/posts?userId=${session.user.email}`
-        );
-        setPostCount(res.data.length);
-      } catch (err) {
-        console.error("Failed to fetch user posts:", err);
-      }
-    };
-    fetchUserPosts();
-  }, [session?.user?.email]);*/
-
-
-  ///////////// tomal-dev ////////////////////  
-
-  //post count tomal-dev
-
-  const [postCount, setPostCount] = useState(0);  
-
-    useEffect(() => {
     if (!session?.user?.email) return;
 
     const fetchPostCount = async () => {
@@ -43,87 +21,62 @@ export default function LeftSide() {
         const { data } = await axiosInstance.get(
           `/user-post-count?email=${session.user.email}`
         );
-
-        if (data.success) {
-          setPostCount(data.totalPosts);
-        }
+        if (data.success) setPostCount(data.totalPosts);
       } catch (error) {
         console.log("Error fetching post count:", error);
       }
     };
 
     fetchPostCount();
-
-      // every 5 second reload
-  const interval = setInterval(fetchPostCount, 5000);
-
-  return () => clearInterval(interval);
-
+    const interval = setInterval(fetchPostCount, 5000);
+    return () => clearInterval(interval);
   }, [session]);
 
-  // follower count tomal-dev
-
-   const [followerCount, setFollowerCount] = useState(0);
-
-    useEffect(() => {
+  useEffect(() => {
     if (!session?.user?.email) return;
-
     const fetchFollowerCount = async () => {
       try {
         const { data } = await axiosInstance.get(
           `/user-follower-count?email=${session.user.email}`
         );
-
-        if (data.success) {
-          setFollowerCount(data.totalPosts);
-        }
+        if (data.success) setFollowerCount(data.totalPosts);
       } catch (error) {
-        console.log("Error fetching post count:", error);
+        console.log("Error fetching follower count:", error);
       }
     };
-
     fetchFollowerCount();
   }, [session]);
 
-
-  // following count tomal-dev
-
- const [followCount, setFollowCount] = useState(0);
-
-    useEffect(() => {
+  useEffect(() => {
     if (!session?.user?.email) return;
-
     const fetchFollowCount = async () => {
       try {
         const { data } = await axiosInstance.get(
           `/user-following-count?email=${session.user.email}`
         );
-
-        if (data.success) {
-          setFollowCount(data.totalPosts);
-        }
+        if (data.success) setFollowCount(data.totalPosts);
       } catch (error) {
-        console.log("Error fetching post count:", error);
+        console.log("Error fetching following count:", error);
       }
     };
-
     fetchFollowCount();
   }, [session]);
 
-
-  ///////////// tomal-dev ////////////////////
-
+  // 🔹 Updated Shortcuts with Lucide React icons
   const shortcuts = [
-    { name: "Art and Drawing", icon: "🎨" },
-    { name: "Dribbble Pro", icon: "🏀" },
-    { name: "Behance Creative", icon: "🎭" },
-    { name: "One Piece Fan", icon: "🏴‍☠️" },
-  ];
+  { name: "My Skills", icon: Code },             // skills user offers
+  // { name: "Skill Requests", icon: Zap },         // skills users want to learn
+  { name: "Community Tips", icon: Users },      // shared tips or advice
+  { name: "Tutorials", icon: BookOpen },        // saved or trending tutorials
+  // { name: "Workshops", icon: Palette },         // creative/practical workshops
+  { name: "Networking", icon: Camera },         // connect with other users
+];
+
 
   return (
     <div className="flex flex-col gap-6 overflow-hidden">
       {/* Profile Card */}
-      <div className="bg-black/60 backdrop-blur-xl rounded-2xl border border-gray-800 p-6 text-center ">
+      <div className="bg-black/60 backdrop-blur-xl rounded-2xl border border-gray-800 p-6 text-center">
         <img
           src={session?.user?.image || "https://i.pravatar.cc/100?img=12"}
           alt={session?.user?.name || "Profile"}
@@ -163,15 +116,18 @@ export default function LeftSide() {
       <div className="bg-black/60 backdrop-blur-xl rounded-2xl border border-gray-800 p-6 shadow-lg">
         <h3 className="font-semibold mb-4 text-white">Your Shortcuts</h3>
         <ul className="space-y-3">
-          {shortcuts.map((item, index) => (
-            <li
-              key={index}
-              className="flex items-center gap-3 text-gray-300 hover:text-indigo-400 transition cursor-pointer"
-            >
-              <span className="text-lg">{item.icon}</span>
-              <span>{item.name}</span>
-            </li>
-          ))}
+          {shortcuts.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <li
+                key={index}
+                className="flex items-center gap-3 text-gray-300 hover:text-indigo-400 transition cursor-pointer"
+              >
+                <Icon className="w-5 h-5" />
+                <span>{item.name}</span>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

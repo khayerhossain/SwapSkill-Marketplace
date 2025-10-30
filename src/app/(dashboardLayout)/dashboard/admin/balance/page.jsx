@@ -30,6 +30,10 @@ import {
   Line,
   LineChart,
   ComposedChart,
+  RadialBarChart,
+  RadialBar,
+  Label,
+  LabelList,
 } from "recharts";
 
 /**
@@ -363,193 +367,85 @@ export default function Balance() {
           </div>
         </div>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Area Chart with Line */}
-          <div className="bg-white dark:bg-gray-800/50 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-3xl p-6 shadow-2xl transform transition-all duration-300 hover:shadow-3xl">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                  Weekly Trend
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Payment activity over time
-                </p>
-              </div>
-              <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg">
-                <TrendingUp className="w-6 h-6 text-white" />
-              </div>
-            </div>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={trendData}>
-                  <defs>
-                    <linearGradient
-                      id="colorAmount"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient
-                      id="colorPayments"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="#e5e7eb"
-                    opacity={0.3}
-                  />
-                  <XAxis
-                    dataKey="day"
-                    stroke="#9ca3af"
-                    fontSize={12}
-                    fontWeight={600}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    stroke="#9ca3af"
-                    fontSize={12}
-                    fontWeight={600}
-                    tickLine={false}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      background: "rgba(255,255,255,0.95)",
-                      color: "#1f2937",
-                      borderRadius: "16px",
-                      border: "1px solid #e5e7eb",
-                      boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
-                      padding: "12px",
-                    }}
-                  />
-                  <Legend
-                    wrapperStyle={{ paddingTop: "20px" }}
-                    iconType="circle"
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="amount"
-                    stroke="#6366f1"
-                    strokeWidth={3}
-                    fill="url(#colorAmount)"
-                    name="Amount ($)"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="payments"
-                    stroke="#10b981"
-                    strokeWidth={3}
-                    dot={{ fill: "#10b981", strokeWidth: 2, r: 5 }}
-                    activeDot={{ r: 7 }}
-                    name="Payments"
-                  />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Pie Chart */}
-          <div className="bg-white dark:bg-gray-800/50 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-3xl p-6 shadow-2xl transform transition-all duration-300 hover:shadow-3xl">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                  Gateway Distribution
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Payment method breakdown
-                </p>
-              </div>
-              <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg">
-                <CreditCard className="w-6 h-6 text-white" />
-              </div>
-            </div>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <defs>
-                    <filter
-                      id="shadow"
-                      x="-50%"
-                      y="-50%"
-                      width="200%"
-                      height="200%"
-                    >
-                      <feDropShadow
-                        dx="0"
-                        dy="4"
-                        stdDeviation="4"
-                        floodOpacity="0.2"
-                      />
-                    </filter>
-                  </defs>
-                  <Pie
-                    data={pieData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={100}
-                    paddingAngle={5}
-                    dataKey="value"
-                    filter="url(#shadow)"
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    formatter={(value, name) => [`${value}%`, name]}
-                    contentStyle={{
-                      background: "rgba(255,255,255,0.95)",
-                      color: "#1f2937",
-                      borderRadius: "16px",
-                      border: "1px solid #e5e7eb",
-                      boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
-                      padding: "12px",
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 mt-6">
-              {pieData.map((item, index) => (
-                <div
-                  key={item.name}
-                  className="group bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-4 transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <div
-                      className="w-4 h-4 rounded-full shadow-lg"
-                      style={{ backgroundColor: COLORS[index] }}
-                    />
-                    <span className="font-bold text-gray-900 dark:text-gray-100 text-sm">
-                      {item.name}
-                    </span>
-                  </div>
-                  <p className="text-3xl font-black text-gray-900 dark:text-gray-100">
-                    {formatNumber(item.count)}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 font-semibold mt-1">
-                    {item.value}% share
-                  </p>
+        {/* CHARTS SECTION */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 items-stretch">
+            {/* --- MODERN WEEKLY TREND --- */}
+            <div className="bg-gradient-to-br from-[#18181B] to-[#23235b] border border-gray-800 rounded-3xl p-8 shadow-2xl hover:shadow-3xl transition-all">
+                <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-2xl font-extrabold text-white tracking-tight">Weekly Trend</h3>
+                    <span className="inline-block px-3 py-1 rounded-xl text-xs bg-fuchsia-600 text-white font-bold uppercase">Payments</span>
                 </div>
-              ))}
+                <div className="h-80 w-full">
+                    {/* Analytics-style (manual) Bar Chart for Weekly Trend */}
+                    <div className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-6 mt-10 max-w-3xl mx-auto">
+                      <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-xl font-bold text-white">Weekly Trend (Bar)</h3>
+                        <span className="text-gray-400 text-xs">Simple, elegant bar</span>
+                      </div>
+                      <div className="h-64 flex items-end justify-between space-x-5">
+                        {trendData?.map((item, idx) => (
+                          <div key={idx} className="flex flex-col items-center">
+                            <div
+                              className="bg-blue-500 rounded-t-lg w-9 mb-1 transition-all duration-500 shadow-lg hover:bg-fuchsia-500"
+                              style={{ height: `${(item.amount / Math.max(...trendData.map(d=>d.amount || 1), 1)) * 190}px` }}
+                              title={`$${item.amount}`}
+                            ></div>
+                            <span className="text-xs font-semibold text-gray-400 mt-2">{item.day}</span>
+                            <span className="text-xs text-white">${item.amount}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                </div>
             </div>
-          </div>
+            {/* --- MODERN DONUT CHART --- */}
+            <div className="bg-gradient-to-br from-[#133649] to-[#16181d] border border-gray-800 rounded-3xl p-8 shadow-2xl hover:shadow-3xl transition-all flex flex-col">
+                <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-2xl font-extrabold text-white tracking-tight">Gateway Distribution</h3>
+                    <span className="inline-block px-3 py-1 rounded-xl text-xs bg-sky-600 text-white font-bold uppercase">Split</span>
+                </div>
+                <div className="relative h-80 w-full flex items-center justify-center">
+                    {/* Analytics-style (manual) Pie/Stat Chart for Gateway Split */}
+                    <div className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-6 mt-10 max-w-xl mx-auto flex flex-col items-center">
+                      <div className="flex items-center justify-between w-full mb-6">
+                        <h3 className="text-xl font-bold text-white">Gateway Split</h3>
+                        <span className="text-gray-400 text-xs">Analytics format</span>
+                      </div>
+                      <div className="w-full flex flex-col md:flex-row gap-8 justify-center items-center ">
+                        {pieData?.map((item, idx) => (
+                          <div key={item.name} className="flex flex-col items-center">
+                            <div
+                              className="rounded-full shadow-lg mb-3"
+                              style={{
+                                width: 62,
+                                height: 62,
+                                background: COLORS[idx % COLORS.length],
+                                opacity: 0.85,
+                                boxShadow: '0 3px 16px '+COLORS[idx%COLORS.length]+'99',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1.1rem', color: '#fff'
+                              }}
+                              title={`${item.name} - ${item.value}% share`}
+                            >
+                              <span>${item.count}</span>
+                            </div>
+                            <span className="text-xs font-semibold text-gray-300">{item.name}</span>
+                            <span className="text-xs text-gray-400">{item.value}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                </div>
+                {/* Modern horizontal legend */}
+                <div className="flex items-center justify-center gap-5 mt-6">
+                    {pieData.map((item, idx) => (
+                        <div className="flex items-center gap-2" key={item.name}>
+                            <span className="block w-5 h-5 rounded-full border-2 border-white" style={{backgroundColor: COLORS[idx % COLORS.length]}}></span>
+                            <span className="text-sm text-gray-200 font-semibold">{item.name}</span>
+                            <span className="text-xs text-gray-400">({item.count})</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
 
         {/* Transaction Table - Original Style */}

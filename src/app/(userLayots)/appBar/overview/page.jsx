@@ -10,6 +10,7 @@ import { SinglePaymentCard } from "./SinglePayment";
 import Loading from "@/app/loading";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart as RLLineChart, Line, CartesianGrid, Legend } from 'recharts';
 
 export default function Overview() {
   const [payments, setPayments] = useState([]);
@@ -129,63 +130,40 @@ export default function Overview() {
 
         {/* === Progress & Activity Charts === */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
-          {/* Progress Chart */}
-          <div
-            className={`rounded-xl p-6 border ${
-              isDark
-                ? "bg-[#111111] border-gray-800"
-                : "bg-white border-gray-300"
-            }`}
-          >
+          {/* Modern Progress Growth BarChart */}
+          <div className={`rounded-xl p-6 border ${isDark ? "bg-[#111111] border-gray-800" : "bg-white border-gray-300"}`}>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold">Progress Growth</h3>
               <LineChart className="w-5 h-5 text-gray-400" />
             </div>
-            <div className="h-64 flex items-end justify-between space-x-2 overflow-x-auto scrollbar-hide">
-              {analytics.progressData.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ height: 0 }}
-                  animate={{ height: `${(item.progress / 100) * 200}px` }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex flex-col items-center"
-                >
-                  <div className="bg-gradient-to-t from-indigo-500 to-purple-500 rounded-t w-8 mb-2 transition-all duration-500"></div>
-                  <span className="text-xs text-gray-400">{item.week}</span>
-                  <span className="text-xs text-gray-300">
-                    {item.progress}%
-                  </span>
-                </motion.div>
-              ))}
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={analytics.progressData}>
+                  <XAxis dataKey="week" stroke="#9ca3af" fontSize={12} />
+                  <YAxis stroke="#9ca3af" fontSize={12} />
+                  <Tooltip contentStyle={{ background: isDark ? '#222' : '#fff', borderRadius: '8px', color: isDark ? '#fff':'#222' }} />
+                  <Bar dataKey="progress" fill="#6366f1" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
-
-          {/* Activity Chart */}
-          <div
-            className={`rounded-xl p-6 border ${
-              isDark
-                ? "bg-[#111111] border-gray-800"
-                : "bg-white border-gray-300"
-            }`}
-          >
+          {/* Modern Activity Overview LineChart */}
+          <div className={`rounded-xl p-6 border ${isDark ? "bg-[#111111] border-gray-800" : "bg-white border-gray-300"}`}>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold">Activity Overview</h3>
               <Activity className="w-5 h-5 text-gray-400" />
             </div>
-            <div className="h-64 flex items-end justify-between space-x-2 overflow-x-auto scrollbar-hide">
-              {analytics.activityData.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ height: 0 }}
-                  animate={{ height: `${(item.activity / 10) * 200}px` }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex flex-col items-center"
-                >
-                  <div className="bg-gradient-to-t from-emerald-500 to-lime-400 rounded-t w-8 mb-2 transition-all duration-500"></div>
-                  <span className="text-xs text-gray-400">{item.day}</span>
-                  <span className="text-xs text-gray-300">{item.activity}</span>
-                </motion.div>
-              ))}
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <RLLineChart data={analytics.activityData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="day" stroke="#9ca3af" fontSize={12} />
+                  <YAxis stroke="#9ca3af" fontSize={12} />
+                  <Tooltip contentStyle={{ background: isDark ? '#222' : '#fff', borderRadius: '8px', color: isDark ? '#fff':'#222' }} />
+                  <Legend iconType="circle" />
+                  <Line type="monotone" dataKey="activity" stroke="#10b981" strokeWidth={3} dot={{ r: 5, fill: '#10b981' }} />
+                </RLLineChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>

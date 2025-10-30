@@ -62,16 +62,15 @@ export default function LeftSide() {
     fetchFollowCount();
   }, [session]);
 
-  // 🔹 Updated Shortcuts with Lucide React icons
+  // Updated Shortcuts with Lucide React icons
   const shortcuts = [
-  { name: "My Skills", icon: Code },             // skills user offers
-  // { name: "Skill Requests", icon: Zap },         // skills users want to learn
-  { name: "Community Tips", icon: Users },      // shared tips or advice
-  { name: "Tutorials", icon: BookOpen },        // saved or trending tutorials
-  // { name: "Workshops", icon: Palette },         // creative/practical workshops
-  { name: "Networking", icon: Camera },         // connect with other users
-];
-
+    { name: "My Skills", icon: Code }, // skills user offers
+    // { name: "Skill Requests", icon: Zap },         // skills users want to learn
+    { name: "Community Tips", icon: Users }, // shared tips or advice
+    { name: "Tutorials", icon: BookOpen }, // saved or trending tutorials
+    // { name: "Workshops", icon: Palette },         // creative/practical workshops
+    { name: "Networking", icon: Camera }, // connect with other users
+  ];
 
   return (
     <div className="flex flex-col gap-6 overflow-hidden">

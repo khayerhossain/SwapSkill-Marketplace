@@ -87,9 +87,9 @@ export default function UsersPage() {
 
   return (
     <div>
-      <section className="mx-auto bg-transparent p-6 rounded-2xl">
+      <section className="mx-auto bg-transparent rounded-2xl">
         <h1 className="text-3xl font-bold mb-8 text-left text-gray-200">
-          All Users
+          All <span className="text-red-500">Users</span>
         </h1>
 
         {/* Desktop Table */}

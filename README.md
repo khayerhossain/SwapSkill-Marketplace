@@ -1,52 +1,53 @@
-SwapSkill Marketplace
-
+🧠 SwapSkill Marketplace
 A Modern Skill-Sharing Platform Built for the Future of Learning
 
 Live Project: https://swap-skill-marketplace.vercel.app/
 
-Overview
+🌍 Overview
 
-SwapSkill Marketplace is a web-based skill-sharing platform where users can share, learn, and trade skills in a community-driven environment.
-It includes real-time chat, AI chatbot, gamification, secure payments, and an admin analytics dashboard — making it a complete, real-world learning ecosystem.
+SwapSkill Marketplace is a community-driven web platform where users can share, learn, and trade skills seamlessly.
+It features real-time chat, AI chatbot, gamification, secure payments, and an admin analytics dashboard, creating a complete, interactive learning ecosystem.
 
-Team
+👥 Team
 
 Team Name: Six Sparks
+
 Team Lead: Khayer Hossain
+
 Team Members: Tomal, Sabit, Masud, Ariful, Suborna
 
-Core Features
-User Features
+🚀 Core Features
+🧑‍💻 User Features
 
-Authentication using Google and Email/Password (NextAuth + JWT)
+Authentication with Google and Email/Password (NextAuth + JWT)
 
 Dark/Light mode support
 
-Skill Marketplace with browse, filter, and sort functionality
+Skill marketplace with browse, filter, and sort functionality
 
-Real-time chat using Socket.io between learners and providers
+Real-time chat between learners and providers (Socket.io)
 
-Booking and scheduling system with calendar view
+Booking & scheduling system with calendar view
 
-Payment integration with Stripe and SSLCommerz
+Payment integration via Stripe and SSLCommerz
 
-Gamified learning with quizzes, badges, and points
+Gamified learning — earn quizzes, badges, and points
 
 Verified badge system for trusted skill providers
 
-Resource page to share and access useful learning materials
+Resource page to share and access learning materials
 
 Community feed with infinite scroll
 
-User AppBar showing subscription, progress, and activity overview
+User AppBar showing subscription, progress, and activities
 
-AI Chatbot for user assistance and FAQs
+AI Chatbot for user support and FAQs
 
-Admin Features
+🧑‍💼 Admin Features
 
 Skill approval/rejection with feedback
 
-User and subscription management
+User & subscription management
 
 Payment and transaction monitoring
 
@@ -54,111 +55,106 @@ Community moderation tools
 
 Analytics dashboard with insights on users, revenue, and engagement
 
-System Modules
-Module Description
-Landing Page 10 sections including hero, about, skills, testimonials, and footer
-Authentication Google and email-based login system
-Profile Management Manage teaching and learning preferences
-Skill Marketplace Explore and filter available skills
-Community Discussion and post feed for user interaction
-Chat System Real-time learner–provider chat
-Payment System Secure transactions with Stripe and SSLCommerz
-Quiz & Gamification Earn points and badges through quizzes
-Resource Page Central hub for learning resources
-AI Chatbot Intelligent assistant for user help
-Admin Dashboard Manage users, skills, analytics, and content
-Functional Requirements
+⚙️ System Modules
+Module	Description
+Landing Page	10 sections (hero, about, skills, testimonials, footer, etc.)
+Authentication	Google & email-based login system
+Profile Management	Manage teaching & learning preferences
+Skill Marketplace	Explore and filter skills
+Community Feed	User discussions and posts
+Chat System	Real-time chat between learners & providers
+Payment System	Secure transactions (Stripe + SSLCommerz)
+Quiz & Gamification	Earn badges and points through quizzes
+Resource Page	Central hub for learning materials
+AI Chatbot	AI-based help assistant
+Admin Dashboard	Manage users, skills, and analytics
+📋 Functional Requirements
 
-Authentication with NextAuth and JWT
+NextAuth + JWT authentication
 
-Skill browsing, filtering, and searching
+Skill browsing, filtering, searching
 
-Skill posting with details (title, price, description, category)
+Skill posting (title, price, description, category)
 
-Subscription requirement for bookings and posts
+Subscription required for booking and posting
 
-Real-time chat using Socket.io
+Real-time chat with Socket.io
 
-Payments via Stripe and SSLCommerz
+Payments via Stripe & SSLCommerz
 
-Gamification with quizzes and badge systems
+Gamification system with quizzes and badges
 
-Feedback and review management
+Feedback and review system
 
-Admin control panel with analytics and reports
+Admin panel with analytics and reports
 
-Non-Functional Requirements
+🧩 Non-Functional Requirements
 
-Performance: Page load within 3–5 seconds
+Performance: Pages load within 3–5 seconds
 
-Security: SSL encryption and JWT protection
+Security: SSL encryption + JWT protection
 
-Scalability: Support large user base and concurrent chats
+Scalability: Handles large user base and concurrent chats
 
-Usability: Fully responsive with dark/light theme
+Usability: Fully responsive + dark/light theme
 
 Reliability: 99.9% uptime
 
-Tech Stack
-Layer Technology
-Frontend Next.js (React), Tailwind CSS, Framer Motion, ShadCN/UI
-Backend Node.js, Express.js
-Database MongoDB with Mongoose
-Authentication NextAuth, JWT
-Real-Time Communication Socket.io / WebSocket
-Payment Stripe, SSLCommerz
-Deployment Vercel (Frontend), Render/Heroku (Backend), MongoDB Atlas
-AI Integration OpenAI API or Custom AI Model (Chatbot)
-Unique Highlights
+🛠️ Tech Stack
+Layer	Technology
+Frontend	Next.js (React), Tailwind CSS, Framer Motion, ShadCN/UI
+Backend	Node.js, Express.js
+Database	MongoDB + Mongoose
+Auth	NextAuth, JWT
+Real-Time	Socket.io / WebSocket
+Payments	Stripe, SSLCommerz
+Deployment	Vercel (Frontend), Render/Heroku (Backend), MongoDB Atlas
+AI	OpenAI API / Custom AI Model (Chatbot)
+✨ Unique Highlights
 
-Responsive and modern UI with 10+ landing page sections
+Fully responsive, modern UI with 10+ landing page sections
 
-Subscription-based access and role-based privileges
+Subscription-based access & role-based privileges
 
-Gamified learning with points, badges, and rewards
+Gamified learning (points, badges, rewards)
 
-Verified provider system with admin approval
+Verified provider system (admin approval)
 
-Real-time communication between users
+Real-time communication (Socket.io)
 
-Integrated AI chatbot for assistance
+Integrated AI chatbot for user help
 
-Analytics dashboard for admins
+Admin analytics dashboard
 
 Community feed with infinite scroll
 
-Resource-sharing module for collaboration
+Resource-sharing for collaboration
 
-Dual payment gateways (Stripe and SSLCommerz)
+Dual payment gateways (Stripe & SSLCommerz)
 
-Future Roadmap
+🔮 Future Roadmap
 
 AI-based personalized skill recommendations
 
-Smart event scheduling and notifications
+Smart event scheduling & notifications
 
-In-depth user learning analytics
+In-depth analytics on user learning behavior
 
-Mobile application version
+Mobile app development
 
 Voice-based AI assistant integration
 
-Installation & Setup
-
-Clone the repository
-
+⚙️ Installation & Setup
+# Clone the repository
 git clone https://github.com/khayerhossain/swap-skill-marketplace.git
 
-Navigate to the project directory
-
+# Navigate to the directory
 cd swap-skill-marketplace
 
-Install dependencies
-
+# Install dependencies
 npm install
 
-Create a .env file and configure environment variables
-
+Create a .env file
 NEXTAUTH_SECRET=your_secret_key
 NEXTAUTH_URL=http://localhost:3000
 MONGODB_URI=your_mongodb_url
@@ -168,18 +164,17 @@ SSL_STORE_PASS=your_ssl_store_pass
 OPENAI_API_KEY=your_ai_key
 
 Run the development server
-
 npm run dev
 
-Contributors
-Name Role
-Khayer Hossain Team Lead / Fullstack Developer
-Tomal Frontend Developer
-Sabit Backend Developer
-Masud UI/UX Designer
-Ariful QA & Integration
-Suborna Documentation & Testing
-Conclusion
+👨‍💻 Contributors
+Name	Role
+Khayer Hossain	Team Lead / Fullstack Developer
+Tomal	Frontend Developer
+Sabit	Backend Developer
+Masud	UI/UX Designer
+Ariful	QA & Integration
+Suborna	Documentation & Testing
+🏁 Conclusion
 
-SwapSkill Marketplace is a next-generation skill-sharing ecosystem designed to make learning and teaching more interactive, secure, and community-driven.
-With real-time chat, verified badges, gamified learning, AI assistance, and detailed admin analytics, it delivers a complete experience for both learners and instructors.
+SwapSkill Marketplace represents the next generation of skill-sharing, combining AI, gamification, and real-time collaboration.
+It’s built to make learning and teaching more interactive, secure, and community-driven — delivering a complete experience for both learners and instructors.

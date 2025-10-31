@@ -2,13 +2,23 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 
 export const collectionNamesObj = {
   usersCollection: "users",
+  skillsDirectoryCollection: "skills-directory",
+  newsLatterSubscribersCollection: "subscribers",
+  paymentCollection: "payment",
+  testQNACollection: "test-qna",
+  chatMessagesCollection: "chat-messages",
+  chatSessionsCollection: "chat-sessions",
+  notificationsCollection: "notifications",
+  resourcesCollection: "resources",
+  userEarnCoinCollection: "earn-coin",
+  postsCollection: "posts",
+  savedSkills: "saved",
+  faqsms: "faq-massage",
+  followCollection: "follow",
 };
 
 const uri = process.env.MONGODB_URI;
-
-if (!uri) {
-  throw new Error("Please add MONGODB_URI in .env.local");
-}
+if (!uri) throw new Error("Please add MONGODB_URI in .env.local");
 
 let client;
 let clientPromise;

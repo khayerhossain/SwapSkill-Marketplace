@@ -1,38 +1,81 @@
 "use client";
-import { useSession, signOut } from "next-auth/react";
+import { ThemeContext } from "@/context/ThemeProvider";
+import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation"; 
-import React from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState, use } from "react";
+import logo from "../../assets/logo1.png";
 import Container from "./Container";
 
 export default function NavbarPage() {
   const { data: session } = useSession();
-  const pathname = usePathname(); // get current route
+  const pathname = usePathname();
+  const { theme } = use(ThemeContext);
+  const [scrolled, setScrolled] = useState(false);
 
-  // List of nav links
-  const navLinks = [
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 30);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const baseLinks = [
     { name: "Home", path: "/" },
-    { name: "Find Skills", path: "/find-skills" },
-    { name: "Community", path: "/community" },
-    { name: "Projects", path: "/projects" },
-    { name: "Dashboard", path: "/dashboard" },
+    {
+      name: "About Us",
+      dropdown: true,
+      items: [
+        {
+          name: "About Us",
+          path: "#about",
+          newTab: false,
+        },
+        {
+          name: "More About Us",
+          path: "/moreAboutUs",
+          newTab: true, // opens in new tab
+        },
+      ],
+    },
+    { name: "Current Skills", path: "#current-skills" },
+    { name: "Features", path: "/features" },
+    { name: "Pricing", path: "/pricing" },
   ];
 
+  const roleLinks =
+    session?.user?.role === "admin"
+      ? [{ name: "Dashboard", path: "/dashboard" }]
+      : session?.user?.role === "user"
+      ? [{ name: "AppBar", path: "/appBar" }]
+      : [];
+
+  const navLinks = [...baseLinks, ...roleLinks];
+
   return (
-    <div className="navbar bg-base-100 fixed top-0 left-0 w-full z-50 px-0">
+    <div
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        scrolled ? "bg-black/80 backdrop-blur-lg shadow-lg" : "bg-black/40"
+      }`}
+    >
       <Container>
-        <div className="flex justify-between w-full items-center">
-          {/* Navbar Start: Project Name + Mobile Menu */}
-          <div className="navbar-start flex items-center gap-4 px-0">
-            <div className="dropdown">
+        <div className="flex justify-between items-center w-full py-3 text-white">
+          {/* ===== SMALL DEVICES ===== */}
+          <div className="flex w-full items-center justify-between lg:hidden">
+            <Link href="/" className="flex items-center gap-2">
+              <Image src={logo} alt="logo" className="w-10 h-8" />
+              <h1 className="font-semibold text-lg">SwapSkill</h1>
+            </Link>
+
+            <div className="dropdown dropdown-end">
               <div
                 tabIndex={0}
                 role="button"
-                className="btn btn-ghost lg:hidden"
+                className="btn btn-ghost text-white"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
+                  className="h-6 w-6"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -41,82 +84,188 @@ export default function NavbarPage() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M4 6h16M4 12h8m-8 6h16"
+                    d="M4 6h16M4 12h16M4 18h16"
                   />
                 </svg>
               </div>
-              {/* Mobile Menu */}
+
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+                className="menu menu-sm dropdown-content bg-black/90 rounded-box z-[100] mt-3 w-56 p-2 shadow-lg text-white"
               >
                 {navLinks.map((link) => (
-                  <li key={link.path}>
-                    <Link
-                      href={link.path}
-                      className={`${
-                        pathname === link.path
-                          ? "font-semibold text-black border-2 border-black"
-                          : "font-semibold text-gray-600"
-                      }`}
-                    >
-                      {link.name}
-                    </Link>
+                  <li key={link.name}>
+                    {link.dropdown ? (
+                      <details>
+                        <summary className="cursor-pointer text-gray-300 hover:text-white">
+                          {link.name}
+                        </summary>
+                        <ul className="p-2 bg-black/90 rounded-lg mt-1">
+                          {link.items.map((item) => (
+                            <li key={item.path}>
+                              {item.newTab ? (
+                                <a
+                                  href={item.path}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-gray-300 hover:text-white"
+                                >
+                                  {item.name}
+                                </a>
+                              ) : (
+                                <Link
+                                  href={item.path}
+                                  className={`${
+                                    pathname === item.path
+                                      ? "font-semibold text-white underline underline-offset-4"
+                                      : "text-gray-300 hover:text-white"
+                                  }`}
+                                >
+                                  {item.name}
+                                </Link>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    ) : (
+                      <Link
+                        href={link.path}
+                        scroll={true}
+                        className={`${
+                          pathname === link.path
+                            ? "font-semibold text-white underline underline-offset-4"
+                            : "text-gray-300 hover:text-white"
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+
+                <div className="flex flex-col gap-2 mt-3">
+                  <Link
+                    href="/login"
+                    className="btn bg-gray-900 hover:bg-gray-800 text-white rounded-lg border-none shadow-none"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="btn bg-red-600 hover:bg-red-500 text-white rounded-lg border-none shadow-none"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              </ul>
+            </div>
+          </div>
+
+          {/* ===== LARGE DEVICES ===== */}
+          <div className="hidden lg:flex items-center justify-between w-full">
+            <Link href="/" className="flex items-center gap-2">
+              <Image src={logo} alt="logo" className="w-12 h-9" />
+              <h1 className="font-semibold text-xl">SwapSkill</h1>
+            </Link>
+
+            <div className="flex-1 flex justify-center">
+              <ul className="menu menu-horizontal px-1 gap-6">
+                {navLinks.map((link) => (
+                  <li key={link.name} className="relative group">
+                    {link.dropdown ? (
+                      <>
+                        <button className="transition text-gray-300 hover:text-white flex items-center gap-1">
+                          {link.name}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-4 h-4"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                            />
+                          </svg>
+                        </button>
+
+                        {/* Dropdown menu */}
+                        <ul className="absolute left-0 mt-2 hidden group-hover:block bg-black/90 rounded-lg p-2 shadow-lg min-w-[180px]">
+                          {link.items.map((item) => (
+                            <li key={item.path}>
+                              {item.newTab ? (
+                                <a
+                                  href={item.path}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="block px-3 py-1 text-gray-300 hover:text-white"
+                                >
+                                  {item.name}
+                                </a>
+                              ) : (
+                                <Link
+                                  href={item.path}
+                                  className={`block px-3 py-1 text-gray-300 hover:text-white ${
+                                    pathname === item.path
+                                      ? "font-semibold underline underline-offset-4"
+                                      : ""
+                                  }`}
+                                >
+                                  {item.name}
+                                </Link>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    ) : (
+                      <Link
+                        href={link.path}
+                        scroll={true}
+                        className={`transition ${
+                          pathname === link.path
+                            ? "font-semibold text-white underline underline-offset-4"
+                            : "text-gray-300 hover:text-white"
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
             </div>
-            {/* Project Name */}
-            <Link href="/" className="text-xl font-bold">
-              Swap Skill
-            </Link>
-          </div>
 
-          {/* Navbar Center (Desktop) */}
-          <div className="navbar-center hidden lg:flex px-0">
-            <ul className="menu menu-horizontal px-1 gap-4">
-              {navLinks.map((link) => (
-                <li key={link.path}>
+            <div className="flex items-center gap-4">
+              {session?.user ? (
+                <button
+                  aria-label="Logout"
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                  className="btn bg-red-600 hover:bg-red-500 text-white rounded-lg border-none shadow-none"
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <div>
                   <Link
-                    href={link.path}
-                    className={`transition ${
-                      pathname === link.path
-                        ? "font-semibold text-black underline border-black"
-                        : "font-semibold text-gray-600 hover:text-black"
-                    }`}
+                    href="/login"
+                    className="btn bg-black/60 hover:bg-gray-800 text-white rounded-lg border-none shadow-none mr-3"
                   >
-                    {link.name}
+                    Sign In
                   </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Navbar End: Profile + Buttons */}
-          <div className="navbar-end flex items-center gap-2 px-0">
-            {session?.user?.name && (
-              <div className="px-3 py-3 rounded-full bg-gray-200 text-black font-medium">
-                {session.user.name}
-              </div>
-            )}
-
-            {session ? (
-              <button
-                onClick={() => signOut()}
-                className="btn bg-red-500 text-white rounded-2xl"
-              >
-                Logout
-              </button>
-            ) : (
-              <>
-                <Link href="/login" className="btn">
-                  Login
-                </Link>
-                <Link href="/register" className="btn">
-                  Register
-                </Link>
-              </>
-            )}
+                  <Link
+                    href="/register"
+                    className="btn bg-red-600 hover:bg-red-500 text-white rounded-lg border-none shadow-none"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </Container>

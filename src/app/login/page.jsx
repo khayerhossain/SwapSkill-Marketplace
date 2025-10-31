@@ -22,22 +22,25 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); //start loading
+
     try {
       const result = await signIn("credentials", {
         redirect: false,
         email: form.email,
         password: form.password,
       });
-      if (result?.error) toast.error("Invalid credentials");
-      else {
+
+      if (result?.error) {
+        toast.error("Invalid credentials");
+      } else {
         toast.success("Logged in successfully");
-        router.push("/appBar"); 
+        router.push("/appBar");
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");
-    }
-    finally {
-      setLoading(false);
+    } finally {
+      setLoading(false); // stop loading
     }
   };
 

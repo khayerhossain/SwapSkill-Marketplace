@@ -22,6 +22,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const { data } = await axiosInstance.post("/register", form);
       if (data.success) {

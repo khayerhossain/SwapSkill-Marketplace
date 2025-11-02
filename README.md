@@ -146,7 +146,6 @@ Voice-based AI assistant integration
 
 ⚙️ Installation & Setup
 # Clone the repository
-git clone https://github.com/khayerhossain/swap-skill-marketplace.git
 
 # Navigate to the directory
 cd swap-skill-marketplace

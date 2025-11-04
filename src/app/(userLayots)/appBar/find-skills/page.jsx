@@ -33,6 +33,7 @@ export default function SkillsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { data: session } = useSession();
+  const [savedSkillIds, setSavedSkillIds] = useState([]); // add this state
 
   useEffect(() => {
     const fetchSkills = async () => {
@@ -60,25 +61,42 @@ export default function SkillsPage() {
     fetchSkills();
   }, [searchQuery, page, sort]);
 
+  useEffect(() => {
+    async function fetchSavedSkillIds() {
+      if (!session?.user?.email) return;
+      try {
+        const res = await axiosInstance.get(`/saved-skills`, { params: { email: session.user.email } });
+        setSavedSkillIds(res.data?.skills?.map(s => s.skillData?._id || s.skillData?.id || s._id) || []);
+      } catch {}
+    }
+    fetchSavedSkillIds();
+  }, [session?.user?.email]);
+
   const handleSearch = () => {
     setPage(1);
     setSearchQuery(searchInput.trim());
   };
 
   const handleSaveSkill = async (skill) => {
-    try {
-      const userEmail = session?.user?.email;
-      if (!userEmail) {
-        alert("Please login to save this skill.");
-        return;
-      }
-
-      const { data } = await axiosInstance.post("/saved-skills", {
-        skillData: skill,
-        userEmail,
+    const userEmail = session?.user?.email;
+    if (!userEmail) {
+      alert("Please login to save this skill.");
+      return;
+    }
+    if (savedSkillIds.includes(skill._id)) {
+      Swal.fire({
+        icon: "info",
+        title: "Already Saved",
+        text: "You've already saved this skill.",
+        timer: 2000,
+        showConfirmButton: false,
       });
-
+      return;
+    }
+    try {
+      const { data } = await axiosInstance.post("/saved-skills", { skillData: skill, userEmail });
       if (data.success) {
+        setSavedSkillIds(prev => [...prev, skill._id]);
         Swal.fire({
           icon: "success",
           title: "Saved!",
@@ -94,7 +112,6 @@ export default function SkillsPage() {
         });
       }
     } catch (error) {
-      console.error("Save failed:", error);
       Swal.fire({
         icon: "error",
         title: "Error!",

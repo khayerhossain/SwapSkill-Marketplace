@@ -61,8 +61,8 @@ export default function SubscribersPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#0e0e0e] to-[#151515] p-6 flex flex-col items-center">
-      <div className="w-full rounded-2xl shadow-2xl p-6 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#0e0e0e] to-[#151515] flex flex-col items-center">
+      <div className="w-full rounded-2xl shadow-2xl text-white">
         <h1 className="text-3xl md:text-4xl font-bold mb-8">
           Newsletter{" "}
           <span className="text-red-500 drop-shadow-lg">Subscribers</span>

@@ -6,19 +6,15 @@ export const collectionNamesObj = {
   newsLatterSubscribersCollection: "subscribers",
   paymentCollection: "payment",
   testQNACollection: "test-qna",
-  chatMessagesCollection: "chat-messages", 
-  chatSessionsCollection: "chat-sessions", 
-  notificationsCollection: "notifications", 
+  chatMessagesCollection: "chat-messages",
+  chatSessionsCollection: "chat-sessions",
+  notificationsCollection: "notifications",
   resourcesCollection: "resources",
   userEarnCoinCollection: "earn-coin",
   postsCollection: "posts",
-
   savedSkills: "saved",
-
   faqsms: "faq-massage",
-
   followCollection: "follow",
-
 };
 
 const uri = process.env.MONGODB_URI;

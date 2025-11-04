@@ -47,6 +47,8 @@ export default function Profile() {
     }
   };
   
+    ///////////// tomal-dev ////////////////////  
+
   //post count tomal-dev
 
   const [postCount, setPostCount] = useState(0);  
@@ -69,10 +71,40 @@ export default function Profile() {
     };
 
     fetchPostCount();
+
+      // every 5 second reload
+  const interval = setInterval(fetchPostCount, 5000);
+
+  return () => clearInterval(interval);
+
+  }, [session]);
+
+  // follower count tomal-dev
+
+   const [followerCount, setFollowerCount] = useState(0);
+
+    useEffect(() => {
+    if (!session?.user?.email) return;
+
+    const fetchFollowerCount = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/user-follower-count?email=${session.user.email}`
+        );
+
+        if (data.success) {
+          setFollowerCount(data.totalPosts);
+        }
+      } catch (error) {
+        console.log("Error fetching post count:", error);
+      }
+    };
+
+    fetchFollowerCount();
   }, [session]);
 
 
-  // follow count
+  // following count tomal-dev
 
  const [followCount, setFollowCount] = useState(0);
 
@@ -82,7 +114,7 @@ export default function Profile() {
     const fetchFollowCount = async () => {
       try {
         const { data } = await axiosInstance.get(
-          `/follows?email=${session.user.email}`
+          `/user-following-count?email=${session.user.email}`
         );
 
         if (data.success) {
@@ -99,6 +131,7 @@ export default function Profile() {
 
   ///////////// tomal-dev ////////////////////
 
+
   // Image Upload
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -110,7 +143,7 @@ export default function Profile() {
 
     try {
       const response = await axiosInstance.post("/profile/update", formData, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       const result = response.data;
@@ -307,24 +340,22 @@ export default function Profile() {
                   {profile?.role || session?.user?.role || "User"}
                 </div>
 
-
-        <div className="flex justify-around mt-6 text-sm text-gray-300 gap-6">
-          <div className="text-center">
-            <p className="font-bold text-lg text-white">{postCount}</p>
-            <span className="text-gray-400">Posts</span>
-          </div>
-          <div className="text-center">
-            <p className="font-bold text-lg text-white">0</p>
-            <span className="text-gray-400">Followers</span>
-          </div>
-          <div className="text-center">
-            <p className="font-bold text-lg text-white">{followCount}</p>
-            <span className="text-gray-400">Following</span>
-          </div>
-        </div>                
-
-
-
+                <div className="flex justify-around mt-6 text-sm text-gray-300 gap-6">
+                  <div className="text-center">
+                    <p className="font-bold text-lg text-white">{postCount}</p>
+                    <span className="text-gray-400">Posts</span>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-bold text-lg text-white">{followerCount}</p>
+                    <span className="text-gray-400">Followers</span>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-bold text-lg text-white">
+                      {followCount}
+                    </p>
+                    <span className="text-gray-400">Following</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -530,5 +561,3 @@ export default function Profile() {
     </div>
   );
 }
-
-

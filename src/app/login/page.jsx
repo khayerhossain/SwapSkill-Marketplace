@@ -14,6 +14,7 @@ import Link from "next/link";
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleChange = (e) =>
@@ -21,19 +22,25 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); //start loading
+
     try {
       const result = await signIn("credentials", {
         redirect: false,
         email: form.email,
         password: form.password,
       });
-      if (result?.error) toast.error("Invalid credentials");
-      else {
+
+      if (result?.error) {
+        toast.error("Invalid credentials");
+      } else {
         toast.success("Logged in successfully");
-        router.push("/appBar"); // login successful হলে redirect
+        router.push("/appBar");
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false); // stop loading
     }
   };
 
@@ -144,9 +151,32 @@ export default function LoginPage() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   type="submit"
-                  className="w-full py-2.5 rounded-lg bg-red-500 font-semibold hover:opacity-90 transition-all shadow-lg cursor-pointer"
+                  className={`w-full py-2.5 rounded-lg bg-red-500 font-semibold hover:opacity-90 transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2`}
+                  disabled={loading} // disable while loading
                 >
-                  Sign In
+                  {loading && (
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                      />
+                    </svg>
+                  )}
+                  {loading ? "Signing In..." : "Sign In"}
                 </motion.button>
               </form>
 

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -20,6 +19,7 @@ import {
   Meh,
   Zap,
 } from "lucide-react";
+import Loading from "@/app/loading";
 
 const FEELINGS = [
   { icon: Smile, label: "Happy", color: "text-yellow-400" },
@@ -47,19 +47,21 @@ export default function CommunityFeed() {
   const [showAllComments, setShowAllComments] = useState({});
   const [menuOpen, setMenuOpen] = useState(null);
   const fileRef = useRef(null);
+  const [loading, setLoading] = useState(true);
 
   //  Fetch posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await axiosInstance.get("/posts");
-        // Sort newest posts first (Just now → Older)
         const sortedPosts = res.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
         setPosts(sortedPosts);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchPosts();
@@ -211,7 +213,9 @@ export default function CommunityFeed() {
           />
           <div>
             <p className="text-sm font-semibold">{currentUser.name}</p>
-            <p className="text-xs text-gray-400">Share something with the community</p>
+            <p className="text-xs text-gray-400">
+              Share something with the community
+            </p>
           </div>
         </div>
 
@@ -224,7 +228,8 @@ export default function CommunityFeed() {
 
         {feeling && (
           <div className="flex items-center gap-2 bg-[#2b2b2b] p-2 rounded">
-            <feeling.icon className={`w-5 h-5 ${feeling.color}`} /> Feeling {feeling.label}
+            <feeling.icon className={`w-5 h-5 ${feeling.color}`} /> Feeling{" "}
+            {feeling.label}
             <button onClick={() => setFeeling(null)} className="ml-auto">
               <Trash2 className="w-4 h-4 text-red-500" />
             </button>
@@ -301,106 +306,148 @@ export default function CommunityFeed() {
       </div>
 
       {/* Posts Feed */}
-      {posts.map((p) => {
-        const liked = p.likes.includes(currentUser.id);
-        const visibleComments = showAllComments[p._id]
-          ? p.comments
-          : p.comments.slice(0, 2);
+      {loading ? (
+        <div className="min-h-screen">
+          <Loading /> 
+        </div>
+      ) : posts.length === 0 ? (
+        <p className="text-center text-gray-400">
+          No posts yet. Be the first to share something!
+        </p>
+      ) : (
+        posts.map((p) => {
+          const liked = p.likes.includes(currentUser.id);
+          const visibleComments = showAllComments[p._id]
+            ? p.comments
+            : p.comments.slice(0, 2);
 
-        return (
-          <div
-            key={p._id}
-            className="bg-black/60 border border-gray-800 rounded-2xl p-4 space-y-3 shadow-md"
-          >
-            <div className="flex gap-3 items-center">
-              <img
-                src={p.user?.avatar || "https://i.pravatar.cc/40"}
-                className="w-10 h-10 rounded-full"
-              />
-              <div>
-                <p className="text-sm font-semibold text-gray-100">{p.user?.name}</p>
-                <p className="text-xs text-gray-500">{timeAgo(p.createdAt)}</p>
-              </div>
-              <div className="ml-auto relative">
-                <button onClick={() => setMenuOpen(menuOpen === p._id ? null : p._id)}>
-                  <MoreHorizontal className="text-gray-400 cursor-pointer" />
-                </button>
-                {menuOpen === p._id && p.user?.id === currentUser.id && (
-                  <div className="absolute right-0 top-5 bg-[#1f1f1f] border border-gray-700 shadow rounded p-2 z-10 text-sm">
-                    <button
-                      onClick={() => deletePost(p._id, p.user.id)}
-                      className="hover:bg-[#2a2a2a] px-2 py-1 text-red-500"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {p.text && <p className="text-sm text-gray-200">{p.text}</p>}
-            {p.media &&
-              (p.media.type === "video" ? (
-                <video src={p.media.url} controls className="w-full rounded-lg" />
-              ) : (
-                <img src={p.media.url} className="w-full rounded-lg" />
-              ))}
-
-            <div className="text-sm text-gray-400 border-b border-gray-700 pb-2 flex gap-4">
-              <span>{p.likes.length} Likes</span>
-              <span>{p.comments.length} Comments</span>
-            </div>
-
-            <div className="flex gap-6 pt-2 text-gray-400">
-              <button
-                onClick={() => toggleLike(p._id)}
-                className={`flex items-center gap-1 ${liked ? "text-blue-500" : "hover:text-blue-400"}`}
-              >
-                <ThumbsUp className="w-4 h-4" /> Like
-              </button>
-              <div className="flex items-center gap-1 hover:text-gray-200 cursor-pointer">
-                <MessageCircle className="w-4 h-4" /> Comment
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              {visibleComments.map((c, index) => (
-                <div key={c._id || c.id || index} className="flex gap-2 items-start">
-                  <img src={c.user?.avatar || "https://i.pravatar.cc/40"} className="w-8 h-8 rounded-full" />
-                  <div className="bg-[#2a2a2a] rounded-2xl px-3 py-1 flex-1">
-                    <p className="text-sm font-semibold text-gray-100">{c.user?.name}</p>
-                    <p className="text-sm text-gray-300">{c.text}</p>
-                    <p className="text-xs text-gray-500">{timeAgo(c.time)}</p>
-                  </div>
-                </div>
-              ))}
-
-              {p.comments.length > 2 && !showAllComments[p._id] && (
-                <button
-                  onClick={() => setShowAllComments({ ...showAllComments, [p._id]: true })}
-                  className="text-blue-500 text-sm"
-                >
-                  See more comments
-                </button>
-              )}
-
-              <div className="flex gap-2 items-center">
-                <img src={currentUser.avatar} className="w-8 h-8 rounded-full" />
-                <input
-                  value={comments[p._id] || ""}
-                  onChange={(e) => setComments({ ...comments, [p._id]: e.target.value })}
-                  onKeyDown={(e) => e.key === "Enter" && addComment(p._id)}
-                  placeholder="Write a comment..."
-                  className="flex-1 px-3 py-1 bg-[#2a2a2a] rounded-full text-sm text-gray-200"
+          return (
+            <div
+              key={p._id}
+              className="bg-black/60 border border-gray-800 rounded-2xl p-4 space-y-3 shadow-md"
+            >
+              <div className="flex gap-3 items-center">
+                <img
+                  src={p.user?.avatar || "https://i.pravatar.cc/40"}
+                  className="w-10 h-10 rounded-full"
                 />
-                <button onClick={() => addComment(p._id)} disabled={!comments[p._id]?.trim()}>
-                  <Send className="w-4 h-4 text-blue-500" />
+                <div>
+                  <p className="text-sm font-semibold text-gray-100">
+                    {p.user?.name}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {timeAgo(p.createdAt)}
+                  </p>
+                </div>
+                <div className="ml-auto relative">
+                  <button
+                    onClick={() =>
+                      setMenuOpen(menuOpen === p._id ? null : p._id)
+                    }
+                  >
+                    <MoreHorizontal className="text-gray-400 cursor-pointer" />
+                  </button>
+                  {menuOpen === p._id && p.user?.id === currentUser.id && (
+                    <div className="absolute right-0 top-5 bg-[#1f1f1f] border border-gray-700 shadow rounded p-2 z-10 text-sm">
+                      <button
+                        onClick={() => deletePost(p._id, p.user.id)}
+                        className="hover:bg-[#2a2a2a] px-2 py-1 text-red-500"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {p.text && <p className="text-sm text-gray-200">{p.text}</p>}
+              {p.media &&
+                (p.media.type === "video" ? (
+                  <video
+                    src={p.media.url}
+                    controls
+                    className="w-full rounded-lg"
+                  />
+                ) : (
+                  <img src={p.media.url} className="w-full rounded-lg" />
+                ))}
+
+              <div className="text-sm text-gray-400 border-b border-gray-700 pb-2 flex gap-4">
+                <span>{p.likes.length} Likes</span>
+                <span>{p.comments.length} Comments</span>
+              </div>
+
+              <div className="flex gap-6 pt-2 text-gray-400">
+                <button
+                  onClick={() => toggleLike(p._id)}
+                  className={`flex items-center gap-1 ${
+                    liked ? "text-blue-500" : "hover:text-blue-400"
+                  }`}
+                >
+                  <ThumbsUp className="w-4 h-4" /> Like
                 </button>
+                <div className="flex items-center gap-1 hover:text-gray-200 cursor-pointer">
+                  <MessageCircle className="w-4 h-4" /> Comment
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                {visibleComments.map((c, index) => (
+                  <div
+                    key={c._id || c.id || index}
+                    className="flex gap-2 items-start"
+                  >
+                    <img
+                      src={c.user?.avatar || "https://i.pravatar.cc/40"}
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <div className="bg-[#2a2a2a] rounded-2xl px-3 py-1 flex-1">
+                      <p className="text-sm font-semibold text-gray-100">
+                        {c.user?.name}
+                      </p>
+                      <p className="text-sm text-gray-300">{c.text}</p>
+                      <p className="text-xs text-gray-500">{timeAgo(c.time)}</p>
+                    </div>
+                  </div>
+                ))}
+
+                {p.comments.length > 2 && !showAllComments[p._id] && (
+                  <button
+                    onClick={() =>
+                      setShowAllComments({ ...showAllComments, [p._id]: true })
+                    }
+                    className="text-blue-500 text-sm"
+                  >
+                    See more comments
+                  </button>
+                )}
+
+                <div className="flex gap-2 items-center">
+                  <img
+                    src={currentUser.avatar}
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <input
+                    value={comments[p._id] || ""}
+                    onChange={(e) =>
+                      setComments({ ...comments, [p._id]: e.target.value })
+                    }
+                    onKeyDown={(e) => e.key === "Enter" && addComment(p._id)}
+                    placeholder="Write a comment..."
+                    className="flex-1 px-3 py-1 bg-[#2a2a2a] rounded-full text-sm text-gray-200"
+                  />
+                  <button
+                    onClick={() => addComment(p._id)}
+                    disabled={!comments[p._id]?.trim()}
+                  >
+                    <Send className="w-4 h-4 text-blue-500" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })
+      )}
     </div>
   );
 }

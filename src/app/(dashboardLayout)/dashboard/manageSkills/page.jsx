@@ -111,12 +111,12 @@ export default function ManageSkills() {
     );
 
   return (
-    <div className="min-h-screen text-white p-4 sm:p-6">
+    <div className="min-h-screen text-white">
       <div className=" mx-auto">
         {/* Header */}
         <div className="mb-8 text-center sm:text-left">
-          <h1 className="text-3xl font-bold mb-1 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            Manage Quiz Skills
+          <h1 className="text-3xl font-bold mb-1 text-white">
+           <span className="text-red-500">Review</span> and Manage Users Skills
           </h1>
           <p className="text-gray-400 text-sm sm:text-base">
             Review and manage user quiz results with ease.

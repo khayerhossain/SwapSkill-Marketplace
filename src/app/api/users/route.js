@@ -2,22 +2,57 @@ import dbConnect, { collectionNamesObj } from "@/lib/db.connect";
 import { ObjectId } from "mongodb";
 
 // GET all users
-export async function GET() {
+
+export async function GET(request) {
   try {
     const usersCollection = await dbConnect(collectionNamesObj.usersCollection);
-    const users = await usersCollection.find().toArray();
 
-    // ObjectId
+    //  Get query parameters for pagination
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get("page")) || 1; 
+    const limit = parseInt(searchParams.get("limit")) || 10; 
+
+    const skip = (page - 1) * limit;
+
+    //  Count total users for pagination info
+    const totalUsers = await usersCollection.countDocuments();
+
+    //  Fetch paginated users
+    const users = await usersCollection
+      .find()
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+
     const formatted = users.map((u) => ({
       ...u,
       _id: u._id.toString(),
     }));
 
-    return Response.json(formatted, { status: 200 });
+    //  Return paginated data with meta info
+    return Response.json(
+      {
+        success: true,
+        users: formatted,
+        pagination: {
+          totalUsers,
+          totalPages: Math.ceil(totalUsers / limit),
+          currentPage: page,
+          limit,
+        },
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json(
+      { success: false, message: error.message },
+      { status: 500 }
+    );
   }
 }
+
+
+
 
 // PATCH (update user status)
 export async function PATCH(req) {

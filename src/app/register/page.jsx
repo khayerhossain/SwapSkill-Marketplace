@@ -9,10 +9,12 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import logo from "../../assets/logo1.png";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleChange = (e) =>
@@ -20,6 +22,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const { data } = await axiosInstance.post("/register", form);
       if (data.success) {
@@ -35,6 +38,8 @@ export default function RegisterPage() {
       } else toast.error(data.error || "Something went wrong!");
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,13 +70,25 @@ export default function RegisterPage() {
             transition={{ delay: 0.3, duration: 0.7 }}
             className="hidden md:flex flex-col justify-center flex-1 p-8 md:p-14"
           >
-            <Image src={logo} alt="Logo" width={70} height={70} className="mb-8 opacity-90 hover:opacity-100 transition" />
+            <Image
+              src={logo}
+              alt="Logo"
+              width={70}
+              height={70}
+              className="mb-8 opacity-90 hover:opacity-100 transition"
+            />
             <h1 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
               Join Us
             </h1>
             <p className="text-gray-400 mb-8 leading-relaxed max-w-md">
-              Create your account to start sharing, learning, and connecting with amazing people!
+              Create your account to start sharing, learning, and connecting
+              with amazing people!
             </p>
+            <Link href="/">
+              <button className="px-6 py-2 rounded-lg bg-red-500 hover:opacity-90 transition-all font-semibold text-white shadow-lg shadow-red-700/40 w-fit cursor-pointer">
+                Visit Home
+              </button>
+            </Link>
           </motion.div>
 
           {/* RIGHT SIDE */}
@@ -87,11 +104,15 @@ export default function RegisterPage() {
               transition={{ repeat: Infinity, duration: 10, ease: "easeInOut" }}
               className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl p-6 sm:p-10 w-full sm:max-w-sm shadow-[0_0_25px_rgba(0,0,0,0.6)]"
             >
-              <h2 className="text-2xl font-semibold text-center mb-6">Create Account</h2>
+              <h2 className="text-2xl font-semibold text-center mb-6">
+                Create Account
+              </h2>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block mb-1 text-sm text-gray-300">Name</label>
+                  <label className="block mb-1 text-sm text-gray-300">
+                    Name
+                  </label>
                   <input
                     type="text"
                     name="name"
@@ -103,7 +124,9 @@ export default function RegisterPage() {
                 </div>
 
                 <div>
-                  <label className="block mb-1 text-sm text-gray-300">Email</label>
+                  <label className="block mb-1 text-sm text-gray-300">
+                    Email
+                  </label>
                   <input
                     type="email"
                     name="email"
@@ -115,7 +138,9 @@ export default function RegisterPage() {
                 </div>
 
                 <div>
-                  <label className="block mb-1 text-sm text-gray-300">Password</label>
+                  <label className="block mb-1 text-sm text-gray-300">
+                    Password
+                  </label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
@@ -139,14 +164,37 @@ export default function RegisterPage() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   type="submit"
-                  className="w-full py-2.5 rounded-lg bg-red-500 font-semibold hover:opacity-90 transition-all shadow-lg"
+                  className={`w-full py-2.5 rounded-lg bg-red-500 font-semibold hover:opacity-90 transition-all shadow-lg flex items-center justify-center gap-2`}
+                  disabled={loading} // disable while loading
                 >
-                  Register
+                  {loading && (
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                      />
+                    </svg>
+                  )}
+                  {loading ? "Registering..." : "Register"}
                 </motion.button>
               </form>
 
               <div className="mt-6 text-center">
-                     <motion.button
+                <motion.button
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={handleGoogleLogin}
@@ -180,17 +228,16 @@ export default function RegisterPage() {
                   </span>
                 </motion.button>
 
-              <p className="mt-4 text-sm text-center text-gray-400">
-                Already have an account?{" "}
-                <button
-                  onClick={() => router.push("/login")}
-                  className="text-red-400 hover:text-red-300 underline ml-1"
-                >
-                  Login
-                </button>
-              </p>
+                <p className="mt-4 text-sm text-center text-gray-400">
+                  Already have an account?{" "}
+                  <button
+                    onClick={() => router.push("/login")}
+                    className="text-red-400 hover:text-red-300 underline ml-1 cursor-pointer"
+                  >
+                    Login
+                  </button>
+                </p>
               </div>
-              
             </motion.div>
           </motion.div>
         </motion.div>

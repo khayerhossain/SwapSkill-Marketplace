@@ -5,8 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, use } from "react";
-import logo from "../../assets/logo1.png";
-import Container from "./Container";
+import logo from "../../assets/logo1.png";import Container from "./Container";
 
 export default function NavbarPage() {
   const { data: session } = useSession();
@@ -55,7 +54,7 @@ export default function NavbarPage() {
   return (
     <div
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        scrolled ? "bg-black/80 backdrop-blur-lg shadow-lg" : "bg-black/40"
+        scrolled ? "bg-black/80 backdrop-blur-lg shadow-lg" : ""
       }`}
     >
       <Container>
@@ -64,7 +63,7 @@ export default function NavbarPage() {
           <div className="flex w-full items-center justify-between lg:hidden">
             <Link href="/" className="flex items-center gap-2">
               <Image src={logo} alt="logo" className="w-10 h-8" />
-              <h1 className="font-semibold text-lg">SwapSkill</h1>
+              <h1 className="font-signature-custom text-3xl text-white">SwapSkill</h1>
             </Link>
 
             <div className="dropdown dropdown-end">
@@ -136,7 +135,7 @@ export default function NavbarPage() {
                           pathname === link.path
                             ? "font-semibold text-white underline underline-offset-4"
                             : "text-gray-300 hover:text-white"
-                        }`}
+                        } hover:bg-transparent focus:bg-transparent active:bg-transparent`}
                       >
                         {link.name}
                       </Link>
@@ -166,7 +165,7 @@ export default function NavbarPage() {
           <div className="hidden lg:flex items-center justify-between w-full">
             <Link href="/" className="flex items-center gap-2">
               <Image src={logo} alt="logo" className="w-12 h-9" />
-              <h1 className="font-semibold text-xl">SwapSkill</h1>
+              <h1 className="font-signature-custom text-4xl text-white">SwapSkill</h1>
             </Link>
 
             <div className="flex-1 flex justify-center">
@@ -175,7 +174,7 @@ export default function NavbarPage() {
                   <li key={link.name} className="relative group">
                     {link.dropdown ? (
                       <>
-                        <button className="transition text-gray-300 hover:text-white flex items-center gap-1">
+                        <button className="transition text-gray-300 hover:text-white flex items-center gap-1 hover:bg-transparent focus:bg-transparent active:bg-transparent">
                           {link.name}
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -194,39 +193,41 @@ export default function NavbarPage() {
                         </button>
 
                         {/* Dropdown menu */}
-                        <ul className="absolute left-0 mt-2 hidden group-hover:block bg-black/90 rounded-lg p-2 shadow-lg min-w-[180px]">
-                          {link.items.map((item) => (
-                            <li key={item.path}>
-                              {item.newTab ? (
-                                <a
-                                  href={item.path}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="block px-3 py-1 text-gray-300 hover:text-white"
-                                >
-                                  {item.name}
-                                </a>
-                              ) : (
-                                <Link
-                                  href={item.path}
-                                  className={`block px-3 py-1 text-gray-300 hover:text-white ${
-                                    pathname === item.path
-                                      ? "font-semibold underline underline-offset-4"
-                                      : ""
-                                  }`}
-                                >
-                                  {item.name}
-                                </Link>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
+                        <div className="absolute left-0 top-full pt-2 hidden group-hover:block z-50">
+                          <ul className="bg-black/95 backdrop-blur-md rounded-lg p-2 shadow-2xl min-w-[200px] border border-white/10">
+                            {link.items.map((item) => (
+                              <li key={item.path}>
+                                {item.newTab ? (
+                                  <a
+                                    href={item.path}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block px-4 py-2 text-sm text-gray-300 hover:text-white transition-all"
+                                  >
+                                    {item.name}
+                                  </a>
+                                ) : (
+                                  <Link
+                                    href={item.path}
+                                    className={`block px-4 py-2 text-sm transition-all hover:bg-transparent focus:bg-transparent active:bg-transparent ${
+                                      pathname === item.path
+                                        ? "text-white font-semibold"
+                                        : "text-gray-300 hover:text-white"
+                                    }`}
+                                  >
+                                    {item.name}
+                                  </Link>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </>
                     ) : (
                       <Link
                         href={link.path}
                         scroll={true}
-                        className={`transition ${
+                        className={`transition hover:bg-transparent focus:bg-transparent active:bg-transparent ${
                           pathname === link.path
                             ? "font-semibold text-white underline underline-offset-4"
                             : "text-gray-300 hover:text-white"

@@ -68,12 +68,12 @@ export default function HeroSection() {
               className="object-cover"
               priority
             />
-            <div className="absolute inset-0 bg-black/70 transition-colors duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent transition-colors duration-500" />
           </motion.div>
         </AnimatePresence>
 
         {/* Text Content */}
-        <div className="relative z-10 flex flex-col justify-center h-full mt-40 text-center md:text-left">
+        <div className="relative z-10 flex flex-col justify-center h-full mt-48 text-center md:text-left">
           <motion.div
             key={slide.id + "-text"}
             initial={{ y: 40, opacity: 0 }}
@@ -82,18 +82,24 @@ export default function HeroSection() {
             transition={{ duration: 0.8 }}
             className="max-w-2xl mx-auto md:mx-0"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 text-white transition-colors duration-500">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 drop-shadow-sm transition-colors duration-500">
               {slide.title}
             </h1>
-            <p className="text-lg sm:text-xl md:text-2xl mb-2 text-red-600 dark:text-red-500 font-semibold tracking-wide">
+            <p className="font-signature-custom text-4xl sm:text-5xl md:text-6xl mb-6 text-red-500 font-normal tracking-wide drop-shadow-md">
               {slide.subtitle}
             </p>
-            <p className="text-base sm:text-lg md:text-xl mb-6 text-gray-700 dark:text-gray-300 leading-relaxed transition-colors duration-500">
+            <p className="text-base sm:text-lg md:text-xl mb-8 text-gray-200 max-w-lg leading-relaxed transition-colors duration-500">
               {slide.description}
             </p>
-            <button className="bg-red-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-red-700 transition">
-              {slide.button}
-            </button>
+            
+            <div className="flex flex-wrap gap-5 justify-center md:justify-start">
+              <button className="bg-red-600 hover:bg-red-700 text-white font-bold px-10 py-4 rounded-lg text-lg shadow-xl shadow-red-600/20 hover:shadow-red-600/40 transition-all duration-300">
+                {slide.button}
+              </button>
+              <button className="bg-transparent border-2 border-white/30 text-white font-bold px-10 py-4 rounded-lg text-lg hover:bg-white/10 hover:border-white transition-all duration-300 backdrop-blur-sm">
+                Learn More
+              </button>
+            </div>
           </motion.div>
         </div>
 

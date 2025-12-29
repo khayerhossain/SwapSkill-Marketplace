@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, X, MessageCircle, Loader2 } from "lucide-react";
+import { Send, X, MessageCircle, Loader2, Bot, User, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import axiosInstance from "@/lib/axiosInstance";
 
 export default function Chatbot() {
@@ -9,8 +10,7 @@ export default function Chatbot() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content:
-        "Hey there 👋 Welcome to SwapSkill! I’m your AI assistant — need help finding a skill, booking a class, or learning how things work?",
+      content: "Hey there 👋 Welcome to SwapSkill! I’m your AI assistant — need help finding a skill, booking a class, or learning how things work?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -50,8 +50,7 @@ export default function Chatbot() {
           ...prev,
           {
             role: "assistant",
-            content:
-              "Hmm 😅 something went wrong. Try again after a moment, chief.",
+            content: "Hmm 😅 something went wrong. Try again after a moment, chief.",
           },
         ]);
       }
@@ -78,91 +77,165 @@ export default function Chatbot() {
   return (
     <>
       {/* Floating Chat Icon */}
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-5 right-5 h-14 w-14 rounded-full shadow-xl bg-red-600 hover:bg-red-700 flex items-center justify-center text-white z-50 transition-all duration-300"
-        >
-          <MessageCircle className="h-6 w-6" />
-        </button>
-      )}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.button
+            initial={{ scale: 0, opacity: 0, rotate: -45 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            exit={{ scale: 0, opacity: 0, rotate: 45 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setIsOpen(true)}
+            className="fixed bottom-6 right-6 h-16 w-16 rounded-full bg-gradient-to-tr from-red-600 to-rose-400 flex items-center justify-center text-white z-50 group border border-white/20"
+          >
+            <div className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-20 group-hover:hidden"></div>
+            <img 
+              src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" 
+              alt="Bot" 
+              className="h-10 w-10 relative z-10 brightness-0 invert"
+            />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Chat Window */}
-      {isOpen && (
-        <div className="fixed bottom-5 right-5 w-[90%] sm:w-80 md:w-96 h-[80vh] sm:h-[480px] flex flex-col backdrop-blur-2xl bg-gradient-to-br from-[#111]/95 via-[#181818]/90 to-[#222]/80 border border-white/10 shadow-2xl rounded-2xl z-50 overflow-hidden transition-all duration-300">
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 bg-gradient-to-r from-red-600 to-red-500 text-white shadow-md">
-            <div className="flex items-center gap-2">
-              <MessageCircle className="h-5 w-5" />
-              <h3 className="font-semibold text-sm sm:text-base">
-                SwapSkill Assistant
-              </h3>
-            </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="hover:bg-red-700/80 p-1 rounded-full transition-all"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 text-gray-100 scrollbar-thin scrollbar-thumb-red-700/30">
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex ${
-                  msg.role === "user" ? "justify-end" : "justify-start"
-                }`}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 100, scale: 0.8, transformOrigin: "bottom right" }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 100, scale: 0.8 }}
+            className="fixed bottom-6 right-6 w-[95%] sm:w-[400px] h-[600px] max-h-[85vh] flex flex-col backdrop-blur-3xl bg-[#111]/85 border border-white/10 rounded-3xl z-50 overflow-hidden"
+          >
+            {/* Header */}
+            <div className="p-5 bg-gradient-to-r from-red-600/90 to-[#991b1b]/90 backdrop-blur-md flex items-center justify-between border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center border border-white/30 backdrop-blur-lg">
+                    <img 
+                      src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" 
+                      alt="Bot" 
+                      className="h-7 w-7 brightness-0 invert"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-bold text-white tracking-tight flex items-center gap-1.5">
+                    SwapSkill Assistant <Sparkles className="h-3 w-3 text-yellow-300" />
+                  </h3>
+                  <p className="text-[10px] text-red-100 font-medium uppercase tracking-[0.1em]">AI Powered Assistant</p>
+                </div>
+              </div>
+              <motion.button
+                whileHover={{ rotate: 90, scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setIsOpen(false)}
+                className="bg-black/20 hover:bg-black/40 p-2 rounded-xl transition-colors border border-white/10"
               >
-                <div
-                  className={`max-w-[85%] sm:max-w-[80%] rounded-2xl p-2.5 sm:p-3 text-sm transition-all duration-300 ${
-                    msg.role === "user"
-                      ? "bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-500/30"
-                      : "bg-white/10 text-gray-200 border border-white/10 backdrop-blur-sm"
+                <X className="h-4 w-4 text-white" />
+              </motion.button>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-6 scrollbar-none scroll-smooth">
+              {messages.map((msg, index) => (
+                <motion.div
+                  initial={{ opacity: 0, x: msg.role === "user" ? 20 : -20, y: 10 }}
+                  animate={{ opacity: 1, x: 0, y: 0 }}
+                  key={index}
+                  className={`flex items-end gap-2.5 ${
+                    msg.role === "user" ? "flex-row-reverse" : "flex-row"
                   }`}
                 >
-                  {msg.content}
-                </div>
-              </div>
-            ))}
+                  {/* Avatar */}
+                  <div className={`flex-shrink-0 h-8 w-8 rounded-xl flex items-center justify-center border backdrop-blur-md ${
+                    msg.role === "user" 
+                    ? "bg-red-500/20 border-red-500/30" 
+                    : "bg-white/10 border-white/20"
+                  }`}>
+                    {msg.role === "user" ? (
+                      <User className="h-4 w-4 text-red-400" />
+                    ) : (
+                      <img 
+                        src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" 
+                        alt="Bot" 
+                        className="h-5 w-5 brightness-0 invert opacity-70"
+                      />
+                    )}
+                  </div>
 
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-white/10 border border-white/20 rounded-lg p-3">
-                  <Loader2 className="h-4 w-4 animate-spin text-red-400" />
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
+                  {/* Bubble */}
+                  <div
+                    className={`relative max-w-[75%] px-4 py-3 text-sm ${
+                      msg.role === "user"
+                        ? "bg-gradient-to-br from-red-600 to-red-800 text-white rounded-2xl rounded-br-none"
+                        : "bg-white/5 border border-white/10 text-gray-200 backdrop-blur-md rounded-2xl rounded-bl-none"
+                    }`}
+                  >
+                    {msg.content}
+                    {/* Tiny triangle for speech effect */}
+                    <div className={`absolute bottom-0 w-2 h-2 ${
+                      msg.role === "user" 
+                      ? "-right-1 bg-red-800" 
+                      : "-left-1 bg-white/5 border-l border-b border-white/10"
+                    } transform rotate-45`}></div>
+                  </div>
+                </motion.div>
+              ))}
 
-          {/* Input */}
-          <div className="p-3 sm:p-4 border-t border-white/10 bg-black/40 backdrop-blur-lg">
-            <div className="flex gap-2 items-center">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Type your message..."
-                disabled={isLoading}
-                className="flex-1 px-3 py-2 sm:px-4 sm:py-2.5 text-sm text-white placeholder-gray-400 bg-white/5 border border-red-500/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/70 focus:border-red-500/60 hover:border-red-400 transition-all duration-300"
-              />
-              <button
-                onClick={handleSend}
-                disabled={isLoading || !input.trim()}
-                className={`p-3 rounded-xl text-white transition-all duration-300 ${
-                  isLoading || !input.trim()
-                    ? "bg-red-400/50 cursor-not-allowed"
-                    : "bg-gradient-to-r from-red-600 to-red-500 hover:scale-105 hover:shadow-lg hover:shadow-red-500/30"
-                }`}
-              >
-                <Send className="h-4 w-4" />
-              </button>
+              {isLoading && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex items-center gap-3"
+                >
+                  <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
+                    <img 
+                      src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" 
+                      alt="Bot" 
+                      className="h-5 w-5 brightness-0 invert opacity-40 animate-pulse"
+                    />
+                  </div>
+                  <div className="bg-white/5 border border-white/10 rounded-2xl rounded-bl-none px-4 py-3 backdrop-blur-md">
+                    <Loader2 className="h-4 w-4 animate-spin text-red-400" />
+                  </div>
+                </motion.div>
+              )}
+              <div ref={messagesEndRef} />
             </div>
-          </div>
-        </div>
-      )}
+
+            {/* Input Area */}
+            <div className="p-5 bg-black/40 border-t border-white/10 backdrop-blur-2xl">
+              <div className="relative group">
+                <div className="relative flex gap-2 items-center">
+                  <input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Type a message..."
+                    disabled={isLoading}
+                    className="flex-1 px-5 py-3.5 text-sm text-white placeholder-gray-500 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:ring-1 focus:ring-red-500/50 focus:border-red-500/40 hover:bg-white/10 transition-all duration-300"
+                  />
+                  <motion.button
+                    whileHover={!input.trim() || isLoading ? {} : { scale: 1.05, x: 2 }}
+                    whileTap={!input.trim() || isLoading ? {} : { scale: 0.95 }}
+                    onClick={handleSend}
+                    disabled={isLoading || !input.trim()}
+                    className={`p-3.5 rounded-2xl text-white transition-all duration-300 ${
+                      isLoading || !input.trim()
+                        ? "bg-gray-800/50 text-gray-500 cursor-not-allowed border border-white/5"
+                        : "bg-gradient-to-r from-red-600 to-rose-500 active:shadow-inner"
+                    }`}
+                  >
+                    <Send className="h-5 w-5" />
+                  </motion.button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
+

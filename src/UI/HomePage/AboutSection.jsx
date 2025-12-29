@@ -17,7 +17,7 @@ const textVariants = {
 
 export default function AboutSection() {
   return (
-    <section className="relative w-full py-24 flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#0a0a0a] via-[#111111] to-[#1a1a1a] text-gray-200">
+    <section className="relative w-full py-24 flex items-center justify-center overflow-hidden bg-[#0a0a0a] text-gray-200">
       {/*  Subtle glow overlay for extra depth */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-indigo-500/5 pointer-events-none" />
       <Container>

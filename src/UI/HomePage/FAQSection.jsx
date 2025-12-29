@@ -64,7 +64,7 @@ export default function FAQSection() {
 
 
   return (
-    <section className="relative py-24 bg-gradient-to-b from-[#0a0a0a] via-[#111111] to-[#1a1a1a] text-gray-200 overflow-hidden">
+    <section className="relative py-24 bg-[#0a0a0a] text-gray-200 overflow-hidden">
       <Container>
         <div className=" mx-auto">
           <div className="flex flex-col lg:flex-row gap-12">

@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono, Pinyon_Script } from "next/font/google";
+import { Geist, Geist_Mono, Pinyon_Script, Mr_De_Haviland, Anton, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 import NextAuthSessionProvider from "@/Providers/NextAuthSessionProvider";
 import { Toaster } from "react-hot-toast";
@@ -21,6 +21,24 @@ const pinyonScript = Pinyon_Script({
   weight: "400",
 });
 
+const mrDeHaviland = Mr_De_Haviland({
+  variable: "--font-mr-de-haviland",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const anton = Anton({
+  variable: "--font-anton",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas-neue",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 export const metadata = {
   title: "Swap Skill",
   description: "Learn new skills, share your expertise, and earn while teaching others.",
@@ -39,7 +57,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/logo1.png" sizes="any" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${pinyonScript.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${pinyonScript.variable} ${mrDeHaviland.variable} ${anton.variable} ${bebasNeue.variable} antialiased`}
       >
         <NextAuthSessionProvider>
           <ThemeProvider>

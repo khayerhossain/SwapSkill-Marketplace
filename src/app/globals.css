@@ -96,6 +96,15 @@ body {
 
 /* Force true white background in light mode across the app */
 .font-signature-custom {
-  font-family: var(--font-pinyon-script), cursive !important;
+  font-family: var(--font-anton), sans-serif !important;
+  font-style: normal;
+  text-transform: uppercase;
+  display: inline-block;
+  transform: none;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  /* Distressed look simulation */
+  position: relative;
+  color: white;
 }
 

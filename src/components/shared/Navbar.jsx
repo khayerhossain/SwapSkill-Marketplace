@@ -5,7 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, use } from "react";
-import logo from "../../assets/logo1.png";import Container from "./Container";
+import logo from "../../assets/logo1.png";
+import Container from "./Container";
+import { FiHome, FiUsers, FiActivity, FiLayers, FiTag, FiPieChart, FiSmartphone, FiChevronDown, FiArrowRight } from "react-icons/fi";
 
 export default function NavbarPage() {
   const { data: session } = useSession();
@@ -20,9 +22,10 @@ export default function NavbarPage() {
   }, []);
 
   const baseLinks = [
-    { name: "Home", path: "/" },
+    { name: "Home", path: "/", icon: <FiHome className="w-4 h-4" /> },
     {
       name: "About Us",
+      icon: <FiUsers className="w-4 h-4" />,
       dropdown: true,
       items: [
         {
@@ -37,16 +40,16 @@ export default function NavbarPage() {
         },
       ],
     },
-    { name: "Current Skills", path: "#current-skills" },
-    { name: "Features", path: "/features" },
-    { name: "Pricing", path: "/pricing" },
+    { name: "Current Skills", path: "#current-skills", icon: <FiActivity className="w-4 h-4" /> },
+    { name: "Features", path: "/features", icon: <FiLayers className="w-4 h-4" /> },
+    { name: "Pricing", path: "/pricing", icon: <FiTag className="w-4 h-4" /> },
   ];
 
   const roleLinks =
     session?.user?.role === "admin"
-      ? [{ name: "Dashboard", path: "/dashboard" }]
+      ? [{ name: "Dashboard", path: "/dashboard", icon: <FiPieChart className="w-4 h-4" /> }]
       : session?.user?.role === "user"
-      ? [{ name: "AppBar", path: "/appBar" }]
+      ? [{ name: "AppBar", path: "/appBar", icon: <FiSmartphone className="w-4 h-4" /> }]
       : [];
 
   const navLinks = [...baseLinks, ...roleLinks];
@@ -61,9 +64,9 @@ export default function NavbarPage() {
         <div className="flex justify-between items-center w-full py-3 text-white">
           {/* ===== SMALL DEVICES ===== */}
           <div className="flex w-full items-center justify-between lg:hidden">
-            <Link href="/" className="flex items-center gap-2">
-              <Image src={logo} alt="logo" className="w-10 h-8" />
-              <h1 className="font-signature-custom text-3xl text-white">SwapSkill</h1>
+            <Link href="/" className="flex items-center group">
+              <Image src={logo} alt="logo" className="w-10 h-8 transition-transform group-hover:scale-110" />
+              <h1 className="font-signature-custom text-2xl text-white tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">SwapSkill</h1>
             </Link>
 
             <div className="dropdown dropdown-end">
@@ -96,7 +99,8 @@ export default function NavbarPage() {
                   <li key={link.name}>
                     {link.dropdown ? (
                       <details>
-                        <summary className="cursor-pointer text-gray-300 hover:text-white">
+                        <summary className="cursor-pointer text-gray-300 hover:text-white flex items-center gap-2">
+                          {link.icon}
                           {link.name}
                         </summary>
                         <ul className="p-2 bg-black/90 rounded-lg mt-1">
@@ -135,8 +139,9 @@ export default function NavbarPage() {
                           pathname === link.path
                             ? "font-semibold text-white underline underline-offset-4"
                             : "text-gray-300 hover:text-white"
-                        } hover:bg-transparent focus:bg-transparent active:bg-transparent`}
+                        } hover:bg-transparent focus:bg-transparent active:bg-transparent flex items-center gap-2`}
                       >
+                        {link.icon}
                         {link.name}
                       </Link>
                     )}
@@ -163,9 +168,9 @@ export default function NavbarPage() {
 
           {/* ===== LARGE DEVICES ===== */}
           <div className="hidden lg:flex items-center justify-between w-full">
-            <Link href="/" className="flex items-center gap-2">
-              <Image src={logo} alt="logo" className="w-12 h-9" />
-              <h1 className="font-signature-custom text-4xl text-white">SwapSkill</h1>
+            <Link href="/" className="flex items-center group">
+              <Image src={logo} alt="logo" className="w-12 h-9 transition-transform group-hover:scale-110" />
+              <h1 className="font-signature-custom text-3xl text-white tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">SwapSkill</h1>
             </Link>
 
             <div className="flex-1 flex justify-center">
@@ -174,22 +179,10 @@ export default function NavbarPage() {
                   <li key={link.name} className="relative group">
                     {link.dropdown ? (
                       <>
-                        <button className="transition text-gray-300 hover:text-white flex items-center gap-1 hover:bg-transparent focus:bg-transparent active:bg-transparent">
+                        <button className="transition text-gray-300 hover:text-white flex items-center gap-2 hover:bg-transparent focus:bg-transparent active:bg-transparent">
+                          {link.icon}
                           {link.name}
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-4 h-4"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                            />
-                          </svg>
+                          <FiChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
                         </button>
 
                         {/* Dropdown menu */}
@@ -227,12 +220,13 @@ export default function NavbarPage() {
                       <Link
                         href={link.path}
                         scroll={true}
-                        className={`transition hover:bg-transparent focus:bg-transparent active:bg-transparent ${
+                        className={`transition-all duration-300 hover:bg-white/5 px-3 py-1.5 rounded-md flex items-center gap-2 relative group-hover:text-white ${
                           pathname === link.path
                             ? "font-semibold text-white underline underline-offset-4"
                             : "text-gray-300 hover:text-white"
                         }`}
                       >
+                        {link.icon}
                         {link.name}
                       </Link>
                     )}

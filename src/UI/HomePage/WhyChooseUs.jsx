@@ -37,7 +37,7 @@ export default function WhyChooseUs() {
   ];
 
   return (
-    <section className="relative py-24 bg-gradient-to-b from-[#0a0a0a] via-[#111111] to-[#1a1a1a] text-gray-200 overflow-hidden">
+    <section className="relative py-24 bg-[#0a0a0a] text-gray-200 overflow-hidden">
       <Container>
         <motion.div
           className="text-center mb-16"

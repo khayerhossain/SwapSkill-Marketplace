@@ -84,7 +84,7 @@ export default function FooterPage() {
           </div>
 
           {/* Legal Links + Payment Cards */}
-          <div className="flex flex-col justify-between">
+          <div className="flex flex-col gap-6">
             <div>
               <h6 className="font-semibold text-gray-300 mb-3">Legal</h6>
               <ul className="flex flex-col gap-2 text-gray-400 text-sm mb-6">
@@ -109,7 +109,7 @@ export default function FooterPage() {
             {/* Payment Cards Right */}
             <div>
               <h6 className="font-semibold text-gray-300 mb-2">We Accept</h6>
-              <div className="flex justify-end gap-3 text-3xl">
+              <div className="flex justify-start items-center gap-3 text-3xl">
                 <FaCcVisa className="hover:text-red-500 transition-colors" />
                 <FaCcMastercard className="hover:text-red-500 transition-colors" />
                 <FaCcPaypal className="hover:text-red-500 transition-colors" />

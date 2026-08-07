@@ -31,7 +31,7 @@ export default function NewsletterSection() {
   };
 
   return (
-    <section className="relative py-28 bg-[#0b0c10] text-white overflow-hidden">
+    <section className="relative py-28 bg-[#0a0a0a] text-white overflow-hidden">
       <Container>
         <motion.div
           initial={{ opacity: 0, y: 40 }}

@@ -68,7 +68,7 @@ export default function AboutSectionStats() {
     >
       <div className="text-center">
         <div className="text-3xl font-extrabold text-red-500">
-          {totalUsers}+
+          {totalUsers ||60}+
         </div>
         <div className="text-sm text-gray-400">Active Users</div>
       </div>
